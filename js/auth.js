@@ -103,6 +103,35 @@ window.SETTINGS = {
 window.HOST_FEE = 0.10;
 window.settleOf = function (b) { const sub = Math.round(b.total / 1.05); return Math.round(sub * (1 - window.HOST_FEE)); };
 
+// 양방향 매너 점수 (호스트 → 게스트)
+window.MANNER = {
+  KEY: "gi_manner",
+  all: function () { try { return JSON.parse(localStorage.getItem(this.KEY) || "[]"); } catch (e) { return []; } },
+  add: function (r) { const l = this.all(); l.unshift(Object.assign({ ts: Date.now() }, r)); localStorage.setItem(this.KEY, JSON.stringify(l)); },
+  scoreOf: function (guestId) { const rs = this.all().filter((x) => x.guestId === guestId); return rs.length ? rs.reduce((a, x) => a + x.score, 0) / rs.length : null; },
+  rated: function (bookingId, hostId) { return this.all().some((x) => x.bookingId === bookingId && x.hostId === hostId); },
+};
+
+// N빵 대관 (더치페이)
+window.SPLIT = {
+  KEY: "gi_splits",
+  all: function () { try { return JSON.parse(localStorage.getItem(this.KEY) || "{}"); } catch (e) { return {}; } },
+  get: function (bid) { return this.all()[bid] || null; },
+  set: function (bid, obj) { const a = this.all(); a[bid] = obj; localStorage.setItem(this.KEY, JSON.stringify(a)); },
+};
+
+// 번개 특가 데모 시드(할인이 하나도 없을 때만)
+(function seedFlash() {
+  try {
+    if (Object.keys(window.DISCOUNT.all()).length) return;
+    const p = (n) => String(n).padStart(2, "0");
+    const toS = (function () { const x = new Date(Date.now() + 30 * 86400000); return `${x.getFullYear()}-${p(x.getMonth() + 1)}-${p(x.getDate())}`; })();
+    const from = _today();
+    window.DISCOUNT.set(2, { flash: { pct: 20, from, to: toS } });
+    window.DISCOUNT.set(8, { flash: { pct: 35, from, to: toS } });
+  } catch (e) {}
+})();
+
 // 1:1 문의
 window.INQUIRY = {
   KEY: "gi_inquiries",

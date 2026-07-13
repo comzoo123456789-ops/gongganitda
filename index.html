@@ -91,6 +91,13 @@
         <button type="submit" class="searchbar__go" aria-label="검색"></button>
       </form>
 
+      <!-- AI 한 줄 추천 -->
+      <form class="ai-box" id="aiForm">
+        <span class="ai-box__tag">🧭 AI 추천</span>
+        <input type="text" id="aiInput" placeholder="한 줄로 말해보세요 — 예: 6명 브라이덜샤워 강남 3만원대" />
+        <button type="submit" class="btn btn--accent">추천받기</button>
+      </form>
+
       <!-- 카테고리 -->
       <div class="cats" id="catGrid"><!-- JS --></div>
     </section>
@@ -105,6 +112,18 @@
         <div class="chips" id="catChips"><!-- JS --></div>
       </div>
       <div class="grid" id="spaceGrid"><!-- JS --></div>
+    </section>
+
+    <!-- ===== 번개 특가 ===== -->
+    <section class="section section--flash" id="flashsec" hidden>
+      <div class="section__head">
+        <div>
+          <span class="section__kicker" style="color:#e2402f">⚡ FLASH DEAL</span>
+          <h2 class="section__title">지금 번개 특가</h2>
+        </div>
+        <p class="section__sub">기간 한정 할인 중 — 서두르세요!</p>
+      </div>
+      <div class="grid" id="flashGrid"><!-- JS --></div>
     </section>
 
     <!-- ===== 우리 건물 1층 플래그십 ===== -->

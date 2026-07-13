@@ -546,6 +546,28 @@ em { font-style: normal; }
 .mine-act { display: flex; gap: 8px; margin-top: 10px; }
 .mine-act .btn { flex: 1; }
 
+/* AI 한 줄 추천 */
+.ai-box { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 8px 8px 8px 16px; box-shadow: var(--shadow-sm); margin-bottom: 22px; }
+.ai-box__tag { font-size: 0.82rem; font-weight: 800; color: var(--accent); white-space: nowrap; }
+.ai-box input { flex: 1; border: none; outline: none; background: none; font-size: 0.95rem; font-weight: 600; color: var(--ink); min-width: 0; padding: 9px 4px; }
+.ai-box input::placeholder { color: var(--faint); font-weight: 500; }
+.ai-box .btn { flex-shrink: 0; }
+
+/* N빵 더치페이 */
+.split-top { display: flex; gap: 12px; margin: 6px 0 16px; }
+.split-top > div { flex: 1; background: var(--surface-2); border-radius: 12px; padding: 14px; text-align: center; }
+.split-top b { display: block; font-family: var(--serif); font-size: 1.4rem; font-weight: 600; color: var(--ink); }
+.split-top span { font-size: 0.78rem; color: var(--muted); }
+.split-per { font-family: var(--serif); font-size: 1.3rem; font-weight: 600; color: var(--accent); }
+.split-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+.split-p { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border: 1px solid var(--line-2); border-radius: 11px; cursor: pointer; }
+.split-p input { position: absolute; opacity: 0; width: 0; height: 0; }
+.split-p__box { width: 20px; height: 20px; border: 1.5px solid var(--line); border-radius: 6px; flex-shrink: 0; position: relative; }
+.split-p input:checked + .split-p__box { background: var(--ok); border-color: var(--ok); }
+.split-p input:checked + .split-p__box::after { content: "✓"; color: #fff; font-size: 0.72rem; font-weight: 800; position: absolute; top: -1px; left: 4px; }
+.split-p > span:last-of-type { flex: 1; font-weight: 600; }
+.split-p em { color: var(--muted); font-weight: 700; font-size: 0.9rem; }
+
 /* 상세 위치 */
 .sp-loc__addr { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; color: var(--ink-2); font-weight: 600; margin-bottom: 14px; }
 .sp-loc__addr .ic { color: var(--accent); }
@@ -650,6 +672,11 @@ em { font-style: normal; }
   .settle-kpis { grid-template-columns: repeat(2, 1fr); }
   .mapf-list { grid-template-columns: 1fr; }
   .mapp__canvas { height: 340px; }
+  .ai-box { flex-wrap: wrap; padding: 12px; }
+  .ai-box__tag { order: 1; }
+  .ai-box input { order: 2; flex: 1 1 100%; padding: 6px 4px; }
+  .ai-box .btn { order: 3; width: 100%; }
+  .split-top b { font-size: 1.2rem; }
 }
 @media (max-width: 460px) {
   .cats { grid-template-columns: repeat(2, 1fr); }

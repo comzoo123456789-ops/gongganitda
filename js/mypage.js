@@ -10,6 +10,7 @@ const isHost = auth && auth.role === "host";
 
 $("#mpTitle").textContent = `${window.AUTH.displayName(auth)} 님`;
 $("#mpSub").textContent = isHost ? "호스트 회원 · 공간을 등록하고 예약을 관리하세요." : "일반 회원 · 찜한 공간과 예약 내역을 확인하세요.";
+if (!isHost) { const ms = window.MANNER.scoreOf(me); if (ms) $("#mpSub").textContent += ` · 내 매너 점수 ★${ms.toFixed(1)}`; }
 if (isHost) document.querySelectorAll(".js-host").forEach((e) => (e.hidden = false));
 
 const STATUS = {
@@ -61,13 +62,21 @@ function actionBtns(b, asHost) {
     btns.push(`<button class="btn btn--soft btn--sm" data-resched="${b.id}">일정 변경</button>`);
     btns.push(`<button class="btn btn--danger btn--sm" data-cancel="${b.id}">예약 취소</button>`);
   }
-  // 게스트 전용: 이용권 / 후기
+  // 게스트 전용: 이용권 / N빵 / 후기
   if (!asHost && b.status === "confirmed") {
-    if (daysUntil(b.date) >= 0) btns.push(`<button class="btn btn--soft btn--sm" data-ticket="${b.id}">🎫 이용권</button>`);
-    else btns.push(`<button class="btn btn--accent btn--sm" data-review="${b.id}">후기 쓰기</button>`);
+    if (daysUntil(b.date) >= 0) {
+      btns.push(`<button class="btn btn--soft btn--sm" data-ticket="${b.id}">🎫 이용권</button>`);
+      const sp = window.SPLIT.get(b.id);
+      btns.push(`<button class="btn btn--soft btn--sm" data-split="${b.id}">🤝 N빵${sp && sp.n ? ` ${sp.paid.filter(Boolean).length}/${sp.n}` : ""}</button>`);
+    } else btns.push(`<button class="btn btn--accent btn--sm" data-review="${b.id}">후기 쓰기</button>`);
+  }
+  // 호스트 전용: 이용 완료 후 게스트 매너 평가
+  if (asHost && b.status === "confirmed" && daysUntil(b.date) < 0 && !window.MANNER.rated(b.id, me)) {
+    btns.push(`<button class="btn btn--soft btn--sm" data-manner="${b.id}">게스트 평가</button>`);
   }
   return btns.length ? `<div class="mp-bk__act">${btns.join("")}</div>` : "";
 }
+function mannerBadge(guestId) { const s = window.MANNER.scoreOf(guestId); return s ? ` · 매너 ★${s.toFixed(1)}` : " · 신규"; }
 function bookingCard(b, asHost) {
   const s = STATUS[b.status] || STATUS.requested;
   const un = window.CHAT.unread(me, b.id);
@@ -80,7 +89,7 @@ function bookingCard(b, asHost) {
     <div class="mp-bk__top">
       <div class="mp-bk__info" onclick="location.href='space.html?id=${b.spaceId}'">
         <div class="mp-book__name">${b.spaceName}</div>
-        <div class="mp-book__meta">${asHost ? `👤 ${b.guestName || "게스트"} · ` : ""}${timeLabel(b)} · ${won(b.total)}원</div>
+        <div class="mp-book__meta">${asHost ? `👤 ${b.guestName || "게스트"}${mannerBadge(b.guestId)} · ` : ""}${timeLabel(b)} · ${won(b.total)}원</div>
       </div>
       <div class="mp-bk__right">${dd ? `<span class="mp-dday">${dd}</span>` : ""}<span class="mp-book__status st-${s.c}">${s.t}</span></div>
     </div>
@@ -157,10 +166,12 @@ function notifyOther(b, title, sub, link) {
   window.NOTIF.add({ forUser: other, title, sub, link: link || "mypage.html" });
 }
 document.addEventListener("click", (e) => {
-  const t = e.target.closest("[data-accept],[data-decline],[data-cancel],[data-resched],[data-chat],[data-ticket],[data-review]");
+  const t = e.target.closest("[data-accept],[data-decline],[data-cancel],[data-resched],[data-chat],[data-ticket],[data-review],[data-manner],[data-split]");
   if (!t) return;
-  const id = t.dataset.accept || t.dataset.decline || t.dataset.cancel || t.dataset.resched || t.dataset.chat || t.dataset.ticket || t.dataset.review;
+  const id = t.dataset.accept || t.dataset.decline || t.dataset.cancel || t.dataset.resched || t.dataset.chat || t.dataset.ticket || t.dataset.review || t.dataset.manner || t.dataset.split;
   const b = window.BOOKINGS.find(id); if (!b) return;
+  if (t.dataset.manner) { openManner(b); return; }
+  if (t.dataset.split) { openSplit(b); return; }
   if (t.dataset.accept) { window.BOOKINGS.update(id, { status: "confirmed", reschedFrom: null }); notifyOther(b, b.spaceName, `예약이 확정되었어요 · ${slot(b)}`); toast("예약을 수락했어요"); renderAll(); }
   else if (t.dataset.decline) { window.BOOKINGS.update(id, { status: "declined", reschedFrom: null }); notifyOther(b, b.spaceName, `예약이 거절되었어요 · ${b.date}`); toast("예약을 거절했어요"); renderAll(); }
   else if (t.dataset.cancel) { if (!confirm("예약을 취소할까요?")) return; window.BOOKINGS.update(id, { status: "cancelled" }); notifyOther(b, b.spaceName, `예약이 취소되었어요 · ${b.date}`); toast("예약을 취소했어요"); renderAll(); }
@@ -276,10 +287,62 @@ window.addEventListener("storage", (e) => {
   if (e.key === window.BOOKINGS.KEY) renderAll();
 });
 
-// 알림에서 채팅으로 바로 진입 (?chat=<bookingId>)
-(function openChatFromURL() {
-  const bid = new URLSearchParams(location.search).get("chat");
-  if (bid) { const b = window.BOOKINGS.find(bid); if (b) openChat(b); }
+// 게스트 매너 평가 (호스트)
+function openManner(b) {
+  modal.hidden = false;
+  modalCard.innerHTML = `
+    <div class="modal__head"><b>게스트 매너 평가</b><button class="modal__x" data-mclose>✕</button></div>
+    <p class="modal__sub">${b.guestName || "게스트"} · ${b.spaceName} (${b.date})</p>
+    <div class="sp-revstars" id="mnStars">${[1, 2, 3, 4, 5].map((n) => `<button type="button" data-star="${n}">★</button>`).join("")}</div>
+    <p class="modal__note">약속 시간 준수·공간 사용·소통을 기준으로 평가해 주세요.</p>
+    <button class="btn btn--accent btn--block" id="mnSave">평가 등록</button>`;
+  let star = 5;
+  const paint = () => modalCard.querySelectorAll("#mnStars button").forEach((x, i) => x.classList.toggle("on", i < star));
+  paint();
+  $("#mnStars").addEventListener("click", (e) => { const x = e.target.closest("[data-star]"); if (x) { star = +x.dataset.star; paint(); } });
+  $("#mnSave").addEventListener("click", () => {
+    window.MANNER.add({ bookingId: b.id, hostId: me, guestId: b.guestId, score: star });
+    closeModal(); toast("게스트 매너를 평가했어요"); renderAll();
+  });
+}
+
+// N빵 더치페이
+function openSplit(b) {
+  modal.hidden = false;
+  const head = `<div class="modal__head"><b>🤝 N빵 대관</b><button class="modal__x" data-mclose>✕</button></div>`;
+  function render() {
+    let sp = window.SPLIT.get(b.id);
+    if (!sp || !sp.n) {
+      modalCard.innerHTML = head + `
+        <p class="modal__sub">${b.spaceName} · 총 <b>${won(b.total)}원</b></p>
+        <div class="book__field"><label class="book__label">몇 명이서 나눌까요?</label><select id="spN">${[2, 3, 4, 5, 6, 7, 8].map((k) => `<option value="${k}">${k}명</option>`).join("")}</select></div>
+        <div class="book__field"><label class="book__label">예상 1인당 금액</label><div class="split-per" id="spPer"></div></div>
+        <button class="btn btn--accent btn--block" id="spCreate">N빵 시작하기</button>`;
+      const per = () => { const n = +$("#spN").value; $("#spPer").textContent = won(Math.ceil(b.total / n / 100) * 100) + "원"; };
+      per(); $("#spN").addEventListener("change", per);
+      $("#spCreate").addEventListener("click", () => { const n = +$("#spN").value; window.SPLIT.set(b.id, { n, paid: Array(n).fill(false) }); render(); renderAll(); toast("N빵을 시작했어요"); });
+    } else {
+      const per = Math.ceil(b.total / sp.n / 100) * 100;
+      const paidCnt = sp.paid.filter(Boolean).length;
+      modalCard.innerHTML = head + `
+        <p class="modal__sub">${b.spaceName} · ${b.date}</p>
+        <div class="split-top"><div><b>${won(per)}원</b><span>1인당</span></div><div><b>${paidCnt}/${sp.n}</b><span>결제 완료</span></div></div>
+        <div class="split-list">${sp.paid.map((p, i) => `<label class="split-p"><input type="checkbox" data-p="${i}" ${p ? "checked" : ""} /><span class="split-p__box"></span><span>참여자 ${i + 1}</span><em>${won(per)}원</em></label>`).join("")}</div>
+        <button class="btn btn--soft btn--block" id="spCopy">참여 링크 복사</button>
+        <button class="btn btn--danger btn--block" id="spReset" style="margin-top:8px">초기화</button>`;
+      modalCard.querySelectorAll("[data-p]").forEach((c) => c.addEventListener("change", (e) => { sp.paid[+e.target.dataset.p] = e.target.checked; window.SPLIT.set(b.id, sp); render(); renderAll(); }));
+      $("#spCopy").addEventListener("click", () => { const url = location.origin + "/mypage.html?split=" + b.id; if (navigator.clipboard) navigator.clipboard.writeText(url); toast("참여 링크를 복사했어요"); });
+      $("#spReset").addEventListener("click", () => { window.SPLIT.set(b.id, { n: 0, paid: [] }); render(); renderAll(); });
+    }
+  }
+  render();
+}
+
+// 알림/링크에서 바로 진입 (?chat= / ?split=)
+(function openFromURL() {
+  const q = new URLSearchParams(location.search);
+  const cbid = q.get("chat"); if (cbid) { const b = window.BOOKINGS.find(cbid); if (b) openChat(b); }
+  const sbid = q.get("split"); if (sbid) { const b = window.BOOKINGS.find(sbid); if (b) openSplit(b); }
 })();
 
 // ---------- 내 공간 삭제 ----------

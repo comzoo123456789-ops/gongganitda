@@ -68,6 +68,31 @@ function renderGrid() {
 }
 renderGrid();
 
+// 번개 특가 — 반짝할인 활성 공간
+(function flashDeals() {
+  const list = getAllSpaces().filter((s) => window.DISCOUNT && window.DISCOUNT.flashPct(s.id) > 0);
+  if (!list.length) return;
+  const sec = $("#flashsec"); if (!sec) return;
+  sec.hidden = false;
+  $("#flashGrid").innerHTML = list.map(cardHTML).join("");
+})();
+
+// AI 한 줄 추천 → 조건 파싱 후 검색으로
+const aiForm = $("#aiForm");
+if (aiForm) aiForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const q = ($("#aiInput").value || "").trim();
+  if (!q) { $("#aiInput").focus(); return; }
+  const p = new URLSearchParams();
+  const capM = q.match(/(\d+)\s*(명|인)/); if (capM) p.set("cap", capM[1]);
+  const reg = (typeof REGIONS !== "undefined" ? REGIONS : []).find((r) => q.includes(r));
+  if (reg) p.set("region", reg);
+  else { const gu = q.match(/([가-힣]{2,10}(구|동|시))/); if (gu) p.set("region", gu[1]); }
+  const catMap = [[/파티|생일|브라이덜|집들이/, "party"], [/회의|세미나|미팅|강의|컨퍼런스|워크숍/, "meeting"], [/연습|댄스|보컬|악기|밴드|합주/, "practice"], [/스튜디오|촬영|화보|방송|유튜브|영상/, "studio"], [/카페|주방|쿠킹|공유주방|베이킹/, "cafe"], [/공연|행사|전시|웨딩|파티룸/, "event"], [/스터디|공부|독서/, "study"], [/오피스|사무|코워킹|미팅룸/, "office"]];
+  for (const [re, id] of catMap) { if (re.test(q)) { p.set("type", id); break; } }
+  location.href = "search.html" + (p.toString() ? "?" + p.toString() : "");
+});
+
 // 플래그십
 (function flagship() {
   const f = SPACES.find((s) => s.flagship);

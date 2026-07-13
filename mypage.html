@@ -18,6 +18,7 @@
       <a href="index.html" class="logo"><span class="logo__dot"></span>공간잇다</a>
       <nav class="header__nav" id="nav">
         <a href="search.html" class="header__link">공간 찾기</a>
+        <a href="request.html" class="header__link">견적 요청</a>
         <a href="map.html" class="header__link">지도</a>
         <a href="host.html" class="header__link js-host-nav">호스트 등록</a>
         <span class="header__sep"></span>
@@ -41,13 +42,16 @@
     </div>
 
     <nav class="mp-tabs" id="mpTabs">
-      <button class="mp-tab is-active" data-tab="book">예약 내역</button>
+      <button class="mp-tab js-mem is-active" data-tab="book">예약 내역</button>
+      <button class="mp-tab js-mem" data-tab="rfp">견적 요청</button>
+      <button class="mp-tab js-mem" data-tab="fav">찜한 공간</button>
+      <button class="mp-tab js-mem" data-tab="myrev">내 후기</button>
       <button class="mp-tab js-host" data-tab="reqs" hidden>예약 요청<span class="mp-tab__badge" id="reqBadge" hidden></span></button>
-      <button class="mp-tab" data-tab="fav">찜한 공간</button>
-      <button class="mp-tab" data-tab="myrev">내 후기</button>
       <button class="mp-tab js-host" data-tab="mine" hidden>내 등록 공간</button>
       <button class="mp-tab js-host" data-tab="settle" hidden>정산</button>
       <button class="mp-tab js-host" data-tab="disc" hidden>공간 관리</button>
+      <button class="mp-tab js-vendor" data-tab="vreq" hidden>들어온 요청<span class="mp-tab__badge" id="vreqBadge" hidden></span></button>
+      <button class="mp-tab js-vendor" data-tab="vquote" hidden>내 견적</button>
     </nav>
 
     <section class="mp-panel" data-panel="book"><div id="bookList"></div><div class="mp-empty" id="bookEmpty" hidden>아직 예약 내역이 없어요.</div></section>
@@ -57,6 +61,9 @@
     <section class="mp-panel" data-panel="mine" hidden><div class="grid" id="mineGrid"></div><div class="mp-empty" id="mineEmpty" hidden>아직 등록한 공간이 없어요. <a href="host.html" style="color:var(--accent);font-weight:700">공간 등록하기</a></div></section>
     <section class="mp-panel" data-panel="settle" hidden><div id="settleWrap"></div></section>
     <section class="mp-panel" data-panel="disc" hidden><div id="discWrap"></div></section>
+    <section class="mp-panel" data-panel="rfp" hidden><a href="request.html" class="btn btn--accent" style="margin-bottom:16px;display:inline-flex">+ 새 견적 요청</a><div id="rfpList"></div><div class="mp-empty" id="rfpEmpty" hidden>아직 견적 요청이 없어요. 필요한 서비스를 한 번에 요청해보세요.</div></section>
+    <section class="mp-panel" data-panel="vreq" hidden><div id="vreqList"></div><div class="mp-empty" id="vreqEmpty" hidden>들어온 요청이 없어요.</div></section>
+    <section class="mp-panel" data-panel="vquote" hidden><div id="vquoteList"></div><div class="mp-empty" id="vquoteEmpty" hidden>아직 제출한 견적이 없어요.</div></section>
   </main>
 
   <footer class="footer"><div class="footer__copy" style="border:none">© 2026 공간잇다 · wylie</div></footer>

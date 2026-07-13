@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>견적 요청 · 공간잇다</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&display=swap" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-require="auth">
+  <header class="header is-scrolled" id="header">
+    <div class="header__inner">
+      <a href="index.html" class="logo"><span class="logo__dot"></span>공간잇다</a>
+      <nav class="header__nav" id="nav">
+        <a href="search.html" class="header__link">공간 찾기</a>
+        <a href="request.html" class="header__link">견적 요청</a>
+        <a href="map.html" class="header__link">지도</a>
+        <a href="host.html" class="header__link js-host-nav">호스트 등록</a>
+        <span class="header__sep"></span>
+        <span class="auth-area" data-authbox></span>
+      </nav>
+      <button class="hmenu" id="hmenu" aria-label="메뉴"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main class="hostreg">
+    <div class="hostreg__head">
+      <span class="section__kicker">REVERSE AUCTION</span>
+      <h1 class="hostreg__title">견적 요청 (역경매)</h1>
+      <p class="hostreg__sub">필요한 것을 한 번에 요청하면, 업체들이 <b>견적서를 보내드립니다</b>. 비교하고 골라보세요.</p>
+    </div>
+
+    <form class="hf" id="reqForm" novalidate>
+      <div class="hf-row">
+        <div class="hf-field"><label class="hf-label">이용 날짜 <i>*</i></label><input type="date" id="rqDate" /></div>
+        <div class="hf-field"><label class="hf-label">지역 <i>*</i></label><select id="rqRegion"></select></div>
+      </div>
+      <div class="hf-row">
+        <div class="hf-field"><label class="hf-label">수용 인원 <i>*</i></label><input type="number" id="rqCap" min="1" placeholder="예: 20" /></div>
+        <div class="hf-field"><label class="hf-label">주차 대수</label><input type="number" id="rqPark" min="0" placeholder="예: 4" /></div>
+      </div>
+      <div class="hf-field">
+        <label class="hf-label">필요한 서비스 <i>*</i></label>
+        <div class="hf-checks" id="rqSvc"></div>
+        <span class="hf-hint">선택한 서비스의 업체들에게 견적 요청이 일괄 전송됩니다.</span>
+      </div>
+      <div class="hf-field"><label class="hf-label">예산 (선택)</label><input type="text" id="rqBudget" placeholder="예: 30만원 내외" /></div>
+      <div class="hf-field"><label class="hf-label">상세 요청 사항</label><textarea id="rqDetail" rows="3" placeholder="행사 성격, 필요 수량, 시간 등 자유롭게 적어주세요."></textarea></div>
+      <p class="hf-err" id="rqErr" hidden></p>
+      <button type="submit" class="btn btn--accent btn--lg btn--block">견적 요청 보내기</button>
+      <p class="hf-note">데모 — 요청은 이 브라우저에 저장되고, 해당 서비스 업체 계정에 알림이 갑니다.</p>
+    </form>
+  </main>
+
+  <footer class="footer"><div class="footer__copy" style="border:none">© 2026 공간잇다 · wylie</div></footer>
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="js/icons.js"></script>
+  <script src="data/categories.js"></script>
+  <script src="data/spaces.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/request.js"></script>
+</body>
+</html>

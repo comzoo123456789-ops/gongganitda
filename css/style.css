@@ -546,6 +546,33 @@ em { font-style: normal; }
 .mine-act { display: flex; gap: 8px; margin-top: 10px; }
 .mine-act .btn { flex: 1; }
 
+/* 원스톱 · 역경매 소개 */
+.how-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+.how-step { background: var(--surface); border: 1px solid var(--line-2); border-radius: 16px; padding: 22px; box-shadow: var(--shadow-sm); }
+.how-step__n { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 800; margin-bottom: 12px; }
+.how-step b { display: block; font-size: 1.05rem; font-weight: 800; margin-bottom: 4px; }
+.how-step span { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+.how-svc { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+.how-chip { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 9px 15px; font-size: 0.9rem; font-weight: 700; }
+.how-chip .ic { width: 18px; height: 18px; }
+
+/* 역경매 견적 비교 */
+.rfp-quotes { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line-2); display: flex; flex-direction: column; gap: 8px; }
+.rfp-empty { font-size: 0.85rem; color: var(--faint); padding: 6px 0; }
+.quote-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; background: var(--surface-2); border-radius: 11px; border: 1px solid transparent; }
+.quote-row.is-sel { border-color: var(--ok); background: #eaf5ef; }
+.quote-row__l b { font-weight: 800; }
+.quote-cat { font-size: 0.74rem; font-weight: 700; color: var(--accent); background: var(--accent-soft); padding: 2px 8px; border-radius: 999px; margin-left: 4px; }
+.quote-desc { font-size: 0.84rem; color: var(--muted); margin-top: 4px; }
+.quote-row__r { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.quote-price { font-weight: 800; font-size: 1rem; }
+.quote-badge { font-size: 0.76rem; font-weight: 800; color: var(--ok); }
+
+/* 3분할 인증 탭 · 마이페이지 헤더 액션 */
+.auth-tabs--3 { grid-template-columns: repeat(3, 1fr); }
+.auth-tabs--3 .auth-tab { padding: 11px 4px; font-size: 0.86rem; }
+.mp__hactions { display: flex; gap: 8px; }
+
 /* AI 한 줄 추천 */
 .ai-box { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 8px 8px 8px 16px; box-shadow: var(--shadow-sm); margin-bottom: 22px; }
 .ai-box__tag { font-size: 0.82rem; font-weight: 800; color: var(--accent); white-space: nowrap; }
@@ -677,6 +704,9 @@ em { font-style: normal; }
   .ai-box input { order: 2; flex: 1 1 100%; padding: 6px 4px; }
   .ai-box .btn { order: 3; width: 100%; }
   .split-top b { font-size: 1.2rem; }
+  .how-steps { grid-template-columns: 1fr; }
+  .quote-row { flex-direction: column; align-items: stretch; }
+  .quote-row__r { justify-content: flex-end; }
 }
 @media (max-width: 460px) {
   .cats { grid-template-columns: repeat(2, 1fr); }

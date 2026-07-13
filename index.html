@@ -20,6 +20,7 @@
       <a href="index.html" class="logo"><span class="logo__dot"></span>공간잇다</a>
       <nav class="header__nav" id="nav">
         <a href="search.html" class="header__link">공간 찾기</a>
+        <a href="request.html" class="header__link">견적 요청</a>
         <a href="map.html" class="header__link">지도</a>
         <a href="host.html" class="header__link js-host-nav">호스트 등록</a>
         <span class="header__sep"></span>
@@ -34,12 +35,12 @@
     <section class="hero">
       <div class="hero__inner">
         <div class="hero__text">
-          <span class="hero__eyebrow">공간 대관 마켓플레이스</span>
-          <h1 class="hero__title">필요한 순간,<br />필요한 <em>공간</em>을 잇다</h1>
-          <p class="hero__sub">파티룸·회의실·연습실·스튜디오까지 —<br class="hero__br" />시간 단위로 빌리고 지금 바로 예약하세요.</p>
+          <span class="hero__eyebrow">공간 + 필요한 모든 것, 한 번에</span>
+          <h1 class="hero__title">공간부터 장비·케이터링까지<br /><em>견적 한 번</em>에 잇다</h1>
+          <p class="hero__sub">공간을 빌리고, 카메라·케이터링·복합기까지 —<br class="hero__br" />요청 한 번이면 업체들이 견적을 보내드려요.</p>
           <div class="hero__cta">
-            <a href="#cats" class="btn btn--accent btn--lg">공간 찾기</a>
-            <a href="host.html" class="btn btn--outline btn--lg">호스트 되기</a>
+            <a href="search.html" class="btn btn--accent btn--lg">공간 찾기</a>
+            <a href="request.html" class="btn btn--outline btn--lg">견적 요청하기</a>
           </div>
           <div class="hero__stats" id="heroStats"></div>
         </div>
@@ -52,7 +53,7 @@
             <img src="https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=520&h=460&fit=crop&q=80" alt="" loading="lazy" />
             <img src="https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=520&h=560&fit=crop&q=80" alt="" loading="lazy" />
           </div>
-          <div class="hero__chip">★ 4.8 · 검증된 공간</div>
+          <div class="hero__chip">★ 4.8 · 검증된 공간·업체</div>
         </div>
       </div>
     </section>
@@ -139,6 +140,24 @@
         <p class="section__sub">상황에 맞는 공간을 모았어요</p>
       </div>
       <div class="collections" id="colGrid"><!-- JS --></div>
+    </section>
+
+    <!-- ===== 원스톱 · 역경매 소개 ===== -->
+    <section class="section how" id="how">
+      <div class="section__head">
+        <div>
+          <span class="section__kicker">ONE-STOP · 역경매</span>
+          <h2 class="section__title">필요한 건 요청만 하세요</h2>
+        </div>
+        <p class="section__sub">업체들이 견적을 보내드려요 — 비교하고 고르기만 하면 끝</p>
+      </div>
+      <div class="how-steps">
+        <div class="how-step"><span class="how-step__n">1</span><b>견적 요청</b><span>날짜·지역·인원과 필요한 서비스를 한 번에 요청</span></div>
+        <div class="how-step"><span class="how-step__n">2</span><b>업체 견적 도착</b><span>촬영장비·케이터링·복합기 업체가 견적서를 입찰</span></div>
+        <div class="how-step"><span class="how-step__n">3</span><b>비교하고 선택</b><span>가격·제안을 비교하고 채팅 후 결정</span></div>
+      </div>
+      <div class="how-svc" id="howSvc"></div>
+      <a href="request.html" class="btn btn--accent btn--lg" style="margin-top:6px">견적 요청 시작하기 →</a>
     </section>
 
     <!-- ===== 호스트 CTA ===== -->

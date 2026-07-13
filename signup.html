@@ -24,9 +24,10 @@
       <h1 class="auth-card__title">회원가입</h1>
       <p class="auth-card__sub">회원 유형을 선택하세요.</p>
 
-      <div class="auth-tabs" id="suTabs">
-        <button type="button" class="auth-tab is-active" data-role="guest">👤 일반 회원</button>
-        <button type="button" class="auth-tab" data-role="host">🏠 호스트 회원</button>
+      <div class="auth-tabs auth-tabs--3" id="suTabs">
+        <button type="button" class="auth-tab is-active" data-role="guest">👤 일반</button>
+        <button type="button" class="auth-tab" data-role="host">🏠 호스트</button>
+        <button type="button" class="auth-tab" data-role="vendor">🧰 업체</button>
       </div>
 
       <form id="signupForm" novalidate>
@@ -47,6 +48,17 @@
           <input type="email" id="suEmail" placeholder="이메일" />
         </div>
         <p class="field__hint" id="suHostHint" hidden>호스트로 가입하면 공간을 등록해 대관 수익을 만들 수 있어요.</p>
+        <div id="suVendor" hidden>
+          <p class="field__hint">업체로 가입하면 회원의 견적 요청에 <b>견적서를 제출(입찰)</b>할 수 있어요.</p>
+          <div class="field">
+            <label class="field__label">제공 서비스 <i>*</i></label>
+            <div class="hf-checks" id="suSvc"></div>
+          </div>
+          <div class="field">
+            <label class="field__label">활동 지역</label>
+            <select id="suRegion" class="filt__sel"></select>
+          </div>
+        </div>
         <p class="auth-err" id="suErr" hidden></p>
         <button type="submit" class="btn btn--accent btn--lg btn--block">가입하기</button>
       </form>

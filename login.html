@@ -23,9 +23,10 @@
     <div class="auth-card">
       <h1 class="auth-card__title">로그인</h1>
       <p class="auth-card__sub">회원 유형을 선택하세요.</p>
-      <div class="auth-tabs" id="lgTabs">
-        <button type="button" class="auth-tab is-active" data-role="guest">👤 회원 로그인</button>
-        <button type="button" class="auth-tab" data-role="host">🏠 호스트 로그인</button>
+      <div class="auth-tabs auth-tabs--3" id="lgTabs">
+        <button type="button" class="auth-tab is-active" data-role="guest">👤 회원</button>
+        <button type="button" class="auth-tab" data-role="host">🏠 호스트</button>
+        <button type="button" class="auth-tab" data-role="vendor">🧰 업체</button>
       </div>
       <form id="loginForm" novalidate>
         <div class="field">
@@ -40,7 +41,7 @@
         <button type="submit" class="btn btn--accent btn--lg btn--block">로그인</button>
       </form>
       <p class="auth-alt">아직 회원이 아니신가요? <a href="signup.html">회원가입</a></p>
-      <p class="auth-demo">데모 계정 — 회원 <b>guest / 1234</b> · 호스트 <b>host / 1234</b></p>
+      <p class="auth-demo">데모 계정 — 회원 <b>guest/1234</b> · 호스트 <b>host/1234</b> · 업체 <b>vendor/1234</b></p>
     </div>
   </main>
 

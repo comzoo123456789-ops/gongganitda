@@ -10,3 +10,11 @@ const CATEGORIES = [
   { id: "office", label: "오피스", icon: "office", tint: "#e2e2ea", ink: "#6b6b8a" },
 ];
 const catById = (id) => CATEGORIES.find((c) => c.id === id) || { label: id, icon: "grid", ink: "#888" };
+
+// 역경매(견적요청) 부대 서비스 — 거래형 3종
+const SERVICES = [
+  { id: "camera", label: "촬영장비·카메라", icon: "studio", tint: "#e3e6df", ink: "#5f7a5c", desc: "카메라·조명·짐벌 대여" },
+  { id: "catering", label: "케이터링", icon: "cafe", tint: "#ece2d8", ink: "#9c7b56", desc: "다과·도시락·뷔페 준비" },
+  { id: "office", label: "사무기기·복합기", icon: "office", tint: "#e2e2ea", ink: "#6b6b8a", desc: "복합기·프린터·PC" },
+];
+const svcById = (id) => SERVICES.find((s) => s.id === id) || { label: id, icon: "grid", ink: "#888" };

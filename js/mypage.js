@@ -7,11 +7,13 @@ const auth = window.AUTH.get();
 if (!auth) { location.href = "login.html"; }
 const me = auth ? auth.userId : null;
 const isHost = auth && auth.role === "host";
+const isVendor = auth && auth.role === "vendor";
 
 $("#mpTitle").textContent = `${window.AUTH.displayName(auth)} 님`;
-$("#mpSub").textContent = isHost ? "호스트 회원 · 공간을 등록하고 예약을 관리하세요." : "일반 회원 · 찜한 공간과 예약 내역을 확인하세요.";
-if (!isHost) { const ms = window.MANNER.scoreOf(me); if (ms) $("#mpSub").textContent += ` · 내 매너 점수 ★${ms.toFixed(1)}`; }
+$("#mpSub").textContent = isVendor ? "업체 회원 · 들어온 견적 요청에 입찰하세요." : isHost ? "호스트 회원 · 공간을 등록하고 예약을 관리하세요." : "일반 회원 · 예약·견적을 관리하세요.";
+if (!isHost && !isVendor) { const ms = window.MANNER.scoreOf(me); if (ms) $("#mpSub").textContent += ` · 내 매너 점수 ★${ms.toFixed(1)}`; }
 if (isHost) document.querySelectorAll(".js-host").forEach((e) => (e.hidden = false));
+if (isVendor) { document.querySelectorAll(".js-mem").forEach((e) => (e.hidden = true)); document.querySelectorAll(".js-vendor").forEach((e) => (e.hidden = false)); }
 
 const STATUS = {
   requested: { t: "승인 대기", c: "amber" },
@@ -119,7 +121,89 @@ function renderMine() {
   $("#mineGrid").innerHTML = mine.map((s) => `<div class="mine-wrap">${cardHTML(s)}<div class="mine-act"><a href="host.html?id=${s.id}" class="btn btn--soft btn--sm">수정</a><button class="btn btn--danger btn--sm" data-delspace="${s.id}">삭제</button></div></div>`).join("");
   $("#mineEmpty").hidden = mine.length > 0;
 }
-function renderAll() { renderBooks(); if (isHost) { renderReqs(); renderMine(); } }
+function renderAll() {
+  if (isVendor) { renderVreq(); renderVquote(); return; }
+  renderBooks(); renderRfp();
+  if (isHost) { renderReqs(); renderMine(); }
+}
+
+// ---------- 역경매: 회원(견적 요청·비교) ----------
+function quoteRow(q) {
+  const sel = q.status === "accepted";
+  return `<div class="quote-row ${sel ? "is-sel" : ""}">
+    <div class="quote-row__l"><b>${q.vendorName}</b> <span class="quote-cat">${svcById(q.cat).label}</span>${q.desc ? `<div class="quote-desc">${q.desc}</div>` : ""}</div>
+    <div class="quote-row__r"><div class="quote-price">${won(q.price)}원</div>${sel ? `<span class="quote-badge">✅ 선택됨</span>` : `<button class="btn btn--accent btn--sm" data-acceptq="${q.id}">선택</button>`}<button class="btn btn--soft btn--sm" data-qchat="${q.id}">채팅</button></div>
+  </div>`;
+}
+function reqCardMember(r) {
+  const quotes = window.QUOTES.forReq(r.id);
+  const cats = r.cats.map((c) => svcById(c).label).join(", ");
+  return `<div class="mp-bk">
+    <div class="mp-bk__top"><div class="mp-bk__info"><div class="mp-book__name">${r.region} · ${r.date} · ${r.capacity}인</div><div class="mp-book__meta">필요: ${cats}${r.parking ? ` · 주차 ${r.parking}대` : ""}${r.budget ? ` · 예산 ${r.budget}` : ""}</div></div><span class="mp-book__status ${r.status === "closed" ? "st-green" : "st-amber"}">${r.status === "closed" ? "선택 완료" : `견적 ${quotes.length}건`}</span></div>
+    ${r.detail ? `<div class="mp-bk__policy">${r.detail}</div>` : ""}
+    <div class="rfp-quotes">${quotes.length ? quotes.map(quoteRow).join("") : `<div class="rfp-empty">아직 도착한 견적이 없어요 · 업체 검토 중…</div>`}</div>
+  </div>`;
+}
+function renderRfp() {
+  const list = window.REQUESTS.mine(me);
+  $("#rfpList").innerHTML = list.map(reqCardMember).join("");
+  $("#rfpEmpty").hidden = list.length > 0;
+}
+
+// ---------- 역경매: 업체(들어온 요청·내 견적) ----------
+function vreqCard(r) {
+  const mine = window.QUOTES.forReq(r.id).find((q) => q.vendorId === me);
+  const act = mine
+    ? `<span class="quote-badge">견적 제출함 · ${won(mine.price)}원${mine.status === "accepted" ? " · ✅선택됨" : ""}</span><button class="btn btn--soft btn--sm" data-qchat="${mine.id}">채팅</button>`
+    : (r.status === "closed" ? `<span class="mp__sub">마감된 요청</span>` : `<button class="btn btn--accent btn--sm" data-quote="${r.id}">견적 제출</button>`);
+  return `<div class="mp-bk">
+    <div class="mp-bk__top"><div class="mp-bk__info"><div class="mp-book__name">${r.region} · ${r.date} · ${r.capacity}인</div><div class="mp-book__meta">요청: ${r.cats.map((c) => svcById(c).label).join(", ")} · ${window.timeago(r.ts)}</div></div><span class="mp-book__status ${r.status === "closed" ? "st-gray" : "st-green"}">${r.status === "closed" ? "마감" : "모집중"}</span></div>
+    ${r.detail || r.budget ? `<div class="mp-bk__policy">${r.detail || ""}${r.budget ? ` · 예산 ${r.budget}` : ""}</div>` : ""}
+    <div class="mp-bk__act">${act}</div>
+  </div>`;
+}
+function renderVreq() {
+  const cats = auth.serviceCats || [];
+  const list = window.REQUESTS.list().filter((r) => r.cats.some((c) => cats.includes(c)));
+  const pending = list.filter((r) => r.status !== "closed" && !window.QUOTES.forReq(r.id).some((q) => q.vendorId === me)).length;
+  const bd = $("#vreqBadge"); if (bd) { bd.textContent = pending; bd.hidden = pending === 0; }
+  $("#vreqList").innerHTML = list.map(vreqCard).join("");
+  $("#vreqEmpty").hidden = list.length > 0;
+}
+function renderVquote() {
+  const list = window.QUOTES.byVendor(me);
+  $("#vquoteList").innerHTML = list.map((q) => { const r = window.REQUESTS.find(q.requestId) || {}; return `<div class="mp-bk"><div class="mp-bk__top"><div class="mp-bk__info"><div class="mp-book__name">${r.region || ""} · ${r.date || ""}</div><div class="mp-book__meta">${svcById(q.cat).label} · ${won(q.price)}원</div></div><span class="mp-book__status ${q.status === "accepted" ? "st-green" : "st-amber"}">${q.status === "accepted" ? "선택됨" : "제출됨"}</span></div>${q.desc ? `<div class="mp-bk__policy">${q.desc}</div>` : ""}</div>`; }).join("");
+  $("#vquoteEmpty").hidden = list.length > 0;
+}
+function openQuoteForm(r) {
+  modal.hidden = false;
+  const myCats = (auth.serviceCats || []).filter((c) => r.cats.includes(c));
+  modalCard.innerHTML = `<div class="modal__head"><b>견적 제출</b><button class="modal__x" data-mclose>✕</button></div>
+    <p class="modal__sub">${r.region} · ${r.date} · ${r.capacity}인 · 요청: ${r.cats.map((c) => svcById(c).label).join(", ")}</p>
+    <div class="book__field"><label class="book__label">서비스</label><select id="qCat">${myCats.map((c) => `<option value="${c}">${svcById(c).label}</option>`).join("")}</select></div>
+    <div class="book__field"><label class="book__label">견적 금액 (원)</label><input type="number" id="qPrice" min="0" step="1000" placeholder="예: 50000" /></div>
+    <div class="book__field"><label class="book__label">제안 내용</label><textarea id="qDesc" rows="3" placeholder="포함 내역·수량·조건 등"></textarea></div>
+    <button class="btn btn--accent btn--block" id="qSend">견적 보내기</button>`;
+  $("#qSend").addEventListener("click", () => {
+    const price = +$("#qPrice").value; if (!price) { toast("금액을 입력해주세요"); return; }
+    window.QUOTES.add({ requestId: r.id, vendorId: me, vendorName: window.AUTH.displayName(auth), cat: $("#qCat").value, price, desc: $("#qDesc").value.trim() });
+    window.NOTIF.add({ forUser: r.memberId, title: "새 견적 도착 💰", sub: `${window.AUTH.displayName(auth)} · ${won(price)}원`, link: "mypage.html?tab=rfp" });
+    closeModal(); toast("견적을 보냈어요"); renderAll();
+  });
+}
+function openQuoteChat(q) {
+  const r = window.REQUESTS.find(q.requestId) || {};
+  openChat({ id: "q:" + q.id, spaceName: me === q.vendorId ? `${r.memberName || "회원"} 요청` : `${q.vendorName} 견적`, hostId: q.vendorId, guestId: r.memberId });
+}
+document.addEventListener("click", (e) => {
+  const aq = e.target.closest("[data-acceptq]");
+  if (aq) { const q = window.QUOTES.list().find((x) => x.id === aq.dataset.acceptq); if (q) { window.QUOTES.update(q.id, { status: "accepted" }); window.REQUESTS.update(q.requestId, { status: "closed" }); window.NOTIF.add({ forUser: q.vendorId, title: "견적이 선택됐어요 🎉", sub: won(q.price) + "원", link: "mypage.html?tab=vquote" }); toast("견적을 선택했어요"); renderAll(); } return; }
+  const qb = e.target.closest("[data-quote]");
+  if (qb) { const r = window.REQUESTS.find(qb.dataset.quote); if (r) openQuoteForm(r); return; }
+  const qc = e.target.closest("[data-qchat]");
+  if (qc) { const q = window.QUOTES.list().find((x) => x.id === qc.dataset.qchat); if (q) openQuoteChat(q); return; }
+});
+
 renderAll();
 
 // ---------- 내 후기 ----------
@@ -457,12 +541,20 @@ function renderSettle() {
 if (isHost) { renderManage(); renderSettle(); }
 
 // 탭
-$("#mpTabs").addEventListener("click", (e) => {
-  const b = e.target.closest(".mp-tab"); if (!b) return;
-  const t = b.dataset.tab;
-  document.querySelectorAll(".mp-tab").forEach((x) => x.classList.toggle("is-active", x === b));
+function activate(t) {
+  const tab = document.querySelector(`.mp-tab[data-tab="${t}"]`);
+  if (!tab || tab.hidden) return false;
+  document.querySelectorAll(".mp-tab").forEach((x) => x.classList.toggle("is-active", x === tab));
   document.querySelectorAll(".mp-panel").forEach((p) => (p.hidden = p.dataset.panel !== t));
-});
+  return true;
+}
+$("#mpTabs").addEventListener("click", (e) => { const b = e.target.closest(".mp-tab"); if (b) activate(b.dataset.tab); });
+(function initTab() {
+  const urlTab = new URLSearchParams(location.search).get("tab");
+  if (urlTab && activate(urlTab)) return;
+  const first = [...document.querySelectorAll(".mp-tab")].find((t) => !t.hidden);
+  if (first) activate(first.dataset.tab);
+})();
 
 // 햄버거
 const hm = $("#hmenu"), nav = $("#nav");

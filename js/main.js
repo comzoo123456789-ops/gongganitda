@@ -68,6 +68,12 @@ function renderGrid() {
 }
 renderGrid();
 
+// 원스톱 서비스 칩
+(function howSvc() {
+  const el = $("#howSvc"); if (!el || typeof SERVICES === "undefined") return;
+  el.innerHTML = SERVICES.map((s) => `<span class="how-chip" style="color:${s.ink}">${iconSVG(s.icon, 18)}${s.label}</span>`).join("");
+})();
+
 // 번개 특가 — 반짝할인 활성 공간
 (function flashDeals() {
   const list = getAllSpaces().filter((s) => window.DISCOUNT && window.DISCOUNT.flashPct(s.id) > 0);

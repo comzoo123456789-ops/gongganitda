@@ -5,20 +5,24 @@
 window.AUTH = (function () {
   const SK = "gi_auth", UK = "gi_users";
   const read = (k, d) => { try { return JSON.parse(localStorage.getItem(k) || d); } catch (e) { return JSON.parse(d); } };
-  const seeded = read(UK, "[]");
-  if (!seeded.length) {
-    localStorage.setItem(UK, JSON.stringify([
+  let us = read(UK, "[]");
+  if (!us.length) {
+    us = [
       { userId: "guest", pw: "1234", nick: "손님", name: "손님", email: "guest@demo.kr", role: "guest" },
       { userId: "host", pw: "1234", nick: "사장", name: "사장", email: "host@demo.kr", role: "host" },
-    ]));
+    ];
   }
+  if (!us.some((u) => u.role === "vendor")) {
+    us.push({ userId: "vendor", pw: "1234", nick: "와일리장비", name: "와일리장비", email: "vendor@demo.kr", role: "vendor", serviceCats: ["camera", "catering", "office"], region: "서울" });
+  }
+  localStorage.setItem(UK, JSON.stringify(us));
   return {
     users: () => read(UK, "[]"),
     saveUsers: (u) => localStorage.setItem(UK, JSON.stringify(u)),
     get: () => read(SK, "null"),
     set: (a) => localStorage.setItem(SK, JSON.stringify(a)),
     logout: () => localStorage.removeItem(SK),
-    roleWord: (r) => (r === "host" ? "호스트" : "회원"),
+    roleWord: (r) => (r === "host" ? "호스트" : r === "vendor" ? "업체" : "회원"),
     displayName: function (a) { a = a || this.get(); if (!a) return ""; const w = this.roleWord(a.role); const n = a.name || ""; return (n === w || n.endsWith(w)) ? n : `${n} ${w}`; },
   };
 })();
@@ -112,6 +116,27 @@ window.MANNER = {
   rated: function (bookingId, hostId) { return this.all().some((x) => x.bookingId === bookingId && x.hostId === hostId); },
 };
 
+// 역경매 — 견적요청(RFP)
+window.REQUESTS = {
+  KEY: "gi_requests",
+  list: function () { try { return JSON.parse(localStorage.getItem(this.KEY) || "[]"); } catch (e) { return []; } },
+  save: function (l) { localStorage.setItem(this.KEY, JSON.stringify(l)); },
+  mine: function (userId) { return this.list().filter((r) => r.memberId === userId); },
+  find: function (id) { return this.list().find((r) => r.id === id); },
+  add: function (r) { const l = this.list(); l.unshift(Object.assign({ id: "r" + Date.now(), ts: Date.now(), status: "open" }, r)); this.save(l); },
+  update: function (id, patch) { const l = this.list(); const i = l.findIndex((r) => r.id === id); if (i >= 0) { l[i] = Object.assign({}, l[i], patch); this.save(l); } },
+};
+// 역경매 — 견적(입찰)
+window.QUOTES = {
+  KEY: "gi_quotes",
+  list: function () { try { return JSON.parse(localStorage.getItem(this.KEY) || "[]"); } catch (e) { return []; } },
+  save: function (l) { localStorage.setItem(this.KEY, JSON.stringify(l)); },
+  forReq: function (rid) { return this.list().filter((q) => q.requestId === rid); },
+  byVendor: function (vid) { return this.list().filter((q) => q.vendorId === vid); },
+  add: function (q) { const l = this.list(); l.unshift(Object.assign({ id: "q" + Date.now(), ts: Date.now(), status: "sent" }, q)); this.save(l); },
+  update: function (id, patch) { const l = this.list(); const i = l.findIndex((q) => q.id === id); if (i >= 0) { l[i] = Object.assign({}, l[i], patch); this.save(l); } },
+};
+
 // N빵 대관 (더치페이)
 window.SPLIT = {
   KEY: "gi_splits",
@@ -183,6 +208,8 @@ window.timeago = function (ts) { const s = (Date.now() - ts) / 1000; if (s < 60)
 
     // 호스트 전용 내비 — 일반회원에겐 숨김, 호스트에겐 '공간 등록'으로
     document.querySelectorAll(".js-host-nav").forEach((e) => { e.style.display = (!a || a.role === "host") ? "" : "none"; e.textContent = (a && a.role === "host") ? "공간 등록" : "호스트 등록"; });
+    // 업체 전용 내비
+    document.querySelectorAll(".js-vendor").forEach((e) => { e.style.display = (a && a.role === "vendor") ? "" : "none"; });
 
     document.querySelectorAll("[data-authbox]").forEach((box) => {
       if (a) {
@@ -209,6 +236,7 @@ window.timeago = function (ts) { const s = (Date.now() - ts) / 1000; if (s < 60)
     const req = document.body.getAttribute("data-require");
     if (req === "auth" && !a) location.href = "login.html";
     if (req === "host" && (!a || a.role !== "host")) { alert("호스트 회원 전용입니다."); location.href = a ? "index.html" : "login.html"; }
+    if (req === "vendor" && (!a || a.role !== "vendor")) { alert("업체 회원 전용입니다."); location.href = a ? "index.html" : "login.html"; }
 
     // 실시간 배지(다른 탭에서 알림 변화 시)
     window.addEventListener("storage", (e) => { if (e.key === window.NOTIF.KEY) refreshBell(); });

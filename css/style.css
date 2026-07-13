@@ -269,7 +269,9 @@ em { font-style: normal; }
 .srch { max-width: 1220px; margin: 0 auto; padding: 34px 32px 90px; }
 .srch__top { margin-bottom: 26px; }
 .srch__title { font-family: var(--serif); font-size: 2rem; font-weight: 600; letter-spacing: -0.025em; }
-.srch__layout { display: grid; grid-template-columns: 258px 1fr; gap: 36px; align-items: start; }
+.srch__layout { display: grid; grid-template-columns: 236px 1fr; gap: 44px; align-items: start; }
+/* 검색 결과 카드: 좁게 눌리지 않게 넉넉히 */
+.results .grid { grid-template-columns: repeat(auto-fill, minmax(258px, 1fr)); gap: 24px; }
 .filters { position: sticky; top: calc(var(--header-h) + 20px); }
 .filters__mtoggle { display: none; width: 100%; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); font-weight: 700; margin-bottom: 12px; }
 .filt { padding: 18px 0; border-bottom: 1px solid var(--line-2); }

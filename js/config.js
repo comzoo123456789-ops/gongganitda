@@ -6,4 +6,4 @@
 //   아래에 넣으면 지도 페이지가 실제 네이버 지도(마커)로 표시됩니다.
 //   비워두면 지역별 목록 + 네이버 지도 링크로 표시됩니다.
 // ============================================================
-window.NAVER_MAP_KEY = "";
+window.NAVER_MAP_KEY = "p9oJSk8Q2bftCHmPHVlX6yzPyk1Ityk6XaHMYRkw";

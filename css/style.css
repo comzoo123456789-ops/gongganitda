@@ -309,9 +309,50 @@ em { font-style: normal; }
 .hf-preview { position: sticky; top: calc(var(--header-h) + 20px); }
 .hf-preview__label { display: block; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.16em; color: var(--accent); margin-bottom: 14px; }
 
-/* 헤더 인증 영역 */
-.auth-area { display: flex; align-items: center; gap: 16px; }
+/* 로고 (심볼 + 워드마크) */
+.logo { gap: 8px; }
+.logo__mark { flex-shrink: 0; }
+.logo__wm { font-family: var(--serif); font-weight: 700; letter-spacing: -0.02em; }
+.logo__wm em { color: var(--accent); }
+
+/* 헤더 인증 영역 + 알림 종 */
+.auth-area { display: flex; align-items: center; gap: 14px; }
 .auth-name { font-size: 0.85rem; font-weight: 700; color: var(--ink-2); }
+.bell-wrap { position: relative; }
+.bell { position: relative; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--ink-2); transition: background 0.15s; }
+.bell:hover { background: var(--surface-2); }
+.bell__badge { position: absolute; top: 2px; right: 2px; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 999px; background: var(--accent); color: #fff; font-size: 0.66rem; font-weight: 800; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 2px var(--bg); }
+.bell-dd { position: absolute; top: 100%; right: 0; margin-top: 10px; width: 300px; max-height: 380px; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow-lg); padding: 8px; z-index: 200; }
+.bell-dd__t { font-weight: 800; font-size: 0.8rem; padding: 8px 10px 10px; color: var(--muted); }
+.bell-item { display: block; padding: 11px 12px; border-radius: 10px; font-size: 0.86rem; color: var(--ink-2); line-height: 1.45; }
+.bell-item:hover { background: var(--surface-2); }
+.bell-item.is-unread { background: var(--accent-soft); }
+.bell-item time { display: block; font-size: 0.72rem; color: var(--faint); margin-top: 3px; }
+.bell-empty { padding: 24px; text-align: center; color: var(--faint); font-size: 0.86rem; }
+
+/* 예약 달력 (상세 예약 카드) */
+.cal { border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
+.cal-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.cal-top b { font-size: 0.9rem; font-weight: 800; }
+.cal-nav { width: 28px; height: 28px; border-radius: 8px; font-size: 1.15rem; color: var(--ink-2); }
+.cal-nav:hover:not(:disabled) { background: var(--surface-2); }
+.cal-nav:disabled { color: var(--line); cursor: default; }
+.cal-wd { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; margin-bottom: 4px; }
+.cal-wd span { text-align: center; font-size: 0.7rem; font-weight: 700; color: var(--faint); padding: 4px 0; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.cal-e { aspect-ratio: 1 / 0.9; }
+.cal-d { aspect-ratio: 1 / 0.9; border-radius: 8px; font-size: 0.82rem; font-weight: 600; color: var(--ink-2); display: flex; align-items: center; justify-content: center; }
+.cal-d:hover:not(:disabled) { background: var(--surface-2); }
+.cal-d:disabled { color: var(--line-2); cursor: default; }
+.cal-d.is-sel { background: var(--accent); color: #fff; font-weight: 800; }
+
+/* 마이페이지 상태 배지 · 예약 요청 */
+.mp-book__status.st-amber { color: #a9782b; background: #f6ecd6; }
+.mp-book__status.st-green { color: #3f7a5e; background: #dcefe4; }
+.mp-book__status.st-gray { color: var(--muted); background: var(--surface-2); }
+.mp-tab__badge { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; padding: 0 5px; margin-left: 6px; border-radius: 999px; background: var(--accent); color: #fff; font-size: 0.66rem; font-weight: 800; vertical-align: middle; }
+.mp-req { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 16px 18px; background: var(--surface); border: 1px solid var(--line-2); border-radius: 14px; margin-bottom: 12px; }
+.mp-req__act { display: flex; gap: 8px; flex-shrink: 0; }
 
 /* ============================================================
    목적별 큐레이션
@@ -420,8 +461,10 @@ em { font-style: normal; }
   .hf { padding: 22px; }
   .collections { grid-template-columns: repeat(2, 1fr); gap: 12px; }
   .mp { padding: 24px 18px 70px; }
-  .mp-tabs { overflow-x: auto; scrollbar-width: none; }
-  .auth-area { gap: 12px; }
+  .mp-tabs { overflow-x: auto; scrollbar-width: none; white-space: nowrap; }
+  .auth-area { gap: 10px; }
+  .bell-dd { width: calc(100vw - 32px); right: -8px; }
+  .mp-req { flex-direction: column; align-items: stretch; }
 }
 @media (max-width: 460px) {
   .cats { grid-template-columns: repeat(2, 1fr); }

@@ -8,7 +8,15 @@ if (!auth) { location.href = "login.html"; }
 
 $("#mpTitle").textContent = `${auth ? auth.name : ""} 님`;
 $("#mpSub").textContent = auth && auth.role === "host" ? "호스트 회원 · 공간을 등록하고 예약을 관리하세요." : "일반 회원 · 찜한 공간과 예약 내역을 확인하세요.";
-if (auth && auth.role === "host") document.querySelector('.js-host').hidden = false;
+const isHost = auth && auth.role === "host";
+if (isHost) document.querySelectorAll(".js-host").forEach((e) => (e.hidden = false));
+
+const STATUS = {
+  requested: { t: "승인 대기", c: "amber" },
+  confirmed: { t: "예약 확정", c: "green" },
+  declined: { t: "거절됨", c: "gray" },
+};
+const timeLabel = (b) => `${b.date} · ${String(b.start).padStart(2, "0")}:00~${String(b.start + b.hours).padStart(2, "0")}:00 · ${b.guests}인`;
 
 // 카드
 function cardHTML(s) {
@@ -35,27 +43,67 @@ const favs = all.filter((s) => favIds.includes(+s.id));
 $("#favGrid").innerHTML = favs.map(cardHTML).join("");
 $("#favEmpty").hidden = favs.length > 0;
 
-// 예약 내역
-const books = window.BOOKINGS.list();
-$("#bookList").innerHTML = books.map((b) => `
-  <div class="mp-book" onclick="location.href='space.html?id=${b.spaceId}'">
+// 예약 내역 (내가 게스트로 신청한 것)
+const myBooks = window.BOOKINGS.list().filter((b) => b.guestId === auth.userId);
+$("#bookList").innerHTML = myBooks.map((b) => {
+  const s = STATUS[b.status] || STATUS.requested;
+  return `<div class="mp-book" onclick="location.href='space.html?id=${b.spaceId}'">
     <div class="mp-book__main">
       <div class="mp-book__name">${b.spaceName}</div>
-      <div class="mp-book__meta">${b.date} · ${String(b.start).padStart(2, "0")}:00~${String(b.start + b.hours).padStart(2, "0")}:00 · ${b.guests}인</div>
+      <div class="mp-book__meta">${timeLabel(b)}</div>
     </div>
     <div class="mp-book__right">
-      <span class="mp-book__status">예약 요청</span>
+      <span class="mp-book__status st-${s.c}">${s.t}</span>
       <span class="mp-book__price">${won(b.total)}원</span>
     </div>
-  </div>`).join("");
-$("#bookEmpty").hidden = books.length > 0;
+  </div>`;
+}).join("");
+$("#bookEmpty").hidden = myBooks.length > 0;
 
-// 내 등록 공간 (호스트)
-if (auth && auth.role === "host") {
+// 호스트: 받은 예약 요청 + 내 등록 공간
+if (isHost) {
   let mine = [];
   try { mine = JSON.parse(localStorage.getItem("gi_spaces") || "[]"); } catch (e) {}
   $("#mineGrid").innerHTML = mine.map(cardHTML).join("");
   $("#mineEmpty").hidden = mine.length > 0;
+
+  function renderReqs() {
+    const reqs = window.BOOKINGS.list().filter((b) => b.hostId === auth.userId);
+    const pending = reqs.filter((b) => b.status === "requested").length;
+    const badge = $("#reqBadge");
+    if (badge) { badge.textContent = pending; badge.hidden = pending === 0; }
+    $("#reqList").innerHTML = reqs.map((b) => {
+      const s = STATUS[b.status] || STATUS.requested;
+      const actions = b.status === "requested"
+        ? `<div class="mp-req__act"><button class="btn btn--accent btn--sm" data-accept="${b.id}">수락</button><button class="btn btn--outline btn--sm" data-decline="${b.id}">거절</button></div>`
+        : `<span class="mp-book__status st-${s.c}">${s.t}</span>`;
+      return `<div class="mp-req">
+        <div class="mp-book__main">
+          <div class="mp-book__name">${b.spaceName}</div>
+          <div class="mp-book__meta">👤 ${b.guestName || "게스트"} · ${timeLabel(b)} · ${won(b.total)}원</div>
+        </div>
+        ${actions}
+      </div>`;
+    }).join("");
+    $("#reqEmpty").hidden = reqs.length > 0;
+  }
+  renderReqs();
+
+  $("#reqList").addEventListener("click", (e) => {
+    const acc = e.target.closest("[data-accept]"), dec = e.target.closest("[data-decline]");
+    const id = acc ? acc.dataset.accept : dec ? dec.dataset.decline : null;
+    if (!id) return;
+    const b = window.BOOKINGS.list().find((x) => x.id === id);
+    if (!b) return;
+    if (acc) {
+      window.BOOKINGS.update(id, { status: "confirmed" });
+      window.NOTIF.add({ forUser: b.guestId, text: `예약이 확정되었어요 · ${b.spaceName} (${b.date})`, link: "mypage.html" });
+    } else {
+      window.BOOKINGS.update(id, { status: "declined" });
+      window.NOTIF.add({ forUser: b.guestId, text: `예약이 거절되었어요 · ${b.spaceName} (${b.date})`, link: "mypage.html" });
+    }
+    renderReqs();
+  });
 }
 
 // 탭

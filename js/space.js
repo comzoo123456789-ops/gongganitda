@@ -110,8 +110,8 @@ $("#sp").innerHTML = `
       <div class="book">
         <div class="book__price"><strong>${won(S.price)}원</strong><span>/ 시간</span></div>
         <div class="book__field">
-          <label class="book__label">날짜</label>
-          <input type="date" id="bkDate" />
+          <label class="book__label">날짜 선택</label>
+          <div class="cal" id="bkCal"></div>
         </div>
         <div class="book__row">
           <div class="book__field">
@@ -158,31 +158,70 @@ $("#relGrid").innerHTML = galleryExtra.map((s) => {
   </article>`;
 }).join("");
 
-// ---------- 예약 위젯 ----------
-const bkDate = $("#bkDate"), bkStart = $("#bkStart"), bkHours = $("#bkHours"), bkGuests = $("#bkGuests");
-const today = new Date(); today.setDate(today.getDate() + 1);
-bkDate.value = today.toISOString().slice(0, 10);
-bkDate.min = new Date().toISOString().slice(0, 10);
-for (let h = 9; h <= 21; h++) bkStart.insertAdjacentHTML("beforeend", `<option value="${h}">${String(h).padStart(2, "0")}:00</option>`);
+// ---------- 예약 위젯 (달력 + 시간, 중복 방지) ----------
+const bkStart = $("#bkStart"), bkHours = $("#bkHours"), bkGuests = $("#bkGuests");
+const pad = (n) => String(n).padStart(2, "0");
+const fmtD = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const todayD = new Date(); todayD.setHours(0, 0, 0, 0);
+let calMonth = new Date(todayD.getFullYear(), todayD.getMonth(), 1);
+let selDate = fmtD(new Date(todayD.getTime() + 86400000)); // 내일
+
+for (let h = 9; h <= 21; h++) bkStart.insertAdjacentHTML("beforeend", `<option value="${h}">${pad(h)}:00</option>`);
 bkStart.value = 14;
 for (let h = 1; h <= 8; h++) bkHours.insertAdjacentHTML("beforeend", `<option value="${h}">${h}시간</option>`);
 bkHours.value = 2;
 
+// 이미 예약된 시간(같은 공간·같은 날짜) → 중복 방지
+function occupiedHours(dateStr) {
+  const occ = new Set();
+  window.BOOKINGS.list().filter((b) => b.spaceId === S.id && b.date === dateStr && b.status !== "declined")
+    .forEach((b) => { for (let h = b.start; h < b.start + b.hours; h++) occ.add(h); });
+  return occ;
+}
+const WD = ["일", "월", "화", "수", "목", "금", "토"];
+function renderCal() {
+  const y = calMonth.getFullYear(), m = calMonth.getMonth();
+  const startWd = new Date(y, m, 1).getDay();
+  const days = new Date(y, m + 1, 0).getDate();
+  const canPrev = calMonth > new Date(todayD.getFullYear(), todayD.getMonth(), 1);
+  const canNext = calMonth < new Date(todayD.getFullYear(), todayD.getMonth() + 2, 1);
+  let cells = "";
+  for (let i = 0; i < startWd; i++) cells += `<span class="cal-e"></span>`;
+  for (let d = 1; d <= days; d++) {
+    const dt = new Date(y, m, d); const ds = fmtD(dt); const past = dt < todayD;
+    cells += `<button type="button" class="cal-d ${ds === selDate ? "is-sel" : ""}" data-d="${ds}" ${past ? "disabled" : ""}>${d}</button>`;
+  }
+  $("#bkCal").innerHTML =
+    `<div class="cal-top"><button type="button" class="cal-nav" data-cal="-1" ${canPrev ? "" : "disabled"}>‹</button><b>${y}년 ${m + 1}월</b><button type="button" class="cal-nav" data-cal="1" ${canNext ? "" : "disabled"}>›</button></div>
+     <div class="cal-wd">${WD.map((w) => `<span>${w}</span>`).join("")}</div>
+     <div class="cal-grid">${cells}</div>`;
+}
+function refreshSlots() {
+  const occ = occupiedHours(selDate);
+  [...bkStart.options].forEach((o) => { o.disabled = occ.has(+o.value); });
+  if (bkStart.selectedOptions[0] && bkStart.selectedOptions[0].disabled) { const av = [...bkStart.options].find((o) => !o.disabled); if (av) bkStart.value = av.value; }
+  const start = +bkStart.value;
+  [...bkHours.options].forEach((o) => { const h = +o.value; let ok = start + h <= 22; for (let x = start; x < start + h; x++) if (occ.has(x)) ok = false; o.disabled = !ok; });
+  if (bkHours.selectedOptions[0] && bkHours.selectedOptions[0].disabled) { const av = [...bkHours.options].find((o) => !o.disabled); if (av) bkHours.value = av.value; }
+  recalc();
+}
 function recalc() {
   const hours = +bkHours.value;
-  const sub = S.price * hours;
-  const fee = Math.round(sub * 0.05);
-  const start = +bkStart.value, end = start + hours;
+  const sub = S.price * hours, fee = Math.round(sub * 0.05);
   $("#bkCalc").textContent = `${won(S.price)}원 × ${hours}시간`;
   $("#bkSub").textContent = won(sub) + "원";
   $("#bkFee").textContent = won(fee) + "원";
   $("#bkTotal").textContent = won(sub + fee) + "원";
-  // 마감 시간 초과 방지
-  [...bkHours.options].forEach((o) => (o.disabled = start + +o.value > 23));
 }
-bkStart.addEventListener("change", recalc);
+$("#bkCal").addEventListener("click", (e) => {
+  const nav = e.target.closest(".cal-nav");
+  if (nav && !nav.disabled) { calMonth = new Date(calMonth.getFullYear(), calMonth.getMonth() + +nav.dataset.cal, 1); renderCal(); return; }
+  const day = e.target.closest(".cal-d");
+  if (day && !day.disabled) { selDate = day.dataset.d; renderCal(); refreshSlots(); }
+});
+bkStart.addEventListener("change", refreshSlots);
 bkHours.addEventListener("change", recalc);
-recalc();
+renderCal(); refreshSlots();
 
 // 토스트
 let toastT;
@@ -190,12 +229,16 @@ function toast(msg) { const t = $("#toast"); t.textContent = msg; t.hidden = fal
 
 $("#bkGo").addEventListener("click", () => {
   const start = +bkStart.value, hours = +bkHours.value, g = +bkGuests.value;
+  if (bkStart.selectedOptions[0] && bkStart.selectedOptions[0].disabled) { toast("선택한 시간은 예약이 찼어요"); return; }
   if (g > S.capacity) { toast(`최대 ${S.capacity}인까지 이용 가능해요`); return; }
-  if (!window.AUTH || !window.AUTH.get()) { toast("로그인 후 예약할 수 있어요"); setTimeout(() => (location.href = "login.html"), 900); return; }
+  const a = window.AUTH.get();
+  if (!a) { toast("로그인 후 예약할 수 있어요"); setTimeout(() => (location.href = "login.html"), 900); return; }
   const sub = S.price * hours, fee = Math.round(sub * 0.05), total = sub + fee;
-  window.BOOKINGS.add({ spaceId: S.id, spaceName: S.name, date: bkDate.value, start, hours, guests: g, total, ts: Date.now() });
-  toast("예약 요청 완료! 마이페이지에서 확인하세요");
-  setTimeout(() => (location.href = "mypage.html"), 1000);
+  const hostId = S.ownerId || "host";
+  window.BOOKINGS.add({ id: "b" + Date.now(), spaceId: S.id, spaceName: S.name, hostId, guestId: a.userId, guestName: a.name, date: selDate, start, hours, guests: g, total, status: "requested", ts: Date.now() });
+  window.NOTIF.add({ forUser: hostId, text: `새 예약 요청 · ${S.name} (${selDate} ${pad(start)}:00)`, link: "mypage.html" });
+  toast("예약을 요청했어요! 호스트 확인을 기다려 주세요");
+  setTimeout(() => (location.href = "mypage.html"), 1100);
 });
 
 // 햄버거

@@ -74,6 +74,7 @@ $("#hostForm").addEventListener("submit", (e) => {
     id: Date.now(),
     name, cat, region, price, capacity,
     rating: 0, reviews: 0, now: true, host: true,
+    ownerId: (window.AUTH && window.AUTH.get() ? window.AUTH.get().userId : "host"),
     tags: checkedAmen(),
     desc: val("#hDesc"),
     photo: val("#hPhoto"),

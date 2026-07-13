@@ -10,6 +10,7 @@ const liked = new Set();
 const AMENITIES = ["주차", "와이파이", "빔프로젝터", "취사", "음향", "방음", "화이트보드", "조명"];
 
 // ---------- 필터 UI 채우기 ----------
+$("#fRegion").innerHTML = `<option value="">전국</option>` + REGIONS.map((r) => `<option value="${r}">${r}</option>`).join("");
 $("#fType").innerHTML =
   `<label class="filt__chk"><input type="radio" name="type" value="" checked />전체</label>` +
   CATEGORIES.map((c) => `<label class="filt__chk"><input type="radio" name="type" value="${c.id}" />${c.label}</label>`).join("");

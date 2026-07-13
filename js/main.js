@@ -12,6 +12,7 @@ document.querySelectorAll(".searchbar__input[data-ic]").forEach((el) => {
 });
 $("#searchbar .searchbar__go").innerHTML = iconSVG("search", 20);
 $("#sfType").insertAdjacentHTML("beforeend", CATEGORIES.map((c) => `<option value="${c.id}">${c.label}</option>`).join(""));
+$("#sfRegion").insertAdjacentHTML("beforeend", REGIONS.map((r) => `<option value="${r}">${r}</option>`).join(""));
 
 // 히어로 통계
 (function heroStats() {

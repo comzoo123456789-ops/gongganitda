@@ -110,13 +110,14 @@ em { font-style: normal; }
 .hero__bg { background-position: center 42%; }
 
 /* 라이트 배경 검색 바 (카테고리 위) */
-.section--search { padding-top: 44px; padding-bottom: 48px; }
-.searchbar--light { max-width: none; box-shadow: var(--shadow-sm); border: 1px solid var(--line); margin-bottom: 26px; }
-.section--browse { padding-top: 30px; }
+.section--search { padding-top: 34px; padding-bottom: 20px; }
+.searchbar--light { max-width: none; box-shadow: var(--shadow-sm); border: 1px solid var(--line); margin-bottom: 18px; }
+.section--browse { padding-top: 14px; }
+.host { margin-top: 8px; }
 
 /* ================= 섹션 공통 ================= */
-.section { max-width: 1220px; margin: 0 auto; padding: 86px 32px; }
-.section__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; margin-bottom: 34px; flex-wrap: wrap; }
+.section { max-width: 1220px; margin: 0 auto; padding: 52px 32px; }
+.section__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; margin-bottom: 22px; flex-wrap: wrap; }
 .section__kicker { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.24em; color: var(--accent); display: block; margin-bottom: 10px; }
 .section__title { font-family: var(--serif); font-size: 2rem; font-weight: 600; letter-spacing: -0.025em; }
 .section__sub { font-size: 0.92rem; color: var(--muted); }

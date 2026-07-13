@@ -22,6 +22,9 @@ function thumbUrl(s, w, h) {
 }
 const spaceImg = thumbUrl; // 하위호환
 
+// 전국 지역 (광역시·도)
+const REGIONS = ["서울", "경기", "인천", "강원", "대전", "세종", "충북", "충남", "부산", "대구", "울산", "경북", "경남", "광주", "전북", "전남", "제주"];
+
 // 호스트가 등록한 공간(localStorage) + 샘플 공간 병합
 function getAllSpaces() {
   let mine = [];

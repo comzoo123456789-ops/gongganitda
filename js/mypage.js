@@ -36,7 +36,7 @@ function cardHTML(s) {
     <div class="sp-card__thumb" style="background:linear-gradient(135deg,${g[0]},${g[1]})">${img ? `<img src="${img}" alt="${s.name}" loading="lazy" onerror="this.remove()" />` : ""}</div>
     <div class="sp-card__body">
       <span class="sp-card__cat">${c.label}</span><h3 class="sp-card__name">${s.name}</h3>
-      <div class="sp-card__meta"><span>${iconSVG("pin", 14)}${s.region.replace("서울 ", "")}</span><span>${iconSVG("users", 14)}~${s.capacity}인</span></div>
+      <div class="sp-card__meta"><span class="sp-card__loc">${iconSVG("pin", 14)}<span class="sp-card__loctxt">${regionShort(s.region)}</span></span><span class="sp-card__cap">${iconSVG("users", 14)}~${s.capacity}인</span></div>
       <div class="sp-card__foot"><span class="sp-card__price">${won(s.price)}<span>원 / 시간</span></span><span class="sp-card__rating">${iconSVG("star", 14)}${s.rating || "신규"}</span></div>
     </div>
   </article>`;

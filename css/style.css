@@ -155,13 +155,16 @@ em { font-style: normal; }
 .sp-card__body { padding: 16px 4px 6px; display: flex; flex-direction: column; gap: 5px; flex: 1; }
 .sp-card__cat { font-size: 0.72rem; font-weight: 800; color: var(--accent); letter-spacing: 0.04em; }
 .sp-card__name { font-size: 1.05rem; font-weight: 800; color: var(--ink); letter-spacing: -0.02em; line-height: 1.35; }
-.sp-card__meta { display: flex; align-items: center; gap: 12px; font-size: 0.82rem; color: var(--muted); }
-.sp-card__meta .ic { width: 14px; height: 14px; color: var(--faint); }
+.sp-card__meta { display: flex; align-items: center; gap: 10px; font-size: 0.82rem; color: var(--muted); flex-wrap: nowrap; }
+.sp-card__meta .ic { width: 14px; height: 14px; color: var(--faint); flex-shrink: 0; }
 .sp-card__meta span { display: inline-flex; align-items: center; gap: 4px; }
-.sp-card__foot { display: flex; align-items: baseline; justify-content: space-between; margin-top: 8px; }
-.sp-card__price { font-family: var(--serif); font-size: 1.15rem; font-weight: 600; color: var(--ink); }
-.sp-card__price span { font-family: "Pretendard", sans-serif; font-size: 0.76rem; font-weight: 600; color: var(--muted); }
-.sp-card__rating { display: inline-flex; align-items: center; gap: 4px; font-size: 0.82rem; font-weight: 700; color: var(--ink-2); }
+.sp-card__loc { flex: 1; min-width: 0; }
+.sp-card__loctxt { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sp-card__cap { flex-shrink: 0; }
+.sp-card__foot { display: flex; align-items: baseline; justify-content: space-between; gap: 6px 8px; margin-top: 10px; flex-wrap: wrap; }
+.sp-card__price { font-family: "Pretendard", sans-serif; font-size: 1.12rem; font-weight: 800; color: var(--ink); letter-spacing: -0.02em; white-space: nowrap; }
+.sp-card__price span { font-size: 0.76rem; font-weight: 600; color: var(--muted); letter-spacing: 0; }
+.sp-card__rating { display: inline-flex; align-items: center; gap: 4px; font-size: 0.82rem; font-weight: 700; color: var(--ink-2); flex-shrink: 0; white-space: nowrap; }
 .sp-card__rating .ic { width: 14px; height: 14px; color: var(--gold); fill: var(--gold); }
 .sp-card__rating em { color: var(--faint); font-weight: 500; }
 
@@ -600,7 +603,10 @@ em { font-style: normal; }
   .searchbar__go { width: 100%; height: 50px; margin-top: 6px; }
   .hero__stats { gap: 30px; }
   .section { padding: 56px 20px; }
-  .grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .grid { grid-template-columns: repeat(2, 1fr); gap: 18px; }
+  .sp-card__body { padding: 15px 6px 8px; }
+  .sp-card__name { font-size: 1.02rem; }
+  .sp-card__meta { font-size: 0.83rem; }
   .cats { grid-template-columns: repeat(3, 1fr); }
   .flag, .host { padding: 0 20px; }
   .flag__body { padding: 34px 26px; }

@@ -41,13 +41,15 @@
       <button class="mp-tab js-host" data-tab="reqs" hidden>예약 요청<span class="mp-tab__badge" id="reqBadge" hidden></span></button>
       <button class="mp-tab" data-tab="fav">찜한 공간</button>
       <button class="mp-tab js-host" data-tab="mine" hidden>내 등록 공간</button>
-      <button class="mp-tab js-host" data-tab="disc" hidden>수익 · 할인</button>
+      <button class="mp-tab js-host" data-tab="settle" hidden>정산</button>
+      <button class="mp-tab js-host" data-tab="disc" hidden>공간 관리</button>
     </nav>
 
     <section class="mp-panel" data-panel="book"><div id="bookList"></div><div class="mp-empty" id="bookEmpty" hidden>아직 예약 내역이 없어요.</div></section>
     <section class="mp-panel" data-panel="fav" hidden><div class="grid" id="favGrid"></div><div class="mp-empty" id="favEmpty" hidden>아직 찜한 공간이 없어요. 마음에 드는 공간에 하트를 눌러보세요.</div></section>
     <section class="mp-panel" data-panel="reqs" hidden><div id="reqList"></div><div class="mp-empty" id="reqEmpty" hidden>받은 예약 요청이 없어요.</div></section>
     <section class="mp-panel" data-panel="mine" hidden><div class="grid" id="mineGrid"></div><div class="mp-empty" id="mineEmpty" hidden>아직 등록한 공간이 없어요. <a href="host.html" style="color:var(--accent);font-weight:700">공간 등록하기</a></div></section>
+    <section class="mp-panel" data-panel="settle" hidden><div id="settleWrap"></div></section>
     <section class="mp-panel" data-panel="disc" hidden><div id="discWrap"></div></section>
   </main>
 

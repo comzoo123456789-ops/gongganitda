@@ -22,6 +22,10 @@ const pad = (n) => String(n).padStart(2, "0");
 const slot = (b) => `${b.date} ${pad(b.start)}:00~${pad(b.start + b.hours)}:00`;
 const timeLabel = (b) => `${b.date} · ${pad(b.start)}:00~${pad(b.start + b.hours)}:00 · ${b.guests}인`;
 const unitOf = (b) => b.price || Math.round(b.total / (b.hours * 1.05));
+const _t0 = new Date(); _t0.setHours(0, 0, 0, 0);
+const todayStr = `${_t0.getFullYear()}-${pad(_t0.getMonth() + 1)}-${pad(_t0.getDate())}`;
+function daysUntil(d) { const x = new Date(d); x.setHours(0, 0, 0, 0); return Math.round((x - _t0) / 86400000); }
+function ddayLabel(d) { const n = daysUntil(d); if (n < 0) return ""; return n === 0 ? "오늘" : "D-" + n; }
 
 // ---------- 공간 카드 (찜/내공간) ----------
 function cardHTML(s) {
@@ -57,6 +61,11 @@ function actionBtns(b, asHost) {
     btns.push(`<button class="btn btn--soft btn--sm" data-resched="${b.id}">일정 변경</button>`);
     btns.push(`<button class="btn btn--danger btn--sm" data-cancel="${b.id}">예약 취소</button>`);
   }
+  // 게스트 전용: 이용권 / 후기
+  if (!asHost && b.status === "confirmed") {
+    if (daysUntil(b.date) >= 0) btns.push(`<button class="btn btn--soft btn--sm" data-ticket="${b.id}">🎫 이용권</button>`);
+    else btns.push(`<button class="btn btn--accent btn--sm" data-review="${b.id}">후기 쓰기</button>`);
+  }
   return btns.length ? `<div class="mp-bk__act">${btns.join("")}</div>` : "";
 }
 function bookingCard(b, asHost) {
@@ -64,15 +73,20 @@ function bookingCard(b, asHost) {
   const un = window.CHAT.unread(me, b.id);
   const changed = b.reschedFrom && b.status === "requested"
     ? `<div class="mp-bk__change">🔁 일정 변경 요청<br /><s>${slot(b.reschedFrom)}</s> → <b>${slot(b)}</b></div>` : "";
+  const dd = (!asHost && (b.status === "confirmed" || b.status === "requested")) ? ddayLabel(b.date) : "";
+  const hostSub = asHost ? `<div class="mp-bk__sub">요청 ${window.timeago(b.ts)} · 예상 정산 <b>${won(window.settleOf(b))}원</b></div>` : "";
+  const policy = (!asHost && b.status === "confirmed") ? `<div class="mp-bk__policy">취소·환불: 3일 전 100% · 1~2일 전 50% · 당일 불가</div>` : "";
   return `<div class="mp-bk ${un ? "has-unread" : ""}">
     <div class="mp-bk__top">
       <div class="mp-bk__info" onclick="location.href='space.html?id=${b.spaceId}'">
         <div class="mp-book__name">${b.spaceName}</div>
         <div class="mp-book__meta">${asHost ? `👤 ${b.guestName || "게스트"} · ` : ""}${timeLabel(b)} · ${won(b.total)}원</div>
       </div>
-      <span class="mp-book__status st-${s.c}">${s.t}</span>
+      <div class="mp-bk__right">${dd ? `<span class="mp-dday">${dd}</span>` : ""}<span class="mp-book__status st-${s.c}">${s.t}</span></div>
     </div>
+    ${hostSub}
     ${changed}
+    ${policy}
     ${actionBtns(b, asHost)}
   </div>`;
 }
@@ -108,16 +122,57 @@ function notifyOther(b, title, sub, link) {
   window.NOTIF.add({ forUser: other, title, sub, link: link || "mypage.html" });
 }
 document.addEventListener("click", (e) => {
-  const t = e.target.closest("[data-accept],[data-decline],[data-cancel],[data-resched],[data-chat]");
+  const t = e.target.closest("[data-accept],[data-decline],[data-cancel],[data-resched],[data-chat],[data-ticket],[data-review]");
   if (!t) return;
-  const id = t.dataset.accept || t.dataset.decline || t.dataset.cancel || t.dataset.resched || t.dataset.chat;
+  const id = t.dataset.accept || t.dataset.decline || t.dataset.cancel || t.dataset.resched || t.dataset.chat || t.dataset.ticket || t.dataset.review;
   const b = window.BOOKINGS.find(id); if (!b) return;
   if (t.dataset.accept) { window.BOOKINGS.update(id, { status: "confirmed", reschedFrom: null }); notifyOther(b, b.spaceName, `예약이 확정되었어요 · ${slot(b)}`); toast("예약을 수락했어요"); renderAll(); }
   else if (t.dataset.decline) { window.BOOKINGS.update(id, { status: "declined", reschedFrom: null }); notifyOther(b, b.spaceName, `예약이 거절되었어요 · ${b.date}`); toast("예약을 거절했어요"); renderAll(); }
   else if (t.dataset.cancel) { if (!confirm("예약을 취소할까요?")) return; window.BOOKINGS.update(id, { status: "cancelled" }); notifyOther(b, b.spaceName, `예약이 취소되었어요 · ${b.date}`); toast("예약을 취소했어요"); renderAll(); }
   else if (t.dataset.resched) openResched(b);
   else if (t.dataset.chat) openChat(b);
+  else if (t.dataset.ticket) openTicket(b);
+  else if (t.dataset.review) openReview(b);
 });
+
+// 이용권(입장 코드)
+function fauxQR(seed) {
+  let h = 2166136261; for (let i = 0; i < seed.length; i++) { h ^= seed.charCodeAt(i); h = Math.imul(h, 16777619); }
+  const N = 13; let cells = "";
+  for (let i = 0; i < N * N; i++) { h = Math.imul(h ^ (h >>> 13), 16777619); cells += `<span class="${(h >>> 5) & 1 ? "on" : ""}"></span>`; }
+  return `<div class="qr" style="grid-template-columns:repeat(${N},1fr)">${cells}</div>`;
+}
+function openTicket(b) {
+  modal.hidden = false;
+  const code = ("GI" + b.id).toUpperCase().slice(0, 12);
+  modalCard.innerHTML = `
+    <div class="modal__head"><b>🎫 이용권</b><button class="modal__x" data-mclose>✕</button></div>
+    <div class="ticket">
+      ${fauxQR(b.id)}
+      <div class="ticket__code">${code}</div>
+      <div class="ticket__info"><b>${b.spaceName}</b><br />${slot(b)} · ${b.guests}인</div>
+      <div class="ticket__note">입장 시 이 화면을 호스트에게 제시하세요. (데모)</div>
+    </div>`;
+}
+// 후기 작성 (이용 완료 예약)
+function openReview(b) {
+  modal.hidden = false;
+  modalCard.innerHTML = `
+    <div class="modal__head"><b>후기 쓰기</b><button class="modal__x" data-mclose>✕</button></div>
+    <p class="modal__sub">${b.spaceName} · ${b.date}</p>
+    <div class="sp-revstars" id="rvStars">${[1, 2, 3, 4, 5].map((n) => `<button type="button" data-star="${n}">★</button>`).join("")}</div>
+    <textarea id="rvText" rows="3" placeholder="이용 경험을 남겨주세요" style="width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:10px;font-family:inherit;resize:vertical;margin:10px 0"></textarea>
+    <button class="btn btn--accent btn--block" id="rvSave">등록</button>`;
+  let star = 5;
+  const paint = () => modalCard.querySelectorAll("#rvStars button").forEach((x, i) => x.classList.toggle("on", i < star));
+  paint();
+  $("#rvStars").addEventListener("click", (e) => { const x = e.target.closest("[data-star]"); if (x) { star = +x.dataset.star; paint(); } });
+  $("#rvSave").addEventListener("click", () => {
+    const txt = $("#rvText").value.trim(); if (!txt) { toast("후기 내용을 입력해주세요"); return; }
+    window.REVIEWS.add({ spaceId: b.spaceId, userId: me, name: window.AUTH.displayName(auth), rating: star, text: txt });
+    closeModal(); toast("후기가 등록되었어요! 감사합니다");
+  });
+}
 
 // ---------- 모달 ----------
 const modal = $("#modal"), modalCard = $("#modalCard");
@@ -212,46 +267,84 @@ $("#mpEdit").addEventListener("click", () => {
   });
 });
 
-// ---------- 호스트: 수익·할인 관리 ----------
-function renderDisc() {
+// ---------- 호스트: 공간 관리 (할인 · 가용성 · 예약설정) ----------
+function renderManage() {
   const wrap = $("#discWrap"); if (!wrap) return;
   const rooms = getAllSpaces();
   wrap.innerHTML = `
-    <h2 class="sp-sec__title" style="margin-bottom:6px">반짝할인 · 쿠폰 설정</h2>
-    <p class="mp__sub" style="margin-bottom:18px">공간을 골라 할인을 설정하세요. <b>반짝할인</b>은 목록·상세 가격에 즉시 반영되고, <b>쿠폰</b>은 예약 시 코드 입력으로 적용됩니다.</p>
-    <div class="book__field"><label class="book__label">공간 선택</label><select id="dcRoom">${rooms.map((r) => `<option value="${r.id}">${r.name}</option>`).join("")}</select></div>
+    <div class="book__field"><label class="book__label">공간 선택</label><select id="mgRoom">${rooms.map((r) => `<option value="${r.id}">${r.name}</option>`).join("")}</select></div>
+
+    <h3 class="mg-h">⚡ 반짝할인 · 🎟️ 쿠폰</h3>
     <div class="disc-grid">
-      <div class="disc-card">
-        <h3 class="disc-card__t">⚡ 반짝할인</h3>
+      <div class="disc-card"><h3 class="disc-card__t">⚡ 반짝할인</h3>
         <label class="book__label">할인율 (%)</label><input type="number" id="dcFlashPct" min="0" max="70" placeholder="예: 20" />
         <div class="book__row"><div class="book__field"><label class="book__label">시작일</label><input type="date" id="dcFlashFrom" /></div><div class="book__field"><label class="book__label">종료일</label><input type="date" id="dcFlashTo" /></div></div>
       </div>
-      <div class="disc-card">
-        <h3 class="disc-card__t">🎟️ 쿠폰</h3>
+      <div class="disc-card"><h3 class="disc-card__t">🎟️ 쿠폰</h3>
         <label class="book__label">쿠폰 코드</label><input type="text" id="dcCoupCode" placeholder="예: WELCOME10" />
         <label class="book__label">할인율 (%)</label><input type="number" id="dcCoupPct" min="0" max="70" placeholder="예: 10" />
         <div class="book__row"><div class="book__field"><label class="book__label">시작일</label><input type="date" id="dcCoupFrom" /></div><div class="book__field"><label class="book__label">종료일</label><input type="date" id="dcCoupTo" /></div></div>
       </div>
     </div>
-    <button class="btn btn--accent btn--lg" id="dcSave">할인 저장</button>
-    <p class="hf-note" id="dcMsg"></p>`;
-  const load = () => {
-    const d = window.DISCOUNT.get(+$("#dcRoom").value); const f = d.flash || {}, c = d.coupon || {};
-    $("#dcFlashPct").value = f.pct || ""; $("#dcFlashFrom").value = f.from || ""; $("#dcFlashTo").value = f.to || "";
-    $("#dcCoupCode").value = c.code || ""; $("#dcCoupPct").value = c.pct || ""; $("#dcCoupFrom").value = c.from || ""; $("#dcCoupTo").value = c.to || "";
-  };
-  load();
-  $("#dcRoom").addEventListener("change", load);
+    <button class="btn btn--accent" id="dcSave">할인 저장</button>
+
+    <h3 class="mg-h">🚫 가용성 차단</h3>
+    <p class="mp__sub" style="margin-bottom:10px">예약을 받지 않을 날짜를 추가하세요. 상세 달력에서 자동 비활성됩니다.</p>
+    <div class="book__row" style="align-items:flex-end">
+      <div class="book__field" style="flex:1"><label class="book__label">차단할 날짜</label><input type="date" id="blkDate" min="${todayStr}" /></div>
+      <button class="btn btn--soft" id="blkAdd">차단 추가</button>
+    </div>
+    <div class="blk-list" id="blkList"></div>
+
+    <h3 class="mg-h">⚙️ 예약 설정</h3>
+    <label class="mg-check"><input type="checkbox" id="stAuto" /><span>자동 수락 — 승인 없이 즉시 예약 확정</span></label>
+    <div class="book__row">
+      <div class="book__field"><label class="book__label">최소 시간</label><input type="number" id="stMin" min="1" max="12" /></div>
+      <div class="book__field"><label class="book__label">최대 시간</label><input type="number" id="stMax" min="1" max="12" /></div>
+      <div class="book__field"><label class="book__label">청소 버퍼(시간)</label><input type="number" id="stBuf" min="0" max="4" /></div>
+    </div>
+    <button class="btn btn--accent" id="stSave">설정 저장</button>
+    <p class="hf-note" id="mgMsg"></p>`;
+
+  const rid = () => +$("#mgRoom").value;
+  const loadDisc = () => { const d = window.DISCOUNT.get(rid()), f = d.flash || {}, c = d.coupon || {}; $("#dcFlashPct").value = f.pct || ""; $("#dcFlashFrom").value = f.from || ""; $("#dcFlashTo").value = f.to || ""; $("#dcCoupCode").value = c.code || ""; $("#dcCoupPct").value = c.pct || ""; $("#dcCoupFrom").value = c.from || ""; $("#dcCoupTo").value = c.to || ""; };
+  const loadBlk = () => { const l = window.BLOCKS.get(rid()).slice().sort(); $("#blkList").innerHTML = l.length ? l.map((d) => `<span class="blk-chip">${d}<button data-unblk="${d}">✕</button></span>`).join("") : `<span class="mp__sub">차단된 날짜가 없어요.</span>`; };
+  const loadSet = () => { const s = window.SETTINGS.get(rid()); $("#stAuto").checked = !!s.autoAccept; $("#stMin").value = s.minH; $("#stMax").value = s.maxH; $("#stBuf").value = s.buffer; };
+  const loadAll = () => { loadDisc(); loadBlk(); loadSet(); };
+  loadAll();
+  $("#mgRoom").addEventListener("change", loadAll);
   $("#dcSave").addEventListener("click", () => {
-    const sid = +$("#dcRoom").value;
     const flash = $("#dcFlashPct").value ? { pct: +$("#dcFlashPct").value, from: $("#dcFlashFrom").value, to: $("#dcFlashTo").value } : null;
     const coupon = ($("#dcCoupCode").value && $("#dcCoupPct").value) ? { code: $("#dcCoupCode").value.trim(), pct: +$("#dcCoupPct").value, from: $("#dcCoupFrom").value, to: $("#dcCoupTo").value } : null;
-    window.DISCOUNT.set(sid, { flash, coupon });
-    $("#dcMsg").textContent = "저장되었어요. 목록·상세 가격에 반영됩니다.";
-    toast("할인 설정을 저장했어요");
+    window.DISCOUNT.set(rid(), { flash, coupon }); $("#mgMsg").textContent = "할인 저장됨 · 목록·상세에 반영됩니다."; toast("할인을 저장했어요");
+  });
+  $("#blkAdd").addEventListener("click", () => { const d = $("#blkDate").value; if (!d) return; if (!window.BLOCKS.has(rid(), d)) window.BLOCKS.toggle(rid(), d); loadBlk(); toast("날짜를 차단했어요"); });
+  $("#blkList").addEventListener("click", (e) => { const x = e.target.closest("[data-unblk]"); if (!x) return; window.BLOCKS.toggle(rid(), x.dataset.unblk); loadBlk(); });
+  $("#stSave").addEventListener("click", () => {
+    window.SETTINGS.set(rid(), { autoAccept: $("#stAuto").checked, minH: Math.max(1, +$("#stMin").value || 1), maxH: Math.max(1, +$("#stMax").value || 8), buffer: Math.max(0, +$("#stBuf").value || 0) });
+    $("#mgMsg").textContent = "예약 설정 저장됨"; toast("설정을 저장했어요");
   });
 }
-if (isHost) renderDisc();
+// ---------- 호스트: 정산 요약 ----------
+function renderSettle() {
+  const wrap = $("#settleWrap"); if (!wrap) return;
+  const now = new Date(); const ym = `${now.getFullYear()}-${pad(now.getMonth() + 1)}`;
+  const mine = window.BOOKINGS.list().filter((b) => b.hostId === me);
+  const monthC = mine.filter((b) => b.status === "confirmed" && (b.date || "").startsWith(ym));
+  const gross = monthC.reduce((a, b) => a + Math.round(b.total / 1.05), 0);
+  const fee = Math.round(gross * window.HOST_FEE), settle = gross - fee;
+  const pending = mine.filter((b) => b.status === "requested").length;
+  wrap.innerHTML = `
+    <h2 class="sp-sec__title" style="margin-bottom:14px">${now.getMonth() + 1}월 정산 요약</h2>
+    <div class="settle-kpis">
+      <div class="settle-kpi"><strong>${monthC.length}건</strong><span>이번 달 확정</span></div>
+      <div class="settle-kpi"><strong>${won(gross)}원</strong><span>총 매출</span></div>
+      <div class="settle-kpi"><strong>-${won(fee)}원</strong><span>수수료 ${window.HOST_FEE * 100}%</span></div>
+      <div class="settle-kpi settle-kpi--hl"><strong>${won(settle)}원</strong><span>예상 정산액</span></div>
+    </div>
+    <p class="mp__sub" style="margin-top:14px">승인 대기 ${pending}건 · 확정 예약만 매출·정산에 반영됩니다. (데모)</p>`;
+}
+if (isHost) { renderManage(); renderSettle(); }
 
 // 탭
 $("#mpTabs").addEventListener("click", (e) => {

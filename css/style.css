@@ -496,6 +496,50 @@ em { font-style: normal; }
 .disc-card input:focus { border-color: var(--ink); }
 .disc-card .book__row { gap: 10px; }
 
+/* 예약 카드 부가 정보 */
+.mp-bk__right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.mp-dday { font-size: 0.72rem; font-weight: 800; color: var(--accent); background: var(--accent-soft); padding: 3px 9px; border-radius: 999px; }
+.mp-bk__sub { font-size: 0.82rem; color: var(--muted); margin-top: 8px; }
+.mp-bk__sub b { color: var(--ink-2); }
+.mp-bk__policy { font-size: 0.78rem; color: var(--faint); margin-top: 8px; }
+.cal-d.is-block { text-decoration: line-through; color: var(--line) !important; }
+
+/* 결제 확인 모달 */
+.cf { background: var(--surface-2); border-radius: 12px; padding: 16px 18px; margin-bottom: 12px; }
+.cf-row { display: flex; justify-content: space-between; gap: 12px; font-size: 0.9rem; color: var(--muted); margin-bottom: 9px; }
+.cf-row b { color: var(--ink); font-weight: 700; text-align: right; }
+.cf-total { display: flex; justify-content: space-between; align-items: baseline; padding-top: 12px; border-top: 1px dashed var(--line); font-weight: 800; color: var(--ink); }
+.cf-total b { font-family: var(--serif); font-size: 1.35rem; font-weight: 600; }
+.cf-policy { font-size: 0.8rem; color: var(--muted); background: #f6ecd6; border-radius: 9px; padding: 9px 12px; margin-bottom: 14px; }
+
+/* 이용권 · QR */
+.ticket { text-align: center; padding: 8px 0; }
+.qr { display: grid; width: 156px; height: 156px; margin: 6px auto 14px; padding: 8px; background: #fff; border: 1px solid var(--line); border-radius: 10px; gap: 1px; }
+.qr span { background: transparent; }
+.qr span.on { background: var(--ink); border-radius: 1px; }
+.ticket__code { font-family: monospace; font-weight: 800; letter-spacing: 0.14em; font-size: 1.05rem; color: var(--ink); }
+.ticket__info { font-size: 0.92rem; color: var(--ink-2); line-height: 1.6; margin: 12px 0; }
+.ticket__info b { font-weight: 800; }
+.ticket__note { font-size: 0.8rem; color: var(--faint); }
+
+/* 정산 대시보드 */
+.settle-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.settle-kpi { background: var(--surface); border: 1px solid var(--line-2); border-radius: 14px; padding: 18px 14px; text-align: center; }
+.settle-kpi strong { display: block; font-family: var(--serif); font-size: 1.4rem; font-weight: 600; color: var(--ink); }
+.settle-kpi span { display: block; font-size: 0.78rem; color: var(--muted); margin-top: 6px; }
+.settle-kpi--hl { background: var(--dark); border-color: var(--dark); }
+.settle-kpi--hl strong { color: #fff; }
+.settle-kpi--hl span { color: rgba(255,255,255,0.6); }
+
+/* 공간 관리 */
+.mg-h { font-size: 1.05rem; font-weight: 800; margin: 26px 0 12px; padding-top: 20px; border-top: 1px solid var(--line-2); }
+.mg-check { display: flex; align-items: center; gap: 9px; font-size: 0.92rem; font-weight: 600; color: var(--ink-2); margin-bottom: 14px; cursor: pointer; }
+.mg-check input { width: 17px; height: 17px; accent-color: var(--accent); }
+.blk-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.blk-chip { display: inline-flex; align-items: center; gap: 6px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 999px; padding: 6px 8px 6px 13px; font-size: 0.84rem; font-weight: 600; }
+.blk-chip button { width: 18px; height: 18px; border-radius: 50%; background: var(--line); color: var(--ink); font-size: 0.7rem; }
+.blk-chip button:hover { background: var(--accent); color: #fff; }
+
 /* ================= 반응형 ================= */
 @media (max-width: 1024px) {
   .cats { grid-template-columns: repeat(4, 1fr); }
@@ -554,6 +598,7 @@ em { font-style: normal; }
   .bell-dd { width: calc(100vw - 32px); right: -8px; }
   .mp-req { flex-direction: column; align-items: stretch; }
   .disc-grid { grid-template-columns: 1fr; }
+  .settle-kpis { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 460px) {
   .cats { grid-template-columns: repeat(2, 1fr); }

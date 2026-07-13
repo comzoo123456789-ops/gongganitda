@@ -92,7 +92,7 @@ $("#sp").innerHTML = `
 
       <div class="sp-sec">
         <h2 class="sp-sec__title">이용 안내</h2>
-        <p class="sp-desc" style="font-size:0.9rem;color:var(--muted)">· 예약은 시간 단위로 가능하며, 최소 1시간부터 이용할 수 있습니다.<br />· 퇴실 시 공간을 이용 전 상태로 정리해 주세요.<br />· 취소·환불 규정은 예약 확정 시 안내됩니다. (데모 사이트)</p>
+        <p class="sp-desc" style="font-size:0.9rem;color:var(--muted)">· 예약은 시간 단위로 가능합니다.<br />· 퇴실 시 공간을 이용 전 상태로 정리해 주세요.<br />· <b style="color:var(--ink-2)">취소·환불 규정</b> — 이용 <b>3일 전까지 100%</b> 환불, <b>1~2일 전 50%</b>, <b>당일 환불 불가</b>. (데모 기준)</p>
       </div>
 
       <div class="sp-sec">
@@ -209,16 +209,18 @@ const todayD = new Date(); todayD.setHours(0, 0, 0, 0);
 let calMonth = new Date(todayD.getFullYear(), todayD.getMonth(), 1);
 let selDate = fmtD(new Date(todayD.getTime() + 86400000)); // 내일
 
+const SET = window.SETTINGS.get(S.id);
 for (let h = 9; h <= 21; h++) bkStart.insertAdjacentHTML("beforeend", `<option value="${h}">${pad(h)}:00</option>`);
 bkStart.value = 14;
-for (let h = 1; h <= 8; h++) bkHours.insertAdjacentHTML("beforeend", `<option value="${h}">${h}시간</option>`);
-bkHours.value = 2;
+for (let h = SET.minH; h <= SET.maxH; h++) bkHours.insertAdjacentHTML("beforeend", `<option value="${h}">${h}시간</option>`);
+bkHours.value = Math.max(SET.minH, Math.min(2, SET.maxH));
 
-// 이미 예약된 시간(같은 공간·같은 날짜) → 중복 방지
+// 이미 예약된 시간(같은 공간·같은 날짜) + 청소 버퍼 → 중복 방지
 function occupiedHours(dateStr) {
   const occ = new Set();
-  window.BOOKINGS.list().filter((b) => b.spaceId === S.id && b.date === dateStr && b.status !== "declined")
-    .forEach((b) => { for (let h = b.start; h < b.start + b.hours; h++) occ.add(h); });
+  const buf = SET.buffer || 0;
+  window.BOOKINGS.list().filter((b) => b.spaceId === S.id && b.date === dateStr && b.status !== "declined" && b.status !== "cancelled")
+    .forEach((b) => { for (let h = b.start; h < b.start + b.hours + buf; h++) occ.add(h); });
   return occ;
 }
 const WD = ["일", "월", "화", "수", "목", "금", "토"];
@@ -231,8 +233,8 @@ function renderCal() {
   let cells = "";
   for (let i = 0; i < startWd; i++) cells += `<span class="cal-e"></span>`;
   for (let d = 1; d <= days; d++) {
-    const dt = new Date(y, m, d); const ds = fmtD(dt); const past = dt < todayD;
-    cells += `<button type="button" class="cal-d ${ds === selDate ? "is-sel" : ""}" data-d="${ds}" ${past ? "disabled" : ""}>${d}</button>`;
+    const dt = new Date(y, m, d); const ds = fmtD(dt); const past = dt < todayD; const blk = window.BLOCKS.has(S.id, ds);
+    cells += `<button type="button" class="cal-d ${ds === selDate ? "is-sel" : ""} ${blk ? "is-block" : ""}" data-d="${ds}" ${past || blk ? "disabled" : ""}>${d}</button>`;
   }
   $("#bkCal").innerHTML =
     `<div class="cal-top"><button type="button" class="cal-nav" data-cal="-1" ${canPrev ? "" : "disabled"}>‹</button><b>${y}년 ${m + 1}월</b><button type="button" class="cal-nav" data-cal="1" ${canNext ? "" : "disabled"}>›</button></div>
@@ -295,19 +297,50 @@ renderCal(); refreshSlots();
 let toastT;
 function toast(msg) { const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => (t.hidden = true), 2600); }
 
+const modal = $("#modal"), modalCard = $("#modalCard");
+function closeModal() { modal.hidden = true; modalCard.innerHTML = ""; }
+modal.addEventListener("click", (e) => { if (e.target.closest("[data-mclose]")) closeModal(); });
+
 $("#bkGo").addEventListener("click", () => {
   const start = +bkStart.value, hours = +bkHours.value, g = +bkGuests.value;
   if (bkStart.selectedOptions[0] && bkStart.selectedOptions[0].disabled) { toast("선택한 시간은 예약이 찼어요"); return; }
+  if (!g || g < 1) { toast("인원을 입력해주세요"); return; }
   if (g > S.capacity) { toast(`최대 ${S.capacity}인까지 이용 가능해요`); return; }
   const a = window.AUTH.get();
   if (!a) { toast("로그인 후 예약할 수 있어요"); setTimeout(() => (location.href = "login.html"), 900); return; }
+  openConfirm(start, hours, g);
+});
+
+function openConfirm(start, hours, g) {
+  const total = recalc._total, unit = recalc._unit;
+  const auto = window.SETTINGS.get(S.id).autoAccept;
+  modal.hidden = false;
+  modalCard.innerHTML = `
+    <div class="modal__head"><b>예약 확인</b><button class="modal__x" data-mclose>✕</button></div>
+    <div class="cf">
+      <div class="cf-row"><span>공간</span><b>${S.name}</b></div>
+      <div class="cf-row"><span>일시</span><b>${selDate} ${pad(start)}:00~${pad(start + hours)}:00</b></div>
+      <div class="cf-row"><span>인원</span><b>${g}인</b></div>
+      <div class="cf-row"><span>시간요금</span><b>${won(unit)}원 × ${hours}시간</b></div>
+      <div class="cf-total"><span>총 결제금액</span><b>${won(total)}원</b></div>
+    </div>
+    <p class="cf-policy">취소·환불: 이용 3일 전 100% · 1~2일 전 50% · 당일 환불 불가</p>
+    <button class="btn btn--accent btn--lg btn--block" id="cfGo">${auto ? "결제하고 즉시 예약" : "결제하고 예약 요청"}</button>
+    <p class="modal__note">데모 결제 — 실제로 청구되지 않습니다.</p>`;
+  $("#cfGo").addEventListener("click", () => doBooking(start, hours, g));
+}
+function doBooking(start, hours, g) {
+  const a = window.AUTH.get();
   const unit = recalc._unit, total = recalc._total;
   const hostId = S.ownerId || "host";
-  window.BOOKINGS.add({ id: "b" + Date.now(), spaceId: S.id, spaceName: S.name, hostId, guestId: a.userId, guestName: window.AUTH.displayName(a), price: unit, coupon: couponPct || 0, date: selDate, start, hours, guests: g, total, status: "requested", ts: Date.now() });
-  window.NOTIF.add({ forUser: hostId, title: S.name, sub: `새 예약 요청 · ${selDate} ${pad(start)}:00`, link: "mypage.html" });
-  toast("예약을 요청했어요! 호스트 확인을 기다려 주세요");
+  const auto = window.SETTINGS.get(S.id).autoAccept;
+  const status = auto ? "confirmed" : "requested";
+  window.BOOKINGS.add({ id: "b" + Date.now(), spaceId: S.id, spaceName: S.name, hostId, guestId: a.userId, guestName: window.AUTH.displayName(a), price: unit, coupon: couponPct || 0, date: selDate, start, hours, guests: g, total, status, ts: Date.now() });
+  window.NOTIF.add({ forUser: hostId, title: S.name, sub: (auto ? "새 예약(자동수락)" : "새 예약 요청") + ` · ${selDate} ${pad(start)}:00`, link: "mypage.html" });
+  closeModal();
+  toast(auto ? "예약이 확정되었어요!" : "예약을 요청했어요! 호스트 확인을 기다려 주세요");
   setTimeout(() => (location.href = "mypage.html"), 1100);
-});
+}
 
 // 햄버거
 const hm = $("#hmenu"), nav = $("#nav");

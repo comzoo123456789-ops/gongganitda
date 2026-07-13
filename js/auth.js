@@ -82,6 +82,27 @@ window.DISCOUNT = {
 // 반짝할인 반영 가격
 window.priceOf = function (s) { const pct = window.DISCOUNT.flashPct(s.id); return { pct, orig: s.price, price: pct ? Math.round(s.price * (100 - pct) / 100 / 100) * 100 : s.price }; };
 
+// 가용성 차단(호스트가 특정 날짜를 예약 불가로)
+window.BLOCKS = {
+  KEY: "gi_blocks",
+  all: function () { try { return JSON.parse(localStorage.getItem(this.KEY) || "{}"); } catch (e) { return {}; } },
+  get: function (sid) { return this.all()[sid] || []; },
+  has: function (sid, date) { return this.get(sid).indexOf(date) >= 0; },
+  toggle: function (sid, date) { const a = this.all(); const l = a[sid] || []; const i = l.indexOf(date); if (i >= 0) l.splice(i, 1); else l.push(date); a[sid] = l; localStorage.setItem(this.KEY, JSON.stringify(a)); return l.indexOf(date) >= 0; },
+};
+
+// 예약 설정(자동수락·최소/최대시간·청소버퍼)
+window.SETTINGS = {
+  KEY: "gi_settings",
+  all: function () { try { return JSON.parse(localStorage.getItem(this.KEY) || "{}"); } catch (e) { return {}; } },
+  get: function (sid) { return Object.assign({ autoAccept: false, minH: 1, maxH: 8, buffer: 0 }, this.all()[sid] || {}); },
+  set: function (sid, obj) { const a = this.all(); a[sid] = obj; localStorage.setItem(this.KEY, JSON.stringify(a)); },
+};
+
+// 정산 계산(호스트 수수료 10%)
+window.HOST_FEE = 0.10;
+window.settleOf = function (b) { const sub = Math.round(b.total / 1.05); return Math.round(sub * (1 - window.HOST_FEE)); };
+
 // ---------- 로고/아이콘 ----------
 const GI_SYMBOL = '<svg class="logo__mark" width="28" height="28" viewBox="0 0 64 64" fill="none" aria-hidden="true"><path d="M32 6 C21 6 12 14.5 12 25 C12 36 22 42 32 54 C42 42 52 36 52 25 C52 14.5 43 6 32 6 Z" stroke="#211E1A" stroke-width="5" stroke-linejoin="round"/><circle cx="28" cy="24" r="4.6" fill="#4C93B8"/><circle cx="36" cy="24" r="4.6" fill="#D97852"/></svg>';
 const BELL_SVG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>';
@@ -105,6 +126,23 @@ window.timeago = function (ts) { const s = (Date.now() - ts) / 1000; if (s < 60)
     }
 
     const a = window.AUTH.get();
+
+    // 찜한 공간에 반짝할인이 뜨면 알림(기기·유저별 1회)
+    try {
+      if (a && window.FAV) {
+        const key = a.userId;
+        const alerted = JSON.parse(localStorage.getItem("gi_favalert") || "{}"); alerted[key] = alerted[key] || {};
+        const mine = (function () { try { return JSON.parse(localStorage.getItem("gi_spaces") || "[]"); } catch (e) { return []; } })();
+        const pool = (typeof SPACES !== "undefined" ? SPACES : []).concat(mine);
+        window.FAV.list().forEach((id) => {
+          const pct = window.DISCOUNT.flashPct(id);
+          const sp = pool.find((s) => s.id === id);
+          if (pct && sp && !alerted[key][id]) { window.NOTIF.add({ forUser: a.userId, title: sp.name, sub: `⚡ 찜한 공간 반짝할인 ${pct}%`, link: "space.html?id=" + id }); alerted[key][id] = 1; }
+          if (!pct && alerted[key][id]) delete alerted[key][id];
+        });
+        localStorage.setItem("gi_favalert", JSON.stringify(alerted));
+      }
+    } catch (e) {}
 
     // 호스트 전용 내비 — 일반회원에겐 숨김, 호스트에겐 '공간 등록'으로
     document.querySelectorAll(".js-host-nav").forEach((e) => { e.style.display = (!a || a.role === "host") ? "" : "none"; e.textContent = (a && a.role === "host") ? "공간 등록" : "호스트 등록"; });

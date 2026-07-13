@@ -275,7 +275,7 @@ $("#bkGo").addEventListener("click", () => {
   const sub = S.price * hours, fee = Math.round(sub * 0.05), total = sub + fee;
   const hostId = S.ownerId || "host";
   window.BOOKINGS.add({ id: "b" + Date.now(), spaceId: S.id, spaceName: S.name, hostId, guestId: a.userId, guestName: a.name, date: selDate, start, hours, guests: g, total, status: "requested", ts: Date.now() });
-  window.NOTIF.add({ forUser: hostId, text: `새 예약 요청 · ${S.name} (${selDate} ${pad(start)}:00)`, link: "mypage.html" });
+  window.NOTIF.add({ forUser: hostId, title: S.name, sub: `새 예약 요청 · ${selDate} ${pad(start)}:00`, link: "mypage.html" });
   toast("예약을 요청했어요! 호스트 확인을 기다려 주세요");
   setTimeout(() => (location.href = "mypage.html"), 1100);
 });

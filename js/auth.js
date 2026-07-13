@@ -19,7 +19,7 @@ window.AUTH = (function () {
     set: (a) => localStorage.setItem(SK, JSON.stringify(a)),
     logout: () => localStorage.removeItem(SK),
     roleWord: (r) => (r === "host" ? "호스트" : "회원"),
-    displayName: function (a) { a = a || this.get(); return a ? `${a.name} ${this.roleWord(a.role)}` : ""; },
+    displayName: function (a) { a = a || this.get(); if (!a) return ""; const w = this.roleWord(a.role); const n = a.name || ""; return (n === w || n.endsWith(w)) ? n : `${n} ${w}`; },
   };
 })();
 
@@ -57,10 +57,14 @@ window.REVIEWS = {
 };
 
 window.CHAT = {
-  KEY: "gi_chat",
+  KEY: "gi_chat", RKEY: "gi_chatread",
   all: function () { try { return JSON.parse(localStorage.getItem(this.KEY) || "{}"); } catch (e) { return {}; } },
   get: function (bid) { return this.all()[bid] || []; },
   send: function (bid, msg) { const a = this.all(); (a[bid] = a[bid] || []).push(Object.assign({ ts: Date.now() }, msg)); localStorage.setItem(this.KEY, JSON.stringify(a)); },
+  reads: function () { try { return JSON.parse(localStorage.getItem(this.RKEY) || "{}"); } catch (e) { return {}; } },
+  lastRead: function (user, bid) { const r = this.reads(); return (r[user] && r[user][bid]) || 0; },
+  markRead: function (user, bid) { const r = this.reads(); (r[user] = r[user] || {})[bid] = Date.now(); localStorage.setItem(this.RKEY, JSON.stringify(r)); },
+  unread: function (user, bid) { const lr = this.lastRead(user, bid); return this.get(bid).filter((m) => m.from !== user && m.ts > lr).length; },
 };
 
 // ---------- 로고/아이콘 ----------
@@ -128,7 +132,7 @@ window.timeago = function (ts) { const s = (Date.now() - ts) / 1000; if (s < 60)
       if (dd.hasAttribute("hidden")) {
         const items = window.NOTIF.list(a.userId).slice(0, 12);
         dd.innerHTML = `<div class="bell-dd__t">알림</div>` + (items.length
-          ? items.map((n) => `<a class="bell-item ${n.read ? "" : "is-unread"}" href="${n.link || "#"}"><span class="bell-item__txt">${n.text}</span><time>${window.timeago(n.ts)}</time></a>`).join("")
+          ? items.map((n) => `<a class="bell-item ${n.read ? "" : "is-unread"}" href="${n.link || "#"}">${n.title ? `<b class="bell-item__t">${n.title}</b><span class="bell-item__s">${n.sub || ""}</span>` : `<span class="bell-item__txt">${n.text || ""}</span>`}<time>${window.timeago(n.ts)}</time></a>`).join("")
           : `<div class="bell-empty">알림이 없어요</div>`);
         dd.removeAttribute("hidden");
         window.NOTIF.markRead(a.userId); refreshBell();

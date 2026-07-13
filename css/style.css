@@ -412,6 +412,14 @@ em { font-style: normal; }
 .bell-dd { width: min(340px, calc(100vw - 28px)); }
 .bell-item { display: flex; flex-direction: column; }
 .bell-item__txt { display: block; word-break: keep-all; line-height: 1.45; }
+.bell-item__t { display: block; font-weight: 800; font-size: 0.86rem; word-break: keep-all; line-height: 1.35; }
+.bell-item__s { display: block; font-size: 0.8rem; color: var(--muted); margin-top: 2px; word-break: keep-all; line-height: 1.4; }
+
+/* 채팅 안읽음 배지 · 반짝임 */
+.chat-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 16px; height: 16px; padding: 0 4px; margin-left: 5px; border-radius: 999px; background: #e2402f; color: #fff; font-size: 0.64rem; font-weight: 800; }
+.mp-bk.has-unread { border-color: #e2402f; box-shadow: 0 0 0 3px rgba(226, 64, 47, 0.14); animation: bkGlow 1.6s ease-in-out infinite; }
+@keyframes bkGlow { 0%, 100% { box-shadow: 0 0 0 3px rgba(226, 64, 47, 0.12); } 50% { box-shadow: 0 0 0 5px rgba(226, 64, 47, 0.22); } }
+.mp-bk.has-unread [data-chat] { background: #e2402f; color: #fff; }
 
 /* 버튼 변형 */
 .btn--soft { background: var(--surface-2); color: var(--ink-2); }

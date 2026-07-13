@@ -49,7 +49,8 @@ function actionBtns(b, asHost) {
     btns.push(`<button class="btn btn--outline btn--sm" data-decline="${b.id}">거절</button>`);
   }
   if (b.status === "requested" || b.status === "confirmed") {
-    btns.push(`<button class="btn btn--soft btn--sm" data-chat="${b.id}">💬 채팅</button>`);
+    const un = window.CHAT.unread(me, b.id);
+    btns.push(`<button class="btn btn--soft btn--sm" data-chat="${b.id}">💬 채팅${un ? `<span class="chat-badge">${un}</span>` : ""}</button>`);
     btns.push(`<button class="btn btn--soft btn--sm" data-resched="${b.id}">일정 변경</button>`);
     btns.push(`<button class="btn btn--danger btn--sm" data-cancel="${b.id}">예약 취소</button>`);
   }
@@ -57,12 +58,12 @@ function actionBtns(b, asHost) {
 }
 function bookingCard(b, asHost) {
   const s = STATUS[b.status] || STATUS.requested;
-  const who = asHost ? `👤 ${b.guestName || "게스트"}` : b.spaceName;
-  return `<div class="mp-bk">
+  const un = window.CHAT.unread(me, b.id);
+  return `<div class="mp-bk ${un ? "has-unread" : ""}">
     <div class="mp-bk__top">
       <div class="mp-bk__info" onclick="location.href='space.html?id=${b.spaceId}'">
-        <div class="mp-book__name">${asHost ? b.spaceName : b.spaceName}</div>
-        <div class="mp-book__meta">${asHost ? who + " · " : ""}${timeLabel(b)} · ${won(b.total)}원</div>
+        <div class="mp-book__name">${b.spaceName}</div>
+        <div class="mp-book__meta">${asHost ? `👤 ${b.guestName || "게스트"} · ` : ""}${timeLabel(b)} · ${won(b.total)}원</div>
       </div>
       <span class="mp-book__status st-${s.c}">${s.t}</span>
     </div>
@@ -96,18 +97,18 @@ renderAll();
 let toastT; function toast(m) { const t = $("#toast"); t.textContent = m; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => (t.hidden = true), 2400); }
 
 // ---------- 액션 (수락/거절/취소/일정변경/채팅) ----------
-function notifyOther(b, text) {
+function notifyOther(b, title, sub, link) {
   const other = (me === b.hostId) ? b.guestId : b.hostId;
-  window.NOTIF.add({ forUser: other, text, link: "mypage.html" });
+  window.NOTIF.add({ forUser: other, title, sub, link: link || "mypage.html" });
 }
 document.addEventListener("click", (e) => {
   const t = e.target.closest("[data-accept],[data-decline],[data-cancel],[data-resched],[data-chat]");
   if (!t) return;
   const id = t.dataset.accept || t.dataset.decline || t.dataset.cancel || t.dataset.resched || t.dataset.chat;
   const b = window.BOOKINGS.find(id); if (!b) return;
-  if (t.dataset.accept) { window.BOOKINGS.update(id, { status: "confirmed" }); notifyOther(b, `예약이 확정되었어요 · ${b.spaceName} (${b.date})`); toast("예약을 수락했어요"); renderAll(); }
-  else if (t.dataset.decline) { window.BOOKINGS.update(id, { status: "declined" }); notifyOther(b, `예약이 거절되었어요 · ${b.spaceName} (${b.date})`); toast("예약을 거절했어요"); renderAll(); }
-  else if (t.dataset.cancel) { if (!confirm("예약을 취소할까요?")) return; window.BOOKINGS.update(id, { status: "cancelled" }); notifyOther(b, `예약이 취소되었어요 · ${b.spaceName} (${b.date})`); toast("예약을 취소했어요"); renderAll(); }
+  if (t.dataset.accept) { window.BOOKINGS.update(id, { status: "confirmed" }); notifyOther(b, b.spaceName, `예약이 확정되었어요 · ${b.date}`); toast("예약을 수락했어요"); renderAll(); }
+  else if (t.dataset.decline) { window.BOOKINGS.update(id, { status: "declined" }); notifyOther(b, b.spaceName, `예약이 거절되었어요 · ${b.date}`); toast("예약을 거절했어요"); renderAll(); }
+  else if (t.dataset.cancel) { if (!confirm("예약을 취소할까요?")) return; window.BOOKINGS.update(id, { status: "cancelled" }); notifyOther(b, b.spaceName, `예약이 취소되었어요 · ${b.date}`); toast("예약을 취소했어요"); renderAll(); }
   else if (t.dataset.resched) openResched(b);
   else if (t.dataset.chat) openChat(b);
 });
@@ -134,14 +135,17 @@ function openResched(b) {
   $("#rsSave").addEventListener("click", () => {
     const date = $("#rsDate").value, start = +$("#rsStart").value, hours = +$("#rsHours").value;
     window.BOOKINGS.update(b.id, { date, start, hours, status: "requested" });
-    notifyOther(b, `일정 변경 요청 · ${b.spaceName} (${date} ${String(start).padStart(2, "0")}:00)`);
+    notifyOther(b, b.spaceName, `일정 변경 요청 · ${date} ${String(start).padStart(2, "0")}:00`);
     closeModal(); toast("일정 변경을 요청했어요"); renderAll();
   });
 }
 
+let chatDraw = null;
 function openChat(b) {
   modal.hidden = false;
+  window.CHAT.markRead(me, b.id); renderAll();
   function draw() {
+    window.CHAT.markRead(me, b.id);
     const msgs = window.CHAT.get(b.id);
     modalCard.innerHTML = `
       <div class="modal__head"><b>채팅 · ${b.spaceName}</b><button class="modal__x" data-mclose>✕</button></div>
@@ -153,14 +157,25 @@ function openChat(b) {
       const v = $("#chatText").value.trim(); if (!v) return;
       window.CHAT.send(b.id, { from: me, name: window.AUTH.displayName(auth), text: v });
       const other = (me === b.hostId) ? b.guestId : b.hostId;
-      window.NOTIF.add({ forUser: other, text: `💬 새 메시지 · ${b.spaceName}`, link: "mypage.html" });
+      window.NOTIF.add({ forUser: other, title: b.spaceName, sub: "💬 새 메시지", link: `mypage.html?chat=${b.id}` });
       draw();
     });
   }
-  draw();
+  chatDraw = draw; draw();
 }
-// 다른 탭에서 채팅/예약 변화 시 갱신
-window.addEventListener("storage", (e) => { if (e.key === window.CHAT.KEY && !modal.hidden) { /* 열려있는 채팅 갱신은 재열기 */ } if (e.key === window.BOOKINGS.KEY) renderAll(); });
+const _closeModal = closeModal; closeModal = function () { chatDraw = null; _closeModal(); };
+
+// 다른 탭에서 실시간 갱신
+window.addEventListener("storage", (e) => {
+  if (e.key === window.CHAT.KEY) { if (chatDraw && !modal.hidden) chatDraw(); renderAll(); }
+  if (e.key === window.BOOKINGS.KEY) renderAll();
+});
+
+// 알림에서 채팅으로 바로 진입 (?chat=<bookingId>)
+(function openChatFromURL() {
+  const bid = new URLSearchParams(location.search).get("chat");
+  if (bid) { const b = window.BOOKINGS.find(bid); if (b) openChat(b); }
+})();
 
 // 탭
 $("#mpTabs").addEventListener("click", (e) => {

@@ -14,7 +14,17 @@ const SPACES = [
   { id: 11, name: "북유럽 감성 파티룸", cat: "party", region: "서울 송파구 잠실동", price: 32000, capacity: 20, rating: 4.9, reviews: 301, now: true, tags: ["빔프로젝터", "무드 조명", "취사 가능", "노래방"], img: "1524758631624-e2822e304c36", g: ["#8d6e97", "#a98cba"] },
   { id: 12, name: "라이브 방송 스튜디오", cat: "studio", region: "서울 영등포구 여의도동", price: 40000, capacity: 6, rating: 4.7, reviews: 47, now: true, tags: ["송출 장비", "조명", "방음", "편집실"], img: "1521737604893-d14cc237f11d", g: ["#5f7a5c", "#7e9a7b"] },
 ];
-// Unsplash 이미지 URL 생성
-function spaceImg(s, w, h) {
-  return `https://images.unsplash.com/photo-${s.img}?w=${w || 800}&h=${h || 600}&fit=crop&q=80`;
+// 썸네일 URL — 등록 공간은 photo(직접 URL), 샘플은 Unsplash id, 없으면 "" (그라디언트 폴백)
+function thumbUrl(s, w, h) {
+  if (s.photo) return s.photo;
+  if (s.img) return `https://images.unsplash.com/photo-${s.img}?w=${w || 800}&h=${h || 600}&fit=crop&q=80`;
+  return "";
+}
+const spaceImg = thumbUrl; // 하위호환
+
+// 호스트가 등록한 공간(localStorage) + 샘플 공간 병합
+function getAllSpaces() {
+  let mine = [];
+  try { mine = JSON.parse(localStorage.getItem("gi_spaces") || "[]"); } catch (e) {}
+  return [...mine, ...SPACES];
 }

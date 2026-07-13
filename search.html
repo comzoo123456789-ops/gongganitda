@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>공간 찾기 · 공간잇다</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://images.unsplash.com" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&display=swap" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="header is-scrolled" id="header">
+    <div class="header__inner">
+      <a href="index.html" class="logo"><span class="logo__dot"></span>공간잇다</a>
+      <nav class="header__nav" id="nav">
+        <a href="search.html" class="header__link">공간 찾기</a>
+        <a href="host.html" class="header__link">호스트 등록</a>
+        <span class="header__sep"></span>
+        <a href="#" class="header__link">로그인</a>
+        <a href="#" class="btn btn--primary btn--sm">회원가입</a>
+      </nav>
+      <button class="hmenu" id="hmenu" aria-label="메뉴"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main class="srch">
+    <div class="srch__top">
+      <div>
+        <span class="section__kicker">SEARCH</span>
+        <h1 class="srch__title">공간 찾기</h1>
+      </div>
+    </div>
+
+    <div class="srch__layout">
+      <!-- 필터 -->
+      <aside class="filters">
+        <button class="filters__mtoggle" id="fMobile">필터 ▾</button>
+        <div class="filters__body" id="filtersBody">
+          <div class="filt">
+            <span class="filt__t">지역</span>
+            <input type="text" id="fRegion" class="filt__region" placeholder="예: 강남, 홍대, 성수" />
+          </div>
+          <div class="filt">
+            <span class="filt__t">공간 유형</span>
+            <div id="fType" class="filt__list"></div>
+          </div>
+          <div class="filt">
+            <span class="filt__t">시간당 가격</span>
+            <div class="filt__list">
+              <label class="filt__chk"><input type="checkbox" name="price" value="0-10000" />1만원 이하</label>
+              <label class="filt__chk"><input type="checkbox" name="price" value="10000-20000" />1~2만원</label>
+              <label class="filt__chk"><input type="checkbox" name="price" value="20000-30000" />2~3만원</label>
+              <label class="filt__chk"><input type="checkbox" name="price" value="30000-9999999" />3만원 이상</label>
+            </div>
+          </div>
+          <div class="filt">
+            <span class="filt__t">인원</span>
+            <select id="fCap" class="filt__sel">
+              <option value="0">전체</option>
+              <option value="4">4인 이상</option>
+              <option value="10">10인 이상</option>
+              <option value="20">20인 이상</option>
+              <option value="40">40인 이상</option>
+            </select>
+          </div>
+          <div class="filt">
+            <span class="filt__t">편의시설</span>
+            <div id="fAmen" class="filt__list"></div>
+          </div>
+          <div class="filt">
+            <label class="filt__toggle"><input type="checkbox" id="fNow" /><span>지금 예약 가능만</span></label>
+          </div>
+          <button class="btn btn--outline btn--block" id="fReset">필터 초기화</button>
+        </div>
+      </aside>
+
+      <!-- 결과 -->
+      <div class="results">
+        <div class="results__head">
+          <span class="results__count" id="srchCount"></span>
+          <div class="results__sort">
+            <span>정렬</span>
+            <select id="sort" class="filt__sel">
+              <option value="reco">추천순</option>
+              <option value="priceLow">가격 낮은순</option>
+              <option value="priceHigh">가격 높은순</option>
+              <option value="rating">평점순</option>
+              <option value="reviews">후기 많은순</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid" id="results"></div>
+        <div class="srch__empty" id="srchEmpty" hidden>
+          <p>조건에 맞는 공간이 없어요.</p>
+          <button class="btn btn--outline" id="fReset2">필터 초기화</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer"><div class="footer__copy" style="border:none">© 2026 공간잇다 · wylie</div></footer>
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="js/icons.js"></script>
+  <script src="data/categories.js"></script>
+  <script src="data/spaces.js"></script>
+  <script src="js/search.js"></script>
+</body>
+</html>

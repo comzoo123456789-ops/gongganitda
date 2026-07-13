@@ -37,9 +37,11 @@ $("#catChips").innerHTML =
 function cardHTML(s) {
   const c = catById(s.cat);
   const nowBadge = s.now ? `<span class="sp-card__badge"><i></i>실시간 예약</span>` : "";
+  const g = s.g || [c.ink, "#cfc7b8"];
+  const img = spaceImg(s, 640, 480);
   return `<article class="sp-card" data-id="${s.id}">
-    <div class="sp-card__thumb" style="background:linear-gradient(135deg,${s.g[0]},${s.g[1]})">
-      <img src="${spaceImg(s, 640, 480)}" alt="${s.name}" loading="lazy" onerror="this.remove()" />
+    <div class="sp-card__thumb" style="background:linear-gradient(135deg,${g[0]},${g[1]})">
+      ${img ? `<img src="${img}" alt="${s.name}" loading="lazy" onerror="this.remove()" />` : ""}
       ${nowBadge}
       <button class="sp-card__heart ${liked.has(s.id) ? "is-on" : ""}" data-heart="${s.id}" aria-label="찜">${iconSVG("heart", 18)}</button>
     </div>
@@ -52,13 +54,14 @@ function cardHTML(s) {
       </div>
       <div class="sp-card__foot">
         <span class="sp-card__price">${won(s.price)}<span>원 / 시간</span></span>
-        <span class="sp-card__rating">${iconSVG("star", 14)}${s.rating}<em>(${s.reviews})</em></span>
+        <span class="sp-card__rating">${iconSVG("star", 14)}${s.rating || "신규"}${s.reviews ? `<em>(${s.reviews})</em>` : ""}</span>
       </div>
     </div>
   </article>`;
 }
 function renderGrid() {
-  const list = activeCat === "all" ? SPACES : SPACES.filter((s) => s.cat === activeCat);
+  const all = getAllSpaces();
+  const list = activeCat === "all" ? all : all.filter((s) => s.cat === activeCat);
   $("#spaceGrid").innerHTML = list.length ? list.map(cardHTML).join("") : `<p style="color:var(--faint);padding:20px">해당 유형의 공간이 아직 없어요.</p>`;
 }
 renderGrid();
@@ -106,7 +109,7 @@ document.addEventListener("click", (e) => {
     return;
   }
   const cat = e.target.closest(".cat");
-  if (cat) { setCat(cat.dataset.cat); $("#browse").scrollIntoView({ behavior: "smooth" }); return; }
+  if (cat) { location.href = "search.html?type=" + cat.dataset.cat; return; }
   const chip = e.target.closest(".chip");
   if (chip) { setCat(chip.dataset.cat); return; }
   const card = e.target.closest(".sp-card");
@@ -119,13 +122,17 @@ function setCat(id) {
   renderGrid();
 }
 
-// 검색 (데모)
+// 검색 → 검색 결과 페이지로 이동
 $("#searchbar").addEventListener("submit", (e) => {
   e.preventDefault();
+  const p = new URLSearchParams();
+  const region = $("#sfRegion").value.trim();
   const type = $("#sfType").value;
-  if (type) setCat(type);
-  $("#browse").scrollIntoView({ behavior: "smooth" });
-  toast("조건에 맞는 공간을 보여드려요 (검색 연동은 다음 단계)");
+  const cap = $("#sfCap").value;
+  if (region) p.set("region", region);
+  if (type) p.set("type", type);
+  if (cap) p.set("cap", cap);
+  location.href = "search.html" + (p.toString() ? "?" + p.toString() : "");
 });
 
 // 햄버거

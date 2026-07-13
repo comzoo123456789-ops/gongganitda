@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>공간 등록 · 공간잇다</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://images.unsplash.com" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&display=swap" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="header is-scrolled" id="header">
+    <div class="header__inner">
+      <a href="index.html" class="logo"><span class="logo__dot"></span>공간잇다</a>
+      <nav class="header__nav" id="nav">
+        <a href="search.html" class="header__link">공간 찾기</a>
+        <a href="host.html" class="header__link">호스트 등록</a>
+        <span class="header__sep"></span>
+        <a href="#" class="header__link">로그인</a>
+        <a href="#" class="btn btn--primary btn--sm">회원가입</a>
+      </nav>
+      <button class="hmenu" id="hmenu" aria-label="메뉴"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main class="hostreg">
+    <div class="hostreg__head">
+      <span class="section__kicker">HOST</span>
+      <h1 class="hostreg__title">공간 등록</h1>
+      <p class="hostreg__sub">비어있는 공간을 등록하고 시간 단위로 빌려주세요. 등록은 무료입니다.</p>
+    </div>
+
+    <div class="hostreg__layout">
+      <!-- 폼 -->
+      <form class="hf" id="hostForm" novalidate>
+        <div class="hf-field">
+          <label class="hf-label">공간 이름 <i>*</i></label>
+          <input type="text" id="hName" placeholder="예: 성수 감성 파티룸" />
+        </div>
+        <div class="hf-row">
+          <div class="hf-field">
+            <label class="hf-label">공간 유형 <i>*</i></label>
+            <select id="hCat"></select>
+          </div>
+          <div class="hf-field">
+            <label class="hf-label">최대 인원 <i>*</i></label>
+            <input type="number" id="hCapacity" min="1" placeholder="예: 20" />
+          </div>
+        </div>
+        <div class="hf-field">
+          <label class="hf-label">지역 · 주소 <i>*</i></label>
+          <input type="text" id="hRegion" placeholder="예: 서울 성동구 성수동" />
+        </div>
+        <div class="hf-field">
+          <label class="hf-label">시간당 가격 (원) <i>*</i></label>
+          <input type="number" id="hPrice" min="0" step="1000" placeholder="예: 25000" />
+        </div>
+        <div class="hf-field">
+          <label class="hf-label">대표 사진 URL <span class="hf-opt">선택</span></label>
+          <input type="url" id="hPhoto" placeholder="https://... (비우면 기본 배경 표시)" />
+          <span class="hf-hint">이미지 주소를 붙여넣으면 오른쪽 미리보기에 반영됩니다.</span>
+        </div>
+        <div class="hf-field">
+          <label class="hf-label">편의시설</label>
+          <div class="hf-checks" id="hAmen"></div>
+        </div>
+        <div class="hf-field">
+          <label class="hf-label">공간 소개 <span class="hf-opt">선택</span></label>
+          <textarea id="hDesc" rows="3" placeholder="공간의 특징, 이용 안내 등을 자유롭게 적어주세요."></textarea>
+        </div>
+        <p class="hf-err" id="hErr" hidden></p>
+        <button type="submit" class="btn btn--accent btn--lg btn--block">공간 등록하기</button>
+        <p class="hf-note">데모 사이트 — 등록 정보는 이 브라우저에 저장되며, 홈·검색 목록에 바로 나타납니다.</p>
+      </form>
+
+      <!-- 미리보기 -->
+      <aside class="hf-preview">
+        <span class="hf-preview__label">미리보기</span>
+        <div id="hvCard"></div>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="footer"><div class="footer__copy" style="border:none">© 2026 공간잇다 · wylie</div></footer>
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="js/icons.js"></script>
+  <script src="data/categories.js"></script>
+  <script src="data/spaces.js"></script>
+  <script src="js/host.js"></script>
+</body>
+</html>

@@ -5,11 +5,13 @@ const $ = (s) => document.querySelector(s);
 const won = (n) => n.toLocaleString("ko-KR");
 const params = new URLSearchParams(location.search);
 const id = +params.get("id");
-const S = SPACES.find((s) => s.id === id) || SPACES[0];
+const ALL = getAllSpaces();
+const S = ALL.find((s) => s.id === id) || ALL[0];
 const C = catById(S.cat);
+const SG = S.g || [C.ink, "#cfc7b8"];
 
 // 같은 유형의 다른 공간 (갤러리 보조 이미지 + 관련 공간)
-const others = SPACES.filter((s) => s.id !== S.id);
+const others = ALL.filter((s) => s.id !== S.id);
 const sameCat = others.filter((s) => s.cat === S.cat);
 // 같은 유형 우선, 부족하면 다른 공간으로 채워 항상 3개 확보
 const galleryExtra = [...sameCat, ...others.filter((s) => s.cat !== S.cat)].slice(0, 3);
@@ -32,7 +34,7 @@ function reviews() {
       name: REV_NAMES[seed % REV_NAMES.length],
       txt: REV_TXT[seed % REV_TXT.length],
       stars: 4 + (seed % 2),
-      color: S.g[i % 2],
+      color: SG[i % 2],
     };
   });
 }
@@ -54,8 +56,8 @@ $("#sp").innerHTML = `
   <a href="index.html" class="sp-back"><span style="display:inline-flex;transform:scaleX(-1)">${iconSVG("arrow", 16)}</span>목록으로</a>
 
   <div class="sp-gallery">
-    <div class="sp-gallery__main"><img src="${spaceImg(S, 1000, 900)}" alt="${S.name}" onerror="this.parentNode.style.background='linear-gradient(135deg,${S.g[0]},${S.g[1]})'" /></div>
-    ${galleryExtra.slice(0, 2).map((g) => `<div class="sp-gallery__sm"><img src="${spaceImg(g, 500, 400)}" alt="" onerror="this.parentNode.style.background='linear-gradient(135deg,${g.g[0]},${g.g[1]})'" /></div>`).join("")}
+    <div class="sp-gallery__main" style="background:linear-gradient(135deg,${SG[0]},${SG[1]})">${spaceImg(S, 1000, 900) ? `<img src="${spaceImg(S, 1000, 900)}" alt="${S.name}" onerror="this.remove()" />` : ""}</div>
+    ${galleryExtra.slice(0, 2).map((g) => { const gg = g.g || [C.ink, "#cfc7b8"]; const u = spaceImg(g, 500, 400); return `<div class="sp-gallery__sm" style="background:linear-gradient(135deg,${gg[0]},${gg[1]})">${u ? `<img src="${u}" alt="" onerror="this.remove()" />` : ""}</div>`; }).join("")}
   </div>
 
   <div class="sp-layout">
@@ -64,7 +66,7 @@ $("#sp").innerHTML = `
         <span class="sp-head__cat">${C.label}</span>
         <h1 class="sp-head__title">${S.name}</h1>
         <div class="sp-head__meta">
-          <span class="rate">${iconSVG("star", 16)}${S.rating} <em style="color:var(--faint);font-weight:500">· 후기 ${S.reviews}</em></span>
+          <span class="rate">${S.reviews ? `${iconSVG("star", 16)}${S.rating} <em style="color:var(--faint);font-weight:500">· 후기 ${S.reviews}</em>` : `<em style="color:var(--accent);font-weight:700">신규 공간</em>`}</span>
           <span>${iconSVG("pin", 16)}${S.region}</span>
           <span>${iconSVG("users", 16)}최대 ${S.capacity}인</span>
         </div>
@@ -83,13 +85,13 @@ $("#sp").innerHTML = `
       </div>
 
       <div class="sp-sec">
-        <h2 class="sp-sec__title">이용 후기 <span style="color:var(--gold)">★ ${S.rating}</span> <span style="color:var(--faint);font-weight:500;font-size:0.9rem">(${S.reviews})</span></h2>
-        <div class="sp-rev">
+        <h2 class="sp-sec__title">이용 후기 ${S.reviews ? `<span style="color:var(--gold)">★ ${S.rating}</span> <span style="color:var(--faint);font-weight:500;font-size:0.9rem">(${S.reviews})</span>` : ""}</h2>
+        ${S.reviews ? `<div class="sp-rev">
           ${reviews().map((r) => `<div class="sp-revrow">
             <span class="sp-revrow__av" style="background:${r.color}">${r.name.charAt(0)}</span>
             <div><div class="sp-revrow__name">${r.name}</div><div class="sp-revrow__stars">${"★".repeat(r.stars)}${"☆".repeat(5 - r.stars)}</div><div class="sp-revrow__txt">${r.txt}</div></div>
           </div>`).join("")}
-        </div>
+        </div>` : `<p class="sp-desc" style="color:var(--muted)">아직 등록된 후기가 없어요. 첫 이용 후기를 남겨보세요.</p>`}
       </div>
 
       <div class="sp-sec">
@@ -142,9 +144,11 @@ document.title = `${S.name} · 공간잇다`;
 // 관련 공간 카드
 $("#relGrid").innerHTML = galleryExtra.map((s) => {
   const c = catById(s.cat);
+  const gg = s.g || [c.ink, "#cfc7b8"];
+  const u = spaceImg(s, 500, 400);
   return `<article class="sp-card" onclick="location.href='space.html?id=${s.id}'">
-    <div class="sp-card__thumb" style="background:linear-gradient(135deg,${s.g[0]},${s.g[1]})">
-      <img src="${spaceImg(s, 500, 400)}" alt="${s.name}" loading="lazy" onerror="this.remove()" />
+    <div class="sp-card__thumb" style="background:linear-gradient(135deg,${gg[0]},${gg[1]})">
+      ${u ? `<img src="${u}" alt="${s.name}" loading="lazy" onerror="this.remove()" />` : ""}
     </div>
     <div class="sp-card__body">
       <span class="sp-card__cat">${c.label}</span>

@@ -131,17 +131,25 @@ function renderAll() {
 function quoteRow(q) {
   const sel = q.status === "accepted";
   return `<div class="quote-row ${sel ? "is-sel" : ""}">
-    <div class="quote-row__l"><b>${q.vendorName}</b> <span class="quote-cat">${svcById(q.cat).label}</span>${q.desc ? `<div class="quote-desc">${q.desc}</div>` : ""}</div>
+    <div class="quote-row__l"><b>${q.vendorName}</b>${q.desc ? `<div class="quote-desc">${q.desc}</div>` : ""}</div>
     <div class="quote-row__r"><div class="quote-price">${won(q.price)}원</div>${sel ? `<span class="quote-badge">✅ 선택됨</span>` : `<button class="btn btn--accent btn--sm" data-acceptq="${q.id}">선택</button>`}<button class="btn btn--soft btn--sm" data-qchat="${q.id}">채팅</button></div>
   </div>`;
 }
 function reqCardMember(r) {
   const quotes = window.QUOTES.forReq(r.id);
   const cats = r.cats.map((c) => svcById(c).label).join(", ");
+  const blocks = r.cats.map((cat) => {
+    const svc = svcById(cat);
+    const qs = quotes.filter((q) => q.cat === cat);
+    return `<div class="rfp-cat">
+      <div class="rfp-cat__h">${iconSVG(svc.icon, 16)}<span>${svc.label}</span><span class="rfp-cat__cnt">${qs.length}곳</span></div>
+      ${qs.length ? qs.map(quoteRow).join("") : `<div class="rfp-empty">아직 견적이 없어요 · 업체 검토 중…</div>`}
+    </div>`;
+  }).join("");
   return `<div class="mp-bk">
     <div class="mp-bk__top"><div class="mp-bk__info"><div class="mp-book__name">${r.region} · ${r.date} · ${r.capacity}인</div><div class="mp-book__meta">필요: ${cats}${r.parking ? ` · 주차 ${r.parking}대` : ""}${r.budget ? ` · 예산 ${r.budget}` : ""}</div></div><span class="mp-book__status ${r.status === "closed" ? "st-green" : "st-amber"}">${r.status === "closed" ? "선택 완료" : `견적 ${quotes.length}건`}</span></div>
     ${r.detail ? `<div class="mp-bk__policy">${r.detail}</div>` : ""}
-    <div class="rfp-quotes">${quotes.length ? quotes.map(quoteRow).join("") : `<div class="rfp-empty">아직 도착한 견적이 없어요 · 업체 검토 중…</div>`}</div>
+    <div class="rfp-quotes">${blocks}</div>
   </div>`;
 }
 function renderRfp() {

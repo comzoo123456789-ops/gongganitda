@@ -17,6 +17,6 @@ document.getElementById("loginForm").addEventListener("submit", (e) => {
     err.textContent = `${window.AUTH.roleWord(loginRole)} 계정이 아닙니다. 상단에서 유형을 확인해 주세요.`;
     err.hidden = false; return;
   }
-  window.AUTH.set({ userId: user.userId, name: user.nick || user.name, role: user.role, email: user.email });
+  window.AUTH.set({ userId: user.userId, name: user.nick || user.name, role: user.role, email: user.email, serviceCats: user.serviceCats || [], region: user.region || "" });
   location.href = "mypage.html";
 });

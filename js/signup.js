@@ -31,6 +31,6 @@ document.getElementById("signupForm").addEventListener("submit", (e) => {
   }
   users.push(u);
   window.AUTH.saveUsers(users);
-  window.AUTH.set({ userId, name: nick, role, email });
+  window.AUTH.set(Object.assign({ userId, name: nick, role, email }, role === "vendor" ? { serviceCats: u.serviceCats, region: u.region } : {}));
   location.href = "mypage.html";
 });

@@ -469,6 +469,33 @@ em { font-style: normal; }
 .chat-input input { flex: 1; padding: 11px 14px; border: 1px solid var(--line); border-radius: 999px; font-size: 0.92rem; outline: none; }
 .chat-input input:focus { border-color: var(--ink); }
 
+/* 반짝할인 배지·할인가 */
+.sp-card__flash { position: absolute; bottom: 12px; left: 12px; font-size: 0.72rem; font-weight: 800; color: #fff; background: #e2402f; padding: 5px 10px; border-radius: 999px; box-shadow: 0 2px 8px rgba(226,64,47,0.4); }
+.sp-old { color: var(--faint); text-decoration: line-through; font-size: 0.8rem; font-weight: 600; font-family: "Pretendard", sans-serif; }
+.book__old { color: var(--faint); text-decoration: line-through; font-size: 0.95rem; font-weight: 600; margin-right: 6px; }
+.book__flash { display: inline-block; margin-left: 8px; font-size: 0.72rem; font-weight: 800; color: #fff; background: #e2402f; padding: 3px 8px; border-radius: 999px; vertical-align: middle; }
+.book__coupon { margin-top: 4px; }
+.book__couponrow { display: flex; gap: 8px; }
+.book__couponrow input { flex: 1; }
+.book__couponmsg { display: block; font-size: 0.78rem; margin-top: 6px; }
+.book__couponmsg.ok { color: var(--ok); }
+.book__couponmsg.no { color: var(--accent); }
+.book__disc span:last-child { color: var(--accent); font-weight: 700; }
+
+/* 일정 변경 표시 */
+.mp-bk__change { margin: 10px 0 0; padding: 10px 12px; background: #f6ecd6; border-radius: 10px; font-size: 0.84rem; color: var(--ink-2); line-height: 1.55; }
+.mp-bk__change s { color: var(--faint); }
+.mp-bk__change b { color: var(--accent); }
+
+/* 마이페이지 제목행 · 할인관리 */
+.mp__titlerow { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.disc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 8px 0 18px; }
+.disc-card { border: 1px solid var(--line-2); border-radius: 14px; padding: 18px; background: var(--surface); }
+.disc-card__t { font-size: 1rem; font-weight: 800; margin-bottom: 12px; }
+.disc-card input { width: 100%; padding: 10px 13px; border: 1px solid var(--line); border-radius: 10px; font-size: 0.92rem; margin-bottom: 10px; outline: none; background: var(--surface); }
+.disc-card input:focus { border-color: var(--ink); }
+.disc-card .book__row { gap: 10px; }
+
 /* ================= 반응형 ================= */
 @media (max-width: 1024px) {
   .cats { grid-template-columns: repeat(4, 1fr); }
@@ -526,6 +553,7 @@ em { font-style: normal; }
   .auth-area { gap: 10px; }
   .bell-dd { width: calc(100vw - 32px); right: -8px; }
   .mp-req { flex-direction: column; align-items: stretch; }
+  .disc-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 460px) {
   .cats { grid-template-columns: repeat(2, 1fr); }

@@ -67,6 +67,21 @@ window.CHAT = {
   unread: function (user, bid) { const lr = this.lastRead(user, bid); return this.get(bid).filter((m) => m.from !== user && m.ts > lr).length; },
 };
 
+// 할인 (반짝할인 + 쿠폰) — 호스트가 룸별로 설정
+function _today() { const d = new Date(), p = (n) => String(n).padStart(2, "0"); return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`; }
+window.DISCOUNT = {
+  KEY: "gi_discounts",
+  all: function () { try { return JSON.parse(localStorage.getItem(this.KEY) || "{}"); } catch (e) { return {}; } },
+  get: function (sid) { return this.all()[sid] || {}; },
+  set: function (sid, obj) { const a = this.all(); a[sid] = obj; localStorage.setItem(this.KEY, JSON.stringify(a)); },
+  _active: function (d) { if (!d || !d.pct) return 0; const t = _today(); if (d.from && t < d.from) return 0; if (d.to && t > d.to) return 0; return +d.pct; },
+  flashPct: function (sid) { return this._active(this.get(sid).flash); },
+  coupon: function (sid) { return this.get(sid).coupon || null; },
+  couponPct: function (sid, code) { const c = this.get(sid).coupon; if (!c || !c.pct || !code) return 0; if (code.trim().toUpperCase() !== (c.code || "").toUpperCase()) return 0; const t = _today(); if (c.from && t < c.from) return 0; if (c.to && t > c.to) return 0; return +c.pct; },
+};
+// 반짝할인 반영 가격
+window.priceOf = function (s) { const pct = window.DISCOUNT.flashPct(s.id); return { pct, orig: s.price, price: pct ? Math.round(s.price * (100 - pct) / 100 / 100) * 100 : s.price }; };
+
 // ---------- 로고/아이콘 ----------
 const GI_SYMBOL = '<svg class="logo__mark" width="28" height="28" viewBox="0 0 64 64" fill="none" aria-hidden="true"><path d="M32 6 C21 6 12 14.5 12 25 C12 36 22 42 32 54 C42 42 52 36 52 25 C52 14.5 43 6 32 6 Z" stroke="#211E1A" stroke-width="5" stroke-linejoin="round"/><circle cx="28" cy="24" r="4.6" fill="#4C93B8"/><circle cx="36" cy="24" r="4.6" fill="#D97852"/></svg>';
 const BELL_SVG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>';
@@ -91,8 +106,8 @@ window.timeago = function (ts) { const s = (Date.now() - ts) / 1000; if (s < 60)
 
     const a = window.AUTH.get();
 
-    // 호스트 전용 내비(호스트 등록) — 일반회원에겐 숨김
-    document.querySelectorAll(".js-host-nav").forEach((e) => { e.style.display = (!a || a.role === "host") ? "" : "none"; });
+    // 호스트 전용 내비 — 일반회원에겐 숨김, 호스트에겐 '공간 등록'으로
+    document.querySelectorAll(".js-host-nav").forEach((e) => { e.style.display = (!a || a.role === "host") ? "" : "none"; e.textContent = (a && a.role === "host") ? "공간 등록" : "호스트 등록"; });
 
     document.querySelectorAll("[data-authbox]").forEach((box) => {
       if (a) {

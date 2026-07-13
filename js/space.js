@@ -104,7 +104,7 @@ $("#sp").innerHTML = `
     <!-- 예약 카드 -->
     <aside>
       <div class="book">
-        <div class="book__price"><strong>${won(S.price)}원</strong><span>/ 시간</span></div>
+        <div class="book__price" id="bkPrice"></div>
         <div class="book__field">
           <label class="book__label">날짜 선택</label>
           <div class="cal" id="bkCal"></div>
@@ -123,10 +123,16 @@ $("#sp").innerHTML = `
           <label class="book__label">인원</label>
           <input type="number" id="bkGuests" min="1" max="${S.capacity}" value="2" />
         </div>
+        <div class="book__field book__coupon">
+          <label class="book__label">쿠폰 코드</label>
+          <div class="book__couponrow"><input type="text" id="bkCoupon" placeholder="코드 입력" autocomplete="off" /><button type="button" class="btn btn--soft btn--sm" id="bkCouponBtn">적용</button></div>
+          <span class="book__couponmsg" id="bkCouponMsg"></span>
+        </div>
         <div class="book__sum">
-          <div class="book__sumrow"><span id="bkCalc">${won(S.price)}원 × 2시간</span><span id="bkSub">${won(S.price * 2)}원</span></div>
-          <div class="book__sumrow"><span>서비스 수수료</span><span id="bkFee">${won(Math.round(S.price * 2 * 0.05))}원</span></div>
-          <div class="book__total"><span>총 결제금액</span><b id="bkTotal">${won(Math.round(S.price * 2 * 1.05))}원</b></div>
+          <div class="book__sumrow"><span id="bkCalc"></span><span id="bkSub"></span></div>
+          <div class="book__sumrow book__disc" id="bkDiscRow" hidden><span id="bkDiscLbl"></span><span id="bkDisc"></span></div>
+          <div class="book__sumrow"><span>서비스 수수료</span><span id="bkFee"></span></div>
+          <div class="book__total"><span>총 결제금액</span><b id="bkTotal"></b></div>
         </div>
         <button class="btn btn--accent btn--lg btn--block" id="bkGo">예약 요청하기</button>
         <p class="book__note">아직 결제되지 않아요 · 호스트 승인 후 확정됩니다</p>
@@ -244,14 +250,37 @@ function refreshSlots() {
   if (bkHours.selectedOptions[0] && bkHours.selectedOptions[0].disabled) { const av = [...bkHours.options].find((o) => !o.disabled); if (av) bkHours.value = av.value; }
   recalc();
 }
+let couponPct = 0;
+function renderPrice() {
+  const fp = window.priceOf(S);
+  $("#bkPrice").innerHTML = fp.pct
+    ? `<span class="book__old">${won(fp.orig)}원</span><strong>${won(fp.price)}원</strong><span>/ 시간</span><span class="book__flash">⚡${fp.pct}%</span>`
+    : `<strong>${won(fp.price)}원</strong><span>/ 시간</span>`;
+}
 function recalc() {
   const hours = +bkHours.value;
-  const sub = S.price * hours, fee = Math.round(sub * 0.05);
-  $("#bkCalc").textContent = `${won(S.price)}원 × ${hours}시간`;
+  const fp = window.priceOf(S);
+  const unit = couponPct ? Math.round(fp.price * (100 - couponPct) / 100 / 100) * 100 : fp.price;
+  const sub = unit * hours, fee = Math.round(sub * 0.05);
+  const save = fp.orig * hours - sub;
+  $("#bkCalc").textContent = `${won(unit)}원 × ${hours}시간`;
   $("#bkSub").textContent = won(sub) + "원";
+  const dr = $("#bkDiscRow");
+  if (save > 0) { dr.hidden = false; $("#bkDiscLbl").textContent = "할인" + (fp.pct ? ` ⚡${fp.pct}%` : "") + (couponPct ? ` · 쿠폰 ${couponPct}%` : ""); $("#bkDisc").textContent = "-" + won(save) + "원"; }
+  else dr.hidden = true;
   $("#bkFee").textContent = won(fee) + "원";
   $("#bkTotal").textContent = won(sub + fee) + "원";
+  recalc._unit = unit; recalc._total = sub + fee;
 }
+renderPrice();
+if ($("#bkCouponBtn")) $("#bkCouponBtn").addEventListener("click", () => {
+  const code = $("#bkCoupon").value.trim();
+  const p = window.DISCOUNT.couponPct(S.id, code);
+  const msg = $("#bkCouponMsg");
+  if (p) { couponPct = p; msg.textContent = `쿠폰 적용됨 · ${p}% 추가 할인`; msg.className = "book__couponmsg ok"; }
+  else { couponPct = 0; msg.textContent = code ? "유효하지 않거나 기간이 지난 쿠폰이에요" : ""; msg.className = "book__couponmsg no"; }
+  recalc();
+});
 $("#bkCal").addEventListener("click", (e) => {
   const nav = e.target.closest(".cal-nav");
   if (nav && !nav.disabled) { calMonth = new Date(calMonth.getFullYear(), calMonth.getMonth() + +nav.dataset.cal, 1); renderCal(); return; }
@@ -272,9 +301,9 @@ $("#bkGo").addEventListener("click", () => {
   if (g > S.capacity) { toast(`최대 ${S.capacity}인까지 이용 가능해요`); return; }
   const a = window.AUTH.get();
   if (!a) { toast("로그인 후 예약할 수 있어요"); setTimeout(() => (location.href = "login.html"), 900); return; }
-  const sub = S.price * hours, fee = Math.round(sub * 0.05), total = sub + fee;
+  const unit = recalc._unit, total = recalc._total;
   const hostId = S.ownerId || "host";
-  window.BOOKINGS.add({ id: "b" + Date.now(), spaceId: S.id, spaceName: S.name, hostId, guestId: a.userId, guestName: a.name, date: selDate, start, hours, guests: g, total, status: "requested", ts: Date.now() });
+  window.BOOKINGS.add({ id: "b" + Date.now(), spaceId: S.id, spaceName: S.name, hostId, guestId: a.userId, guestName: window.AUTH.displayName(a), price: unit, coupon: couponPct || 0, date: selDate, start, hours, guests: g, total, status: "requested", ts: Date.now() });
   window.NOTIF.add({ forUser: hostId, title: S.name, sub: `새 예약 요청 · ${selDate} ${pad(start)}:00`, link: "mypage.html" });
   toast("예약을 요청했어요! 호스트 확인을 기다려 주세요");
   setTimeout(() => (location.href = "mypage.html"), 1100);

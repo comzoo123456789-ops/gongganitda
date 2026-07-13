@@ -18,7 +18,10 @@ const STATUS = {
   declined: { t: "거절됨", c: "gray" },
   cancelled: { t: "취소됨", c: "gray" },
 };
-const timeLabel = (b) => `${b.date} · ${String(b.start).padStart(2, "0")}:00~${String(b.start + b.hours).padStart(2, "0")}:00 · ${b.guests}인`;
+const pad = (n) => String(n).padStart(2, "0");
+const slot = (b) => `${b.date} ${pad(b.start)}:00~${pad(b.start + b.hours)}:00`;
+const timeLabel = (b) => `${b.date} · ${pad(b.start)}:00~${pad(b.start + b.hours)}:00 · ${b.guests}인`;
+const unitOf = (b) => b.price || Math.round(b.total / (b.hours * 1.05));
 
 // ---------- 공간 카드 (찜/내공간) ----------
 function cardHTML(s) {
@@ -59,6 +62,8 @@ function actionBtns(b, asHost) {
 function bookingCard(b, asHost) {
   const s = STATUS[b.status] || STATUS.requested;
   const un = window.CHAT.unread(me, b.id);
+  const changed = b.reschedFrom && b.status === "requested"
+    ? `<div class="mp-bk__change">🔁 일정 변경 요청<br /><s>${slot(b.reschedFrom)}</s> → <b>${slot(b)}</b></div>` : "";
   return `<div class="mp-bk ${un ? "has-unread" : ""}">
     <div class="mp-bk__top">
       <div class="mp-bk__info" onclick="location.href='space.html?id=${b.spaceId}'">
@@ -67,6 +72,7 @@ function bookingCard(b, asHost) {
       </div>
       <span class="mp-book__status st-${s.c}">${s.t}</span>
     </div>
+    ${changed}
     ${actionBtns(b, asHost)}
   </div>`;
 }
@@ -106,8 +112,8 @@ document.addEventListener("click", (e) => {
   if (!t) return;
   const id = t.dataset.accept || t.dataset.decline || t.dataset.cancel || t.dataset.resched || t.dataset.chat;
   const b = window.BOOKINGS.find(id); if (!b) return;
-  if (t.dataset.accept) { window.BOOKINGS.update(id, { status: "confirmed" }); notifyOther(b, b.spaceName, `예약이 확정되었어요 · ${b.date}`); toast("예약을 수락했어요"); renderAll(); }
-  else if (t.dataset.decline) { window.BOOKINGS.update(id, { status: "declined" }); notifyOther(b, b.spaceName, `예약이 거절되었어요 · ${b.date}`); toast("예약을 거절했어요"); renderAll(); }
+  if (t.dataset.accept) { window.BOOKINGS.update(id, { status: "confirmed", reschedFrom: null }); notifyOther(b, b.spaceName, `예약이 확정되었어요 · ${slot(b)}`); toast("예약을 수락했어요"); renderAll(); }
+  else if (t.dataset.decline) { window.BOOKINGS.update(id, { status: "declined", reschedFrom: null }); notifyOther(b, b.spaceName, `예약이 거절되었어요 · ${b.date}`); toast("예약을 거절했어요"); renderAll(); }
   else if (t.dataset.cancel) { if (!confirm("예약을 취소할까요?")) return; window.BOOKINGS.update(id, { status: "cancelled" }); notifyOther(b, b.spaceName, `예약이 취소되었어요 · ${b.date}`); toast("예약을 취소했어요"); renderAll(); }
   else if (t.dataset.resched) openResched(b);
   else if (t.dataset.chat) openChat(b);
@@ -121,21 +127,30 @@ modal.addEventListener("click", (e) => { if (e.target.closest("[data-mclose]")) 
 function openResched(b) {
   modal.hidden = false;
   const opts = (a, c) => { let o = ""; for (let i = a; i <= c; i++) o += `<option value="${i}">${i}</option>`; return o; };
+  const unit = unitOf(b);
   modalCard.innerHTML = `
     <div class="modal__head"><b>일정 변경</b><button class="modal__x" data-mclose>✕</button></div>
     <p class="modal__sub">${b.spaceName}</p>
-    <div class="book__field"><label class="book__label">날짜</label><input type="date" id="rsDate" value="${b.date}" min="${new Date().toISOString().slice(0, 10)}" /></div>
+    <div class="mp-bk__change" style="margin-bottom:14px">현재 예약<br /><b>${slot(b)}</b> · ${b.guests}인</div>
+    <div class="book__field"><label class="book__label">변경할 날짜</label><input type="date" id="rsDate" value="${b.date}" min="${new Date().toISOString().slice(0, 10)}" /></div>
     <div class="book__row">
-      <div class="book__field"><label class="book__label">시작(시)</label><select id="rsStart">${opts(9, 21)}</select></div>
-      <div class="book__field"><label class="book__label">이용(시간)</label><select id="rsHours">${opts(1, 8)}</select></div>
+      <div class="book__field"><label class="book__label">시작 시간</label><select id="rsStart">${opts(9, 21)}</select></div>
+      <div class="book__field"><label class="book__label">이용 시간</label><select id="rsHours">${opts(1, 8)}</select></div>
     </div>
+    <div class="book__total" style="margin:6px 0 14px"><span>변경 후 금액</span><b id="rsTotal"></b></div>
     <button class="btn btn--accent btn--block" id="rsSave">변경 요청</button>
-    <p class="modal__note">일정을 바꾸면 상대방의 재확인이 필요해 '승인 대기'로 돌아갑니다.</p>`;
+    <p class="modal__note">${won(unit)}원/시간 기준 · 일정을 바꾸면 상대방의 재확인이 필요해 '승인 대기'로 돌아갑니다.</p>`;
   $("#rsStart").value = b.start; $("#rsHours").value = b.hours;
+  const calc = () => { const h = +$("#rsHours").value; const sub = unit * h, total = sub + Math.round(sub * 0.05); $("#rsTotal").textContent = won(total) + "원"; return total; };
+  calc();
+  $("#rsStart").addEventListener("change", calc);
+  $("#rsHours").addEventListener("change", calc);
   $("#rsSave").addEventListener("click", () => {
     const date = $("#rsDate").value, start = +$("#rsStart").value, hours = +$("#rsHours").value;
-    window.BOOKINGS.update(b.id, { date, start, hours, status: "requested" });
-    notifyOther(b, b.spaceName, `일정 변경 요청 · ${date} ${String(start).padStart(2, "0")}:00`);
+    const total = calc();
+    if (date === b.date && start === b.start && hours === b.hours) { toast("변경 사항이 없어요"); return; }
+    window.BOOKINGS.update(b.id, { reschedFrom: { date: b.date, start: b.start, hours: b.hours }, date, start, hours, total, status: "requested" });
+    notifyOther(b, b.spaceName, `일정 변경 요청 · ${slot({ date, start, hours })}`);
     closeModal(); toast("일정 변경을 요청했어요"); renderAll();
   });
 }
@@ -176,6 +191,67 @@ window.addEventListener("storage", (e) => {
   const bid = new URLSearchParams(location.search).get("chat");
   if (bid) { const b = window.BOOKINGS.find(bid); if (b) openChat(b); }
 })();
+
+// ---------- 정보 수정 ----------
+$("#mpEdit").addEventListener("click", () => {
+  modal.hidden = false;
+  const u = window.AUTH.users().find((x) => x.userId === me) || {};
+  modalCard.innerHTML = `
+    <div class="modal__head"><b>정보 수정</b><button class="modal__x" data-mclose>✕</button></div>
+    <div class="book__field"><label class="book__label">닉네임</label><input type="text" id="pfNick" value="${(u.nick || u.name || "").replace(/"/g, "&quot;")}" /></div>
+    <div class="book__field"><label class="book__label">이메일</label><input type="email" id="pfEmail" value="${u.email || ""}" /></div>
+    <div class="book__field"><label class="book__label">새 비밀번호 <span style="color:var(--faint);font-weight:500">(변경 시에만)</span></label><input type="password" id="pfPw" placeholder="••••••" /></div>
+    <button class="btn btn--accent btn--block" id="pfSave">저장</button>`;
+  $("#pfSave").addEventListener("click", () => {
+    const nick = $("#pfNick").value.trim(), email = $("#pfEmail").value.trim(), pw = $("#pfPw").value;
+    if (!nick) { toast("닉네임을 입력해주세요"); return; }
+    const users = window.AUTH.users(); const i = users.findIndex((x) => x.userId === me);
+    if (i >= 0) { users[i].nick = nick; users[i].name = nick; users[i].email = email; if (pw) users[i].pw = pw; window.AUTH.saveUsers(users); }
+    window.AUTH.set(Object.assign({}, auth, { name: nick, email }));
+    toast("저장되었어요"); setTimeout(() => location.reload(), 700);
+  });
+});
+
+// ---------- 호스트: 수익·할인 관리 ----------
+function renderDisc() {
+  const wrap = $("#discWrap"); if (!wrap) return;
+  const rooms = getAllSpaces();
+  wrap.innerHTML = `
+    <h2 class="sp-sec__title" style="margin-bottom:6px">반짝할인 · 쿠폰 설정</h2>
+    <p class="mp__sub" style="margin-bottom:18px">공간을 골라 할인을 설정하세요. <b>반짝할인</b>은 목록·상세 가격에 즉시 반영되고, <b>쿠폰</b>은 예약 시 코드 입력으로 적용됩니다.</p>
+    <div class="book__field"><label class="book__label">공간 선택</label><select id="dcRoom">${rooms.map((r) => `<option value="${r.id}">${r.name}</option>`).join("")}</select></div>
+    <div class="disc-grid">
+      <div class="disc-card">
+        <h3 class="disc-card__t">⚡ 반짝할인</h3>
+        <label class="book__label">할인율 (%)</label><input type="number" id="dcFlashPct" min="0" max="70" placeholder="예: 20" />
+        <div class="book__row"><div class="book__field"><label class="book__label">시작일</label><input type="date" id="dcFlashFrom" /></div><div class="book__field"><label class="book__label">종료일</label><input type="date" id="dcFlashTo" /></div></div>
+      </div>
+      <div class="disc-card">
+        <h3 class="disc-card__t">🎟️ 쿠폰</h3>
+        <label class="book__label">쿠폰 코드</label><input type="text" id="dcCoupCode" placeholder="예: WELCOME10" />
+        <label class="book__label">할인율 (%)</label><input type="number" id="dcCoupPct" min="0" max="70" placeholder="예: 10" />
+        <div class="book__row"><div class="book__field"><label class="book__label">시작일</label><input type="date" id="dcCoupFrom" /></div><div class="book__field"><label class="book__label">종료일</label><input type="date" id="dcCoupTo" /></div></div>
+      </div>
+    </div>
+    <button class="btn btn--accent btn--lg" id="dcSave">할인 저장</button>
+    <p class="hf-note" id="dcMsg"></p>`;
+  const load = () => {
+    const d = window.DISCOUNT.get(+$("#dcRoom").value); const f = d.flash || {}, c = d.coupon || {};
+    $("#dcFlashPct").value = f.pct || ""; $("#dcFlashFrom").value = f.from || ""; $("#dcFlashTo").value = f.to || "";
+    $("#dcCoupCode").value = c.code || ""; $("#dcCoupPct").value = c.pct || ""; $("#dcCoupFrom").value = c.from || ""; $("#dcCoupTo").value = c.to || "";
+  };
+  load();
+  $("#dcRoom").addEventListener("change", load);
+  $("#dcSave").addEventListener("click", () => {
+    const sid = +$("#dcRoom").value;
+    const flash = $("#dcFlashPct").value ? { pct: +$("#dcFlashPct").value, from: $("#dcFlashFrom").value, to: $("#dcFlashTo").value } : null;
+    const coupon = ($("#dcCoupCode").value && $("#dcCoupPct").value) ? { code: $("#dcCoupCode").value.trim(), pct: +$("#dcCoupPct").value, from: $("#dcCoupFrom").value, to: $("#dcCoupTo").value } : null;
+    window.DISCOUNT.set(sid, { flash, coupon });
+    $("#dcMsg").textContent = "저장되었어요. 목록·상세 가격에 반영됩니다.";
+    toast("할인 설정을 저장했어요");
+  });
+}
+if (isHost) renderDisc();
 
 // 탭
 $("#mpTabs").addEventListener("click", (e) => {

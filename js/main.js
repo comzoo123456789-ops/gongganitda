@@ -39,10 +39,12 @@ function cardHTML(s) {
   const nowBadge = s.now ? `<span class="sp-card__badge"><i></i>실시간 예약</span>` : "";
   const g = s.g || [c.ink, "#cfc7b8"];
   const img = spaceImg(s, 640, 480);
+  const pr = window.priceOf(s);
   return `<article class="sp-card" data-id="${s.id}">
     <div class="sp-card__thumb" style="background:linear-gradient(135deg,${g[0]},${g[1]})">
       ${img ? `<img src="${img}" alt="${s.name}" loading="lazy" onerror="this.remove()" />` : ""}
       ${nowBadge}
+      ${pr.pct ? `<span class="sp-card__flash">⚡${pr.pct}%</span>` : ""}
       <button class="sp-card__heart ${window.FAV.has(s.id) ? "is-on" : ""}" data-heart="${s.id}" aria-label="찜">${iconSVG("heart", 18)}</button>
     </div>
     <div class="sp-card__body">
@@ -53,7 +55,7 @@ function cardHTML(s) {
         <span>${iconSVG("users", 14)}~${s.capacity}인</span>
       </div>
       <div class="sp-card__foot">
-        <span class="sp-card__price">${won(s.price)}<span>원 / 시간</span></span>
+        <span class="sp-card__price">${pr.pct ? `<span class="sp-old">${won(pr.orig)}</span> ` : ""}${won(pr.price)}<span>원 / 시간</span></span>
         <span class="sp-card__rating">${iconSVG("star", 14)}${s.rating || "신규"}${s.reviews ? `<em>(${s.reviews})</em>` : ""}</span>
       </div>
     </div>

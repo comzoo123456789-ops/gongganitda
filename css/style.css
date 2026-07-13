@@ -531,6 +531,28 @@ em { font-style: normal; }
 .settle-kpi--hl strong { color: #fff; }
 .settle-kpi--hl span { color: rgba(255,255,255,0.6); }
 
+/* 상세 위치 */
+.sp-loc__addr { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; color: var(--ink-2); font-weight: 600; margin-bottom: 14px; }
+.sp-loc__addr .ic { color: var(--accent); }
+
+/* 지도 페이지 */
+.mapp { max-width: 1120px; margin: 0 auto; padding: 26px 24px 80px; }
+.mapp__head { margin-bottom: 18px; }
+.mapp__title { font-family: var(--serif); font-size: 2rem; font-weight: 600; letter-spacing: -0.02em; margin: 6px 0 6px; }
+.mapp__sub { color: var(--muted); font-size: 0.92rem; line-height: 1.6; }
+.mapp__canvas { width: 100%; height: 460px; border-radius: 16px; border: 1px solid var(--line-2); overflow: hidden; background: var(--surface-2); }
+.mapp__fallback { margin-top: 10px; }
+.mapf-group { margin-bottom: 22px; }
+.mapf-group__t { font-size: 1.05rem; font-weight: 800; margin-bottom: 12px; }
+.mapf-group__t span { color: var(--accent); font-size: 0.9rem; margin-left: 4px; }
+.mapf-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.mapf-item { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--line-2); border-radius: 12px; padding: 12px 14px; }
+.mapf-item__main { flex: 1; min-width: 0; cursor: pointer; }
+.mapf-item__main b { display: block; font-weight: 700; font-size: 0.95rem; }
+.mapf-item__main span { display: block; font-size: 0.82rem; color: var(--muted); margin-top: 2px; }
+.mapf-item__pin { width: 38px; height: 38px; border-radius: 10px; background: var(--surface-2); display: flex; align-items: center; justify-content: center; color: var(--accent); flex-shrink: 0; }
+.mapf-item__pin:hover { background: var(--accent-soft); }
+
 /* 문의 텍스트영역 */
 .book__field textarea, #iqText { width: 100%; padding: 11px 13px; border: 1px solid var(--line); border-radius: 10px; font-family: inherit; font-size: 0.92rem; resize: vertical; outline: none; background: var(--surface); line-height: 1.5; }
 .book__field textarea:focus, #iqText:focus { border-color: var(--ink); }
@@ -603,6 +625,8 @@ em { font-style: normal; }
   .mp-req { flex-direction: column; align-items: stretch; }
   .disc-grid { grid-template-columns: 1fr; }
   .settle-kpis { grid-template-columns: repeat(2, 1fr); }
+  .mapf-list { grid-template-columns: 1fr; }
+  .mapp__canvas { height: 340px; }
 }
 @media (max-width: 460px) {
   .cats { grid-template-columns: repeat(2, 1fr); }

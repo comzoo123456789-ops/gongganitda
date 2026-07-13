@@ -85,6 +85,14 @@ $("#sp").innerHTML = `
       </div>
 
       <div class="sp-sec">
+        <h2 class="sp-sec__title">위치</h2>
+        <div class="sp-loc">
+          <div class="sp-loc__addr">${iconSVG("pin", 18)} ${S.region}</div>
+          <a class="btn btn--outline btn--sm" href="${naverMapUrl(S.addr || S.region)}" target="_blank" rel="noopener">네이버 지도에서 보기 →</a>
+        </div>
+      </div>
+
+      <div class="sp-sec">
         <h2 class="sp-sec__title">이용 후기 <span id="spRevAvg"></span></h2>
         <div id="spReviewForm"></div>
         <div class="sp-rev" id="spRev"></div>

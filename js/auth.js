@@ -103,6 +103,14 @@ window.SETTINGS = {
 window.HOST_FEE = 0.10;
 window.settleOf = function (b) { const sub = Math.round(b.total / 1.05); return Math.round(sub * (1 - window.HOST_FEE)); };
 
+// 1:1 문의
+window.INQUIRY = {
+  KEY: "gi_inquiries",
+  all: function () { try { return JSON.parse(localStorage.getItem(this.KEY) || "[]"); } catch (e) { return []; } },
+  list: function (user) { return this.all().filter((q) => q.userId === user); },
+  add: function (q) { const l = this.all(); l.unshift(Object.assign({ id: "q" + Date.now(), ts: Date.now(), status: "received" }, q)); localStorage.setItem(this.KEY, JSON.stringify(l)); },
+};
+
 // ---------- 로고/아이콘 ----------
 const GI_SYMBOL = '<svg class="logo__mark" width="28" height="28" viewBox="0 0 64 64" fill="none" aria-hidden="true"><path d="M32 6 C21 6 12 14.5 12 25 C12 36 22 42 32 54 C42 42 52 36 52 25 C52 14.5 43 6 32 6 Z" stroke="#211E1A" stroke-width="5" stroke-linejoin="round"/><circle cx="28" cy="24" r="4.6" fill="#4C93B8"/><circle cx="36" cy="24" r="4.6" fill="#D97852"/></svg>';
 const BELL_SVG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>';

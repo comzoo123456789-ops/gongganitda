@@ -113,6 +113,40 @@ function renderMine() {
 function renderAll() { renderBooks(); if (isHost) { renderReqs(); renderMine(); } }
 renderAll();
 
+// ---------- 내 후기 ----------
+function renderMyRev() {
+  const wrap = $("#myrevWrap"); if (!wrap) return;
+  const all = getAllSpaces();
+  const rows = window.REVIEWS.all().filter((r) => r.userId === me);
+  wrap.innerHTML = rows.length ? rows.map((r) => {
+    const sp = all.find((s) => s.id === r.spaceId);
+    return `<div class="mp-bk"><div class="mp-bk__top"><div class="mp-bk__info" onclick="location.href='space.html?id=${r.spaceId}'"><div class="mp-book__name">${sp ? sp.name : "공간"}</div><div class="mp-bk__sub" style="color:var(--gold)">${"★".repeat(r.rating)}${"☆".repeat(5 - r.rating)}</div></div></div><div class="mp-bk__policy" style="color:var(--ink-2);font-size:0.9rem">${r.text}</div></div>`;
+  }).join("") : `<div class="mp-empty">아직 작성한 후기가 없어요. 이용 완료한 예약에서 후기를 남겨보세요.</div>`;
+}
+// ---------- 1:1 문의 ----------
+function renderInq() {
+  const wrap = $("#inqWrap"); if (!wrap) return;
+  wrap.innerHTML = `
+    <h3 class="mg-h" style="margin-top:0;border:none;padding-top:0">1:1 문의하기</h3>
+    <div class="book__field"><label class="book__label">제목</label><input type="text" id="iqSubject" placeholder="문의 제목" /></div>
+    <div class="book__field"><label class="book__label">내용</label><textarea id="iqText" rows="3" placeholder="문의 내용을 입력하세요"></textarea></div>
+    <button class="btn btn--accent" id="iqSend">문의 등록</button>
+    <h3 class="mg-h">문의 내역</h3>
+    <div id="iqList"></div>`;
+  const drawList = () => {
+    const l = window.INQUIRY.list(me);
+    $("#iqList").innerHTML = l.length ? l.map((q) => `<div class="mp-bk"><div class="mp-bk__top"><div class="mp-bk__info"><div class="mp-book__name">${q.subject}</div><div class="mp-book__meta">${new Date(q.ts).toLocaleDateString("ko-KR")} · ${q.text}</div></div><span class="mp-book__status st-amber">접수됨</span></div><div class="mp-bk__policy">📩 담당자가 24시간 내 답변드릴 예정입니다. (데모)</div></div>`).join("") : `<div class="mp-empty">문의 내역이 없어요.</div>`;
+  };
+  drawList();
+  $("#iqSend").addEventListener("click", () => {
+    const s = $("#iqSubject").value.trim(), t = $("#iqText").value.trim();
+    if (!s || !t) { toast("제목과 내용을 입력해주세요"); return; }
+    window.INQUIRY.add({ userId: me, name: window.AUTH.displayName(auth), subject: s, text: t });
+    $("#iqSubject").value = ""; $("#iqText").value = ""; drawList(); toast("문의가 접수되었어요");
+  });
+}
+renderMyRev(); renderInq();
+
 // ---------- 토스트 ----------
 let toastT; function toast(m) { const t = $("#toast"); t.textContent = m; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => (t.hidden = true), 2400); }
 
@@ -307,9 +341,11 @@ function renderManage() {
     <p class="hf-note" id="mgMsg"></p>`;
 
   const rid = () => +$("#mgRoom").value;
-  const loadDisc = () => { const d = window.DISCOUNT.get(rid()), f = d.flash || {}, c = d.coupon || {}; $("#dcFlashPct").value = f.pct || ""; $("#dcFlashFrom").value = f.from || ""; $("#dcFlashTo").value = f.to || ""; $("#dcCoupCode").value = c.code || ""; $("#dcCoupPct").value = c.pct || ""; $("#dcCoupFrom").value = c.from || ""; $("#dcCoupTo").value = c.to || ""; };
+  const loadDisc = () => { const d = window.DISCOUNT.get(rid()), f = d.flash || {}, c = d.coupon || {}; $("#dcFlashPct").value = f.pct || ""; $("#dcFlashFrom").value = f.from || todayStr; $("#dcFlashTo").value = f.to || ""; $("#dcCoupCode").value = c.code || ""; $("#dcCoupPct").value = c.pct || ""; $("#dcCoupFrom").value = c.from || todayStr; $("#dcCoupTo").value = c.to || ""; };
   const loadBlk = () => { const l = window.BLOCKS.get(rid()).slice().sort(); $("#blkList").innerHTML = l.length ? l.map((d) => `<span class="blk-chip">${d}<button data-unblk="${d}">✕</button></span>`).join("") : `<span class="mp__sub">차단된 날짜가 없어요.</span>`; };
   const loadSet = () => { const s = window.SETTINGS.get(rid()); $("#stAuto").checked = !!s.autoAccept; $("#stMin").value = s.minH; $("#stMax").value = s.maxH; $("#stBuf").value = s.buffer; };
+  ["dcFlashFrom", "dcFlashTo", "dcCoupFrom", "dcCoupTo", "blkDate"].forEach((id) => { const el = document.getElementById(id); if (el) el.min = todayStr; });
+  $("#blkDate").value = todayStr;
   const loadAll = () => { loadDisc(); loadBlk(); loadSet(); };
   loadAll();
   $("#mgRoom").addEventListener("change", loadAll);

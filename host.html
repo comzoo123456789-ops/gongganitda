@@ -30,8 +30,8 @@
   <main class="hostreg">
     <div class="hostreg__head">
       <span class="section__kicker">HOST</span>
-      <h1 class="hostreg__title">공간 등록</h1>
-      <p class="hostreg__sub">비어있는 공간을 등록하고 시간 단위로 빌려주세요. 등록은 무료입니다.</p>
+      <h1 class="hostreg__title" id="hTitle">공간 등록</h1>
+      <p class="hostreg__sub" id="hSub">비어있는 공간을 등록하고 시간 단위로 빌려주세요. 등록은 무료입니다.</p>
     </div>
 
     <div class="hostreg__layout">
@@ -74,7 +74,7 @@
           <textarea id="hDesc" rows="3" placeholder="공간의 특징, 이용 안내 등을 자유롭게 적어주세요."></textarea>
         </div>
         <p class="hf-err" id="hErr" hidden></p>
-        <button type="submit" class="btn btn--accent btn--lg btn--block">공간 등록하기</button>
+        <button type="submit" class="btn btn--accent btn--lg btn--block" id="hSubmit">공간 등록하기</button>
         <p class="hf-note">데모 사이트 — 등록 정보는 이 브라우저에 저장되며, 홈·검색 목록에 바로 나타납니다.</p>
       </form>
 

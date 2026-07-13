@@ -9,6 +9,28 @@ const AMENITIES = ["주차", "와이파이", "빔프로젝터", "취사 가능",
 $("#hCat").innerHTML = `<option value="">선택하세요</option>` + CATEGORIES.map((c) => `<option value="${c.id}">${c.label}</option>`).join("");
 $("#hAmen").innerHTML = AMENITIES.map((a) => `<label class="hf-chk"><input type="checkbox" value="${a}" /><span>${a}</span></label>`).join("");
 
+// 수정 모드 (?id=) — 기존 공간 불러와 채우기
+const editId = +new URLSearchParams(location.search).get("id") || 0;
+let editSpace = null;
+if (editId) {
+  let mine = [];
+  try { mine = JSON.parse(localStorage.getItem("gi_spaces") || "[]"); } catch (e) {}
+  editSpace = mine.find((s) => s.id === editId);
+  if (editSpace) {
+    $("#hTitle").textContent = "공간 수정";
+    $("#hSub").textContent = "등록한 공간의 정보를 수정하세요.";
+    $("#hSubmit").textContent = "수정 저장";
+    $("#hName").value = editSpace.name || "";
+    $("#hCat").value = editSpace.cat || "";
+    $("#hCapacity").value = editSpace.capacity || "";
+    $("#hRegion").value = editSpace.region || "";
+    $("#hPrice").value = editSpace.price || "";
+    $("#hPhoto").value = editSpace.photo || "";
+    $("#hDesc").value = editSpace.desc || "";
+    document.querySelectorAll("#hAmen input").forEach((i) => { i.checked = (editSpace.tags || []).indexOf(i.value) >= 0; });
+  }
+}
+
 const val = (id) => $(id).value.trim();
 const checkedAmen = () => [...document.querySelectorAll('#hAmen input:checked')].map((i) => i.value);
 
@@ -70,22 +92,24 @@ $("#hostForm").addEventListener("submit", (e) => {
   }
   err.hidden = true;
   const c = catById(cat);
-  const space = {
-    id: Date.now(),
-    name, cat, region, price, capacity,
-    rating: 0, reviews: 0, now: true, host: true,
-    ownerId: (window.AUTH && window.AUTH.get() ? window.AUTH.get().userId : "host"),
-    tags: checkedAmen(),
-    desc: val("#hDesc"),
-    photo: val("#hPhoto"),
-    g: [c.ink, c.tint],
-  };
+  const fields = { name, cat, region, price, capacity, tags: checkedAmen(), desc: val("#hDesc"), photo: val("#hPhoto"), g: [c.ink, c.tint] };
   let mine = [];
   try { mine = JSON.parse(localStorage.getItem("gi_spaces") || "[]"); } catch (e2) {}
-  mine.unshift(space);
-  localStorage.setItem("gi_spaces", JSON.stringify(mine));
-  toast("공간이 등록되었어요! 상세 페이지로 이동합니다");
-  setTimeout(() => (location.href = "space.html?id=" + space.id), 900);
+  let goId;
+  if (editId && editSpace) {
+    const i = mine.findIndex((s) => s.id === editId);
+    if (i >= 0) mine[i] = Object.assign({}, mine[i], fields);
+    goId = editId;
+    localStorage.setItem("gi_spaces", JSON.stringify(mine));
+    toast("공간 정보를 수정했어요");
+  } else {
+    const space = Object.assign({ id: Date.now(), rating: 0, reviews: 0, now: true, host: true, ownerId: (window.AUTH && window.AUTH.get() ? window.AUTH.get().userId : "host") }, fields);
+    goId = space.id;
+    mine.unshift(space);
+    localStorage.setItem("gi_spaces", JSON.stringify(mine));
+    toast("공간이 등록되었어요!");
+  }
+  setTimeout(() => (location.href = "space.html?id=" + goId), 900);
 });
 
 // 햄버거

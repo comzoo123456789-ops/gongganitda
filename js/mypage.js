@@ -107,7 +107,7 @@ function renderReqs() {
 function renderMine() {
   let mine = [];
   try { mine = JSON.parse(localStorage.getItem("gi_spaces") || "[]"); } catch (e) {}
-  $("#mineGrid").innerHTML = mine.map(cardHTML).join("");
+  $("#mineGrid").innerHTML = mine.map((s) => `<div class="mine-wrap">${cardHTML(s)}<div class="mine-act"><a href="host.html?id=${s.id}" class="btn btn--soft btn--sm">수정</a><button class="btn btn--danger btn--sm" data-delspace="${s.id}">삭제</button></div></div>`).join("");
   $("#mineEmpty").hidden = mine.length > 0;
 }
 function renderAll() { renderBooks(); if (isHost) { renderReqs(); renderMine(); } }
@@ -280,6 +280,16 @@ window.addEventListener("storage", (e) => {
   const bid = new URLSearchParams(location.search).get("chat");
   if (bid) { const b = window.BOOKINGS.find(bid); if (b) openChat(b); }
 })();
+
+// ---------- 내 공간 삭제 ----------
+document.addEventListener("click", (e) => {
+  const d = e.target.closest("[data-delspace]"); if (!d) return;
+  if (!confirm("이 공간을 삭제할까요? 되돌릴 수 없어요.")) return;
+  let mine = []; try { mine = JSON.parse(localStorage.getItem("gi_spaces") || "[]"); } catch (x) {}
+  mine = mine.filter((s) => s.id !== +d.dataset.delspace);
+  localStorage.setItem("gi_spaces", JSON.stringify(mine));
+  renderMine(); toast("공간을 삭제했어요");
+});
 
 // ---------- 정보 수정 ----------
 $("#mpEdit").addEventListener("click", () => {

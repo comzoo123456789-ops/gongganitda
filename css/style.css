@@ -531,6 +531,11 @@ em { font-style: normal; }
 .settle-kpi--hl strong { color: #fff; }
 .settle-kpi--hl span { color: rgba(255,255,255,0.6); }
 
+/* 내 등록 공간 수정/삭제 */
+.mine-wrap { display: flex; flex-direction: column; }
+.mine-act { display: flex; gap: 8px; margin-top: 10px; }
+.mine-act .btn { flex: 1; }
+
 /* 상세 위치 */
 .sp-loc__addr { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; color: var(--ink-2); font-weight: 600; margin-bottom: 14px; }
 .sp-loc__addr .ic { color: var(--accent); }

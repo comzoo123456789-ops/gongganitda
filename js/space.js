@@ -74,7 +74,7 @@ $("#sp").innerHTML = `
 
       <div class="sp-sec">
         <h2 class="sp-sec__title">공간 소개</h2>
-        <p class="sp-desc">${S.region}에 위치한 <b>${S.name}</b>은(는) 최대 ${S.capacity}인까지 이용 가능한 ${C.label} 공간입니다. 시간 단위로 편하게 대관할 수 있으며, 필요한 기본 시설을 모두 갖추고 있어 준비 없이도 바로 이용하실 수 있습니다. 모임·행사·작업 등 목적에 맞게 자유롭게 활용해 보세요.</p>
+        <p class="sp-desc">${S.desc ? S.desc.replace(/</g, "&lt;").replace(/\n/g, "<br />") : `${S.region}에 위치한 <b>${S.name}</b>은(는) 최대 ${S.capacity}인까지 이용 가능한 ${C.label} 공간입니다. 시간 단위로 편하게 대관할 수 있으며, 필요한 기본 시설을 모두 갖추고 있어 준비 없이도 바로 이용하실 수 있습니다. 모임·행사·작업 등 목적에 맞게 자유롭게 활용해 보세요.`}</p>
       </div>
 
       <div class="sp-sec">

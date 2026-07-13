@@ -3,26 +3,26 @@
    웜 그레이지 · Noto Serif KR 디스플레이 · 실사진 · 에디토리얼 여백
    ============================================================ */
 :root {
-  --bg: #ece9e2;
+  --bg: #f6f6f4;
   --surface: #ffffff;
-  --surface-2: #f4f1ea;
-  --ink: #1c1a15;
-  --ink-2: #46423a;
-  --muted: #6f685c;
-  --faint: #a49c8d;
-  --line: #ded8cc;
-  --line-2: #eae5db;
-  --accent: #b0503a;
-  --accent-2: #cf7a5f;
-  --accent-soft: #f2e5de;
-  --dark: #17140f;
-  --gold: #c79a4b;
+  --surface-2: #f2f2ef;
+  --ink: #18170f;
+  --ink-2: #47443c;
+  --muted: #6f6a60;
+  --faint: #a9a49a;
+  --line: #eae8e3;
+  --line-2: #f1f0ec;
+  --accent: #d1503a;
+  --accent-2: #e97a5c;
+  --accent-soft: #fbe7e0;
+  --dark: #16150f;
+  --gold: #cf9f45;
   --ok: #3f7a5e;
-  --radius: 18px;
-  --radius-sm: 12px;
-  --shadow-sm: 0 2px 10px -4px rgba(28, 22, 12, 0.14);
-  --shadow: 0 14px 40px -18px rgba(28, 22, 12, 0.28);
-  --shadow-lg: 0 30px 70px -24px rgba(28, 22, 12, 0.4);
+  --radius: 22px;
+  --radius-sm: 14px;
+  --shadow-sm: 0 4px 16px -6px rgba(20, 20, 24, 0.10);
+  --shadow: 0 16px 44px -18px rgba(20, 20, 24, 0.16);
+  --shadow-lg: 0 32px 72px -24px rgba(20, 20, 24, 0.26);
   --header-h: 70px;
   --serif: "Noto Serif KR", serif;
 }
@@ -59,8 +59,8 @@ em { font-style: normal; }
 .btn--block { width: 100%; }
 
 /* ================= 헤더 ================= */
-.header { position: sticky; top: 0; z-index: 100; background: rgba(236, 233, 226, 0.7); backdrop-filter: saturate(180%) blur(14px); border-bottom: 1px solid transparent; transition: border-color 0.2s, background 0.2s; }
-.header.is-scrolled { background: rgba(236, 233, 226, 0.9); border-bottom-color: var(--line-2); }
+.header { position: sticky; top: 0; z-index: 100; background: rgba(246, 246, 244, 0.72); backdrop-filter: saturate(180%) blur(14px); border-bottom: 1px solid transparent; transition: border-color 0.2s, background 0.2s; }
+.header.is-scrolled { background: rgba(246, 246, 244, 0.92); border-bottom-color: var(--line-2); }
 .header__inner { max-width: 1220px; margin: 0 auto; height: var(--header-h); padding: 0 32px; display: flex; align-items: center; gap: 22px; }
 .logo { display: flex; align-items: center; gap: 9px; font-size: 1.34rem; font-weight: 700; letter-spacing: -0.02em; font-family: var(--serif); flex-shrink: 0; }
 .logo__dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
@@ -124,7 +124,7 @@ em { font-style: normal; }
 
 /* ================= 카테고리 ================= */
 .cats { display: grid; grid-template-columns: repeat(8, 1fr); gap: 12px; }
-.cat { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 18px 8px; background: var(--surface); border: 1px solid var(--line-2); border-radius: 14px; transition: all 0.22s cubic-bezier(0.2, 0.7, 0.3, 1); cursor: pointer; }
+.cat { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 20px 8px; background: var(--surface); border: 1px solid transparent; border-radius: 18px; box-shadow: var(--shadow-sm); transition: all 0.22s cubic-bezier(0.2, 0.7, 0.3, 1); cursor: pointer; }
 .cat:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
 .cat__ic { width: 46px; height: 46px; border-radius: 13px; display: flex; align-items: center; justify-content: center; transition: transform 0.22s; }
 .cat:hover .cat__ic { transform: scale(1.08) rotate(-3deg); }
@@ -139,8 +139,10 @@ em { font-style: normal; }
 
 /* ================= 공간 카드 ================= */
 .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px; }
-.sp-card { background: var(--surface); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; transition: all 0.25s cubic-bezier(0.2, 0.7, 0.3, 1); cursor: pointer; }
+.sp-card { background: var(--surface); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow-sm); transition: all 0.25s cubic-bezier(0.2, 0.7, 0.3, 1); cursor: pointer; }
 .sp-card:hover { transform: translateY(-6px); box-shadow: var(--shadow); }
+.sp-card__body { padding-left: 4px; padding-right: 4px; }
+.sp-card__thumb { border-radius: var(--radius) var(--radius) 0 0; }
 .sp-card__thumb { position: relative; aspect-ratio: 4 / 3; overflow: hidden; }
 .sp-card__thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.3, 1); }
 .sp-card:hover .sp-card__thumb img { transform: scale(1.07); }

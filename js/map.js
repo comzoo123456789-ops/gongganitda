@@ -7,10 +7,13 @@
   const won = (n) => (+n || 0).toLocaleString("ko-KR");
   const spaces = getAllSpaces();
   const key = window.NAVER_MAP_KEY;
-  let map = null;
+  let map = null, authFailed = false;
+
+  // 네이버 인증 실패 시 자동 호출됨 → 목록형으로 폴백 + 안내
+  window.navermap_authFailure = function () { authFailed = true; fallback(); };
 
   if (key) {
-    // 신규 콘솔은 ncpKeyId, 구버전은 ncpClientId — 순차 시도
+    // 신규 콘솔은 ncpKeyId, 구버전은 ncpClientId — 순차 시도(스크립트 로드 실패 시)
     loadNaver("ncpKeyId", onReady, () => loadNaver("ncpClientId", onReady, fallback));
   } else {
     fallback();
@@ -59,7 +62,10 @@
 
   function fallback() {
     $("#map").style.display = "none";
-    $("#mapNote").textContent = "지역별 공간 목록이에요. 항목을 누르면 네이버 지도에서 위치가 열립니다.";
+    $("#mapFallback").hidden = false;
+    $("#mapNote").innerHTML = authFailed
+      ? '⚠️ 네이버 지도 인증에 실패했어요. 콘솔에서 <b>Web 서비스 URL에 이 사이트 도메인</b>을 등록했는지 확인해 주세요. 아래는 지역별 목록입니다.'
+      : "지역별 공간 목록이에요. 항목을 누르면 네이버 지도에서 위치가 열립니다.";
     const byGu = {};
     spaces.forEach((s) => { const gu = (s.region || "기타").split(" ").slice(0, 2).join(" "); (byGu[gu] = byGu[gu] || []).push(s); });
     $("#mapFallback").innerHTML = Object.keys(byGu).sort().map((gu) => `

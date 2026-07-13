@@ -189,10 +189,13 @@ let toastT;
 function toast(msg) { const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => (t.hidden = true), 2600); }
 
 $("#bkGo").addEventListener("click", () => {
-  const start = +bkStart.value, hours = +bkHours.value;
-  const g = +bkGuests.value;
+  const start = +bkStart.value, hours = +bkHours.value, g = +bkGuests.value;
   if (g > S.capacity) { toast(`최대 ${S.capacity}인까지 이용 가능해요`); return; }
-  toast(`예약 요청 완료! ${bkDate.value} ${String(start).padStart(2, "0")}:00~${String(start + hours).padStart(2, "0")}:00 · ${g}인 (데모)`);
+  if (!window.AUTH || !window.AUTH.get()) { toast("로그인 후 예약할 수 있어요"); setTimeout(() => (location.href = "login.html"), 900); return; }
+  const sub = S.price * hours, fee = Math.round(sub * 0.05), total = sub + fee;
+  window.BOOKINGS.add({ spaceId: S.id, spaceName: S.name, date: bkDate.value, start, hours, guests: g, total, ts: Date.now() });
+  toast("예약 요청 완료! 마이페이지에서 확인하세요");
+  setTimeout(() => (location.href = "mypage.html"), 1000);
 });
 
 // 햄버거

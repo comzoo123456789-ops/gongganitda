@@ -3,7 +3,6 @@
 // ============================================================
 const $ = (s) => document.querySelector(s);
 const won = (n) => n.toLocaleString("ko-KR");
-const liked = new Set();
 let activeCat = "all";
 
 // 검색바 아이콘 주입
@@ -44,7 +43,7 @@ function cardHTML(s) {
     <div class="sp-card__thumb" style="background:linear-gradient(135deg,${g[0]},${g[1]})">
       ${img ? `<img src="${img}" alt="${s.name}" loading="lazy" onerror="this.remove()" />` : ""}
       ${nowBadge}
-      <button class="sp-card__heart ${liked.has(s.id) ? "is-on" : ""}" data-heart="${s.id}" aria-label="찜">${iconSVG("heart", 18)}</button>
+      <button class="sp-card__heart ${window.FAV.has(s.id) ? "is-on" : ""}" data-heart="${s.id}" aria-label="찜">${iconSVG("heart", 18)}</button>
     </div>
     <div class="sp-card__body">
       <span class="sp-card__cat">${c.label}</span>
@@ -91,6 +90,20 @@ renderGrid();
   </div>`;
 })();
 
+// 목적별 큐레이션
+const COLLECTIONS = [
+  { title: "파티·모임", sub: "생일·기념일·홈파티", type: "party", img: "1505373877841-8d25f7d46678" },
+  { title: "촬영·스튜디오", sub: "화보·유튜브·라이브", type: "studio", img: "1519710164239-da123dc03ef4" },
+  { title: "회의·워크숍", sub: "세미나·강의·미팅", type: "meeting", img: "1497366754035-f200968a6e72" },
+  { title: "연습·취미", sub: "댄스·보컬·악기", type: "practice", img: "1511379938547-c1f69419868d" },
+];
+$("#colGrid").innerHTML = COLLECTIONS.map((c) => `
+  <a class="col" href="search.html?type=${c.type}">
+    <div class="col__bg" style="background-image:url('https://images.unsplash.com/photo-${c.img}?w=700&q=80')"></div>
+    <div class="col__scrim"></div>
+    <div class="col__txt"><b>${c.title}</b><span>${c.sub}</span></div>
+  </a>`).join("");
+
 // 토스트
 let toastT;
 function toast(msg) {
@@ -104,9 +117,7 @@ document.addEventListener("click", (e) => {
   const heart = e.target.closest("[data-heart]");
   if (heart) {
     e.stopPropagation();
-    const id = +heart.dataset.heart;
-    if (liked.has(id)) { liked.delete(id); heart.classList.remove("is-on"); }
-    else { liked.add(id); heart.classList.add("is-on"); }
+    heart.classList.toggle("is-on", window.FAV.toggle(heart.dataset.heart));
     return;
   }
   const cat = e.target.closest(".cat");

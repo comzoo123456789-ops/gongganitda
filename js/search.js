@@ -5,7 +5,6 @@ const $ = (s) => document.querySelector(s);
 const $$ = (s) => document.querySelectorAll(s);
 const won = (n) => n.toLocaleString("ko-KR");
 const params = new URLSearchParams(location.search);
-const liked = new Set();
 
 const AMENITIES = ["주차", "와이파이", "빔프로젝터", "취사", "음향", "방음", "화이트보드", "조명"];
 
@@ -35,7 +34,7 @@ function cardHTML(s) {
     <div class="sp-card__thumb" style="background:linear-gradient(135deg,${g[0]},${g[1]})">
       ${img ? `<img src="${img}" alt="${s.name}" loading="lazy" onerror="this.remove()" />` : ""}
       ${nowBadge}
-      <button class="sp-card__heart ${liked.has(s.id) ? "is-on" : ""}" data-heart="${s.id}" aria-label="찜">${iconSVG("heart", 18)}</button>
+      <button class="sp-card__heart ${window.FAV.has(s.id) ? "is-on" : ""}" data-heart="${s.id}" aria-label="찜">${iconSVG("heart", 18)}</button>
     </div>
     <div class="sp-card__body">
       <span class="sp-card__cat">${c.label}</span>
@@ -103,7 +102,7 @@ $("#fReset2") && $("#fReset2").addEventListener("click", reset);
 
 document.addEventListener("click", (e) => {
   const heart = e.target.closest("[data-heart]");
-  if (heart) { e.stopPropagation(); const id = +heart.dataset.heart; if (liked.has(id)) { liked.delete(id); heart.classList.remove("is-on"); } else { liked.add(id); heart.classList.add("is-on"); } return; }
+  if (heart) { e.stopPropagation(); heart.classList.toggle("is-on", window.FAV.toggle(heart.dataset.heart)); return; }
   const card = e.target.closest(".sp-card");
   if (card && card.dataset.id) location.href = "space.html?id=" + card.dataset.id;
 });

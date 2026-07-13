@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>공간 상세 · 공간잇다</title>
+  <title>마이페이지 · 공간잇다</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&display=swap" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
-<body>
+<body data-require="auth">
   <header class="header is-scrolled" id="header">
     <div class="header__inner">
       <a href="index.html" class="logo"><span class="logo__dot"></span>공간잇다</a>
@@ -26,18 +26,31 @@
     </div>
   </header>
 
-  <main class="sp" id="sp"><!-- JS 렌더 --></main>
+  <main class="mp">
+    <div class="mp__head">
+      <span class="section__kicker">MY PAGE</span>
+      <h1 class="mp__title" id="mpTitle">마이페이지</h1>
+      <p class="mp__sub" id="mpSub"></p>
+    </div>
 
-  <footer class="footer">
-    <div class="footer__copy" style="border:none">© 2026 공간잇다 · wylie</div>
-  </footer>
+    <nav class="mp-tabs" id="mpTabs">
+      <button class="mp-tab is-active" data-tab="fav">찜한 공간</button>
+      <button class="mp-tab" data-tab="book">예약 내역</button>
+      <button class="mp-tab js-host" data-tab="mine" hidden>내 등록 공간</button>
+    </nav>
 
+    <section class="mp-panel" data-panel="fav"><div class="grid" id="favGrid"></div><div class="mp-empty" id="favEmpty" hidden>아직 찜한 공간이 없어요. 마음에 드는 공간에 하트를 눌러보세요.</div></section>
+    <section class="mp-panel" data-panel="book" hidden><div id="bookList"></div><div class="mp-empty" id="bookEmpty" hidden>아직 예약 내역이 없어요.</div></section>
+    <section class="mp-panel" data-panel="mine" hidden><div class="grid" id="mineGrid"></div><div class="mp-empty" id="mineEmpty" hidden>아직 등록한 공간이 없어요. <a href="host.html" style="color:var(--accent);font-weight:700">공간 등록하기</a></div></section>
+  </main>
+
+  <footer class="footer"><div class="footer__copy" style="border:none">© 2026 공간잇다 · wylie</div></footer>
   <div class="toast" id="toast" hidden></div>
 
   <script src="js/icons.js"></script>
   <script src="data/categories.js"></script>
   <script src="data/spaces.js"></script>
   <script src="js/auth.js"></script>
-  <script src="js/space.js"></script>
+  <script src="js/mypage.js"></script>
 </body>
 </html>

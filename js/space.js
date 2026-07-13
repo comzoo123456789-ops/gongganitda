@@ -85,13 +85,9 @@ $("#sp").innerHTML = `
       </div>
 
       <div class="sp-sec">
-        <h2 class="sp-sec__title">이용 후기 ${S.reviews ? `<span style="color:var(--gold)">★ ${S.rating}</span> <span style="color:var(--faint);font-weight:500;font-size:0.9rem">(${S.reviews})</span>` : ""}</h2>
-        ${S.reviews ? `<div class="sp-rev">
-          ${reviews().map((r) => `<div class="sp-revrow">
-            <span class="sp-revrow__av" style="background:${r.color}">${r.name.charAt(0)}</span>
-            <div><div class="sp-revrow__name">${r.name}</div><div class="sp-revrow__stars">${"★".repeat(r.stars)}${"☆".repeat(5 - r.stars)}</div><div class="sp-revrow__txt">${r.txt}</div></div>
-          </div>`).join("")}
-        </div>` : `<p class="sp-desc" style="color:var(--muted)">아직 등록된 후기가 없어요. 첫 이용 후기를 남겨보세요.</p>`}
+        <h2 class="sp-sec__title">이용 후기 <span id="spRevAvg"></span></h2>
+        <div id="spReviewForm"></div>
+        <div class="sp-rev" id="spRev"></div>
       </div>
 
       <div class="sp-sec">
@@ -158,6 +154,47 @@ $("#relGrid").innerHTML = galleryExtra.map((s) => {
   </article>`;
 }).join("");
 
+// ---------- 후기 ----------
+function allReviews() {
+  const real = window.REVIEWS.list(S.id).map((r) => ({ name: r.name, txt: r.text, stars: r.rating, color: SG[0] }));
+  const demo = S.reviews ? reviews() : [];
+  return real.concat(demo);
+}
+function renderReviews() {
+  const list = allReviews();
+  const cnt = list.length;
+  const avg = cnt ? (list.reduce((a, r) => a + r.stars, 0) / cnt).toFixed(1) : 0;
+  $("#spRevAvg").innerHTML = cnt ? `<span style="color:var(--gold)">★ ${avg}</span> <span style="color:var(--faint);font-weight:500;font-size:0.9rem">(${cnt})</span>` : "";
+  $("#spRev").innerHTML = cnt ? list.map((r) => `<div class="sp-revrow">
+    <span class="sp-revrow__av" style="background:${r.color}">${(r.name || "익명").charAt(0)}</span>
+    <div><div class="sp-revrow__name">${r.name || "익명"}</div><div class="sp-revrow__stars">${"★".repeat(r.stars)}${"☆".repeat(5 - r.stars)}</div><div class="sp-revrow__txt">${r.txt}</div></div>
+  </div>`).join("") : `<p class="sp-desc" style="color:var(--muted)">아직 등록된 후기가 없어요. 첫 후기를 남겨보세요.</p>`;
+}
+function renderReviewForm() {
+  const a = window.AUTH.get();
+  const box = $("#spReviewForm");
+  if (!a) { box.innerHTML = `<p class="sp-revlogin">후기를 남기려면 <a href="login.html">로그인</a>하세요.</p>`; return; }
+  box.innerHTML = `<button class="btn btn--outline btn--sm" id="revToggle">✏️ 후기 쓰기</button>
+    <div class="sp-revform" id="revForm" hidden>
+      <div class="sp-revstars" id="revStars">${[1, 2, 3, 4, 5].map((n) => `<button type="button" data-star="${n}">★</button>`).join("")}</div>
+      <textarea id="revText" rows="3" placeholder="이용 경험을 남겨주세요"></textarea>
+      <button class="btn btn--accent btn--sm" id="revSubmit">등록하기</button>
+    </div>`;
+  let star = 5;
+  const paint = () => box.querySelectorAll("#revStars button").forEach((b, i) => b.classList.toggle("on", i < star));
+  paint();
+  $("#revToggle").addEventListener("click", () => { const f = $("#revForm"); f.hidden = !f.hidden; });
+  $("#revStars").addEventListener("click", (e) => { const b = e.target.closest("[data-star]"); if (b) { star = +b.dataset.star; paint(); } });
+  $("#revSubmit").addEventListener("click", () => {
+    const t = $("#revText").value.trim();
+    if (!t) { toast("후기 내용을 입력해주세요"); return; }
+    window.REVIEWS.add({ spaceId: S.id, userId: a.userId, name: window.AUTH.displayName(a), rating: star, text: t });
+    $("#revText").value = ""; $("#revForm").hidden = true;
+    renderReviews(); toast("후기가 등록되었어요!");
+  });
+}
+renderReviews(); renderReviewForm();
+
 // ---------- 예약 위젯 (달력 + 시간, 중복 방지) ----------
 const bkStart = $("#bkStart"), bkHours = $("#bkHours"), bkGuests = $("#bkGuests");
 const pad = (n) => String(n).padStart(2, "0");
@@ -198,7 +235,9 @@ function renderCal() {
 }
 function refreshSlots() {
   const occ = occupiedHours(selDate);
-  [...bkStart.options].forEach((o) => { o.disabled = occ.has(+o.value); });
+  const isToday = selDate === fmtD(todayD);
+  const nowH = new Date().getHours();
+  [...bkStart.options].forEach((o) => { o.disabled = occ.has(+o.value) || (isToday && +o.value <= nowH); });
   if (bkStart.selectedOptions[0] && bkStart.selectedOptions[0].disabled) { const av = [...bkStart.options].find((o) => !o.disabled); if (av) bkStart.value = av.value; }
   const start = +bkStart.value;
   [...bkHours.options].forEach((o) => { const h = +o.value; let ok = start + h <= 22; for (let x = start; x < start + h; x++) if (occ.has(x)) ok = false; o.disabled = !ok; });

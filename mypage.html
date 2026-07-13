@@ -18,7 +18,7 @@
       <a href="index.html" class="logo"><span class="logo__dot"></span>공간잇다</a>
       <nav class="header__nav" id="nav">
         <a href="search.html" class="header__link">공간 찾기</a>
-        <a href="host.html" class="header__link">호스트 등록</a>
+        <a href="host.html" class="header__link js-host-nav">호스트 등록</a>
         <span class="header__sep"></span>
         <span class="auth-area" data-authbox></span>
       </nav>
@@ -47,6 +47,13 @@
   </main>
 
   <footer class="footer"><div class="footer__copy" style="border:none">© 2026 공간잇다 · wylie</div></footer>
+
+  <!-- 모달 (일정변경 · 채팅) -->
+  <div class="modal" id="modal" hidden>
+    <div class="modal__backdrop" data-mclose></div>
+    <div class="modal__card" id="modalCard"></div>
+  </div>
+
   <div class="toast" id="toast" hidden></div>
 
   <script src="js/icons.js"></script>

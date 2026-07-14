@@ -546,6 +546,10 @@ em { font-style: normal; }
 .mine-act { display: flex; gap: 8px; margin-top: 10px; }
 .mine-act .btn { flex: 1; }
 
+/* 견적요청 리드타임 안내 */
+.rq-notice { background: #f6ecd6; border: 1px solid #ecd9a8; border-radius: 12px; padding: 14px 18px; font-size: 0.9rem; color: var(--ink-2); line-height: 1.6; margin-bottom: 20px; }
+.rq-notice b { color: var(--accent); }
+
 /* 원스톱 · 역경매 소개 */
 .how-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
 .how-step { background: var(--surface); border: 1px solid var(--line-2); border-radius: 16px; padding: 22px; box-shadow: var(--shadow-sm); }

@@ -147,7 +147,7 @@ function reqCardMember(r) {
     </div>`;
   }).join("");
   return `<div class="mp-bk">
-    <div class="mp-bk__top"><div class="mp-bk__info"><div class="mp-book__name">${r.region} · ${r.date} · ${r.capacity}인</div><div class="mp-book__meta">필요: ${cats}${r.parking ? ` · 주차 ${r.parking}대` : ""}${r.budget ? ` · 예산 ${r.budget}` : ""}</div></div><span class="mp-book__status ${r.status === "closed" ? "st-green" : "st-amber"}">${r.status === "closed" ? "선택 완료" : `견적 ${quotes.length}건`}</span></div>
+    <div class="mp-bk__top"><div class="mp-bk__info"><div class="mp-book__name">${r.region} · ${r.date} · ${r.capacity}인</div><div class="mp-book__meta">필요: ${cats}${r.parking ? ` · 주차 ${r.parking}대` : ""}${r.budget ? ` · 예산 ${r.budget}` : ""}${r.deadline ? ` · 🕑 선정 마감 ${r.deadline}` : ""}</div></div><span class="mp-book__status ${r.status === "closed" ? "st-green" : "st-amber"}">${r.status === "closed" ? "선택 완료" : `견적 ${quotes.length}건`}</span></div>
     ${r.detail ? `<div class="mp-bk__policy">${r.detail}</div>` : ""}
     <div class="rfp-quotes">${blocks}</div>
   </div>`;
@@ -161,11 +161,13 @@ function renderRfp() {
 // ---------- 역경매: 업체(들어온 요청·내 견적) ----------
 function vreqCard(r) {
   const mine = window.QUOTES.forReq(r.id).find((q) => q.vendorId === me);
+  const expired = r.deadline && todayStr > r.deadline;
+  const closed = r.status === "closed" || expired;
   const act = mine
     ? `<span class="quote-badge">견적 제출함 · ${won(mine.price)}원${mine.status === "accepted" ? " · ✅선택됨" : ""}</span><button class="btn btn--soft btn--sm" data-qchat="${mine.id}">채팅</button>`
-    : (r.status === "closed" ? `<span class="mp__sub">마감된 요청</span>` : `<button class="btn btn--accent btn--sm" data-quote="${r.id}">견적 제출</button>`);
+    : (closed ? `<span class="mp__sub">${expired ? "입찰 마감 (이용 1주 전 마감)" : "마감된 요청"}</span>` : `<button class="btn btn--accent btn--sm" data-quote="${r.id}">견적 제출</button>`);
   return `<div class="mp-bk">
-    <div class="mp-bk__top"><div class="mp-bk__info"><div class="mp-book__name">${r.region} · ${r.date} · ${r.capacity}인</div><div class="mp-book__meta">요청: ${r.cats.map((c) => svcById(c).label).join(", ")} · ${window.timeago(r.ts)}</div></div><span class="mp-book__status ${r.status === "closed" ? "st-gray" : "st-green"}">${r.status === "closed" ? "마감" : "모집중"}</span></div>
+    <div class="mp-bk__top"><div class="mp-bk__info"><div class="mp-book__name">${r.region} · ${r.date} · ${r.capacity}인</div><div class="mp-book__meta">요청: ${r.cats.map((c) => svcById(c).label).join(", ")}${r.deadline ? ` · 입찰마감 ${r.deadline}` : ""} · ${window.timeago(r.ts)}</div></div><span class="mp-book__status ${closed ? "st-gray" : "st-green"}">${closed ? (r.status === "closed" ? "마감" : "입찰마감") : "모집중"}</span></div>
     ${r.detail || r.budget ? `<div class="mp-bk__policy">${r.detail || ""}${r.budget ? ` · 예산 ${r.budget}` : ""}</div>` : ""}
     <div class="mp-bk__act">${act}</div>
   </div>`;
@@ -173,7 +175,7 @@ function vreqCard(r) {
 function renderVreq() {
   const cats = auth.serviceCats || [];
   const list = window.REQUESTS.list().filter((r) => r.cats.some((c) => cats.includes(c)));
-  const pending = list.filter((r) => r.status !== "closed" && !window.QUOTES.forReq(r.id).some((q) => q.vendorId === me)).length;
+  const pending = list.filter((r) => r.status !== "closed" && !(r.deadline && todayStr > r.deadline) && !window.QUOTES.forReq(r.id).some((q) => q.vendorId === me)).length;
   const bd = $("#vreqBadge"); if (bd) { bd.textContent = pending; bd.hidden = pending === 0; }
   $("#vreqList").innerHTML = list.map(vreqCard).join("");
   $("#vreqEmpty").hidden = list.length > 0;
@@ -207,7 +209,7 @@ document.addEventListener("click", (e) => {
   const aq = e.target.closest("[data-acceptq]");
   if (aq) { const q = window.QUOTES.list().find((x) => x.id === aq.dataset.acceptq); if (q) { window.QUOTES.update(q.id, { status: "accepted" }); window.REQUESTS.update(q.requestId, { status: "closed" }); window.NOTIF.add({ forUser: q.vendorId, title: "견적이 선택됐어요 🎉", sub: won(q.price) + "원", link: "mypage.html?tab=vquote" }); toast("견적을 선택했어요"); renderAll(); } return; }
   const qb = e.target.closest("[data-quote]");
-  if (qb) { const r = window.REQUESTS.find(qb.dataset.quote); if (r) openQuoteForm(r); return; }
+  if (qb) { const r = window.REQUESTS.find(qb.dataset.quote); if (!r) return; if (r.deadline && todayStr > r.deadline) { toast("입찰이 마감된 요청이에요 (이용 1주 전 마감)"); return; } openQuoteForm(r); return; }
   const qc = e.target.closest("[data-qchat]");
   if (qc) { const q = window.QUOTES.list().find((x) => x.id === qc.dataset.qchat); if (q) openQuoteChat(q); return; }
 });

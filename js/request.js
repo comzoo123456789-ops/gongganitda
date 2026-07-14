@@ -7,9 +7,12 @@ const pad = (n) => String(n).padStart(2, "0");
 const today = new Date(); today.setHours(0, 0, 0, 0);
 const todayStr = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
 
+const fmtD = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const minStr = fmtD(new Date(today.getTime() + 14 * 86400000)); // 최소 2주 전 요청
+
 $("#rqRegion").innerHTML = REGIONS.map((r) => `<option value="${r}">${r}</option>`).join("");
 $("#rqSvc").innerHTML = SERVICES.map((s) => `<label class="hf-chk"><input type="checkbox" value="${s.id}" /><span>${s.label}</span></label>`).join("");
-$("#rqDate").min = todayStr; $("#rqDate").value = todayStr;
+$("#rqDate").min = minStr; $("#rqDate").value = minStr;
 
 let toastT; function toast(m) { const t = $("#toast"); t.textContent = m; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => (t.hidden = true), 2400); }
 
@@ -20,12 +23,14 @@ $("#reqForm").addEventListener("submit", (e) => {
   const capacity = +$("#rqCap").value, parking = +$("#rqPark").value || 0;
   const cats = [...document.querySelectorAll("#rqSvc input:checked")].map((i) => i.value);
   if (!date || !region || !capacity) { err.textContent = "날짜·지역·인원을 입력해 주세요."; err.hidden = false; return; }
+  if (date < minStr) { err.textContent = "원활한 준비를 위해 이용일은 최소 2주 뒤로 선택해 주세요."; err.hidden = false; return; }
   if (!cats.length) { err.textContent = "필요한 서비스를 하나 이상 선택해 주세요."; err.hidden = false; return; }
   err.hidden = true;
 
+  const deadline = fmtD(new Date(new Date(date).getTime() - 7 * 86400000)); // 이용 1주 전 = 선정·준비 마감
   const req = {
     memberId: auth.userId, memberName: window.AUTH.displayName(auth),
-    date, region, capacity, parking, cats,
+    date, region, capacity, parking, cats, deadline,
     budget: $("#rqBudget").value.trim(), detail: $("#rqDetail").value.trim(),
   };
   window.REQUESTS.add(req);

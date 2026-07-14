@@ -150,6 +150,7 @@ function reqCardMember(r) {
     <div class="mp-bk__top"><div class="mp-bk__info"><div class="mp-book__name">${r.region} · ${r.date} · ${r.capacity}인</div><div class="mp-book__meta">필요: ${cats}${r.parking ? ` · 주차 ${r.parking}대` : ""}${r.budget ? ` · 예산 ${r.budget}` : ""}${r.deadline ? ` · 🕑 선정 마감 ${r.deadline}` : ""}</div></div><span class="mp-book__status ${r.status === "closed" ? "st-green" : "st-amber"}">${r.status === "closed" ? "선택 완료" : `견적 ${quotes.length}건`}</span></div>
     ${r.detail ? `<div class="mp-bk__policy">${r.detail}</div>` : ""}
     <div class="rfp-quotes">${blocks}</div>
+    <div class="mp-bk__act">${r.status !== "closed" ? `<a href="request.html?id=${r.id}" class="btn btn--soft btn--sm">요청 수정</a>` : ""}<button class="btn btn--danger btn--sm" data-delreq="${r.id}">요청 삭제</button></div>
   </div>`;
 }
 function renderRfp() {
@@ -206,6 +207,8 @@ function openQuoteChat(q) {
   openChat({ id: "q:" + q.id, spaceName: me === q.vendorId ? `${r.memberName || "회원"} 요청` : `${q.vendorName} 견적`, hostId: q.vendorId, guestId: r.memberId });
 }
 document.addEventListener("click", (e) => {
+  const dr = e.target.closest("[data-delreq]");
+  if (dr) { if (!confirm("이 견적 요청을 삭제할까요? 받은 견적도 함께 삭제됩니다.")) return; const id = dr.dataset.delreq; window.REQUESTS.save(window.REQUESTS.list().filter((x) => x.id !== id)); window.QUOTES.save(window.QUOTES.list().filter((x) => x.requestId !== id)); toast("요청을 삭제했어요"); renderAll(); return; }
   const aq = e.target.closest("[data-acceptq]");
   if (aq) { const q = window.QUOTES.list().find((x) => x.id === aq.dataset.acceptq); if (q) { window.QUOTES.update(q.id, { status: "accepted" }); window.REQUESTS.update(q.requestId, { status: "closed" }); window.NOTIF.add({ forUser: q.vendorId, title: "견적이 선택됐어요 🎉", sub: won(q.price) + "원", link: "mypage.html?tab=vquote" }); toast("견적을 선택했어요"); renderAll(); } return; }
   const qb = e.target.closest("[data-quote]");

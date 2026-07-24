@@ -1,0 +1,27 @@
+﻿<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><title>개인정보 제3자 제공 · 결제대행(PG) 위탁 동의</title>
+<style>body{font-family:'맑은 고딕','Malgun Gothic',sans-serif;font-size:11pt;line-height:1.7;color:#1a1a1a;}
+h1{font-size:17pt;border-bottom:2pt solid #333;padding-bottom:6pt;margin:0 0 4pt;}
+.eff{color:#777;font-size:9.5pt;margin:0 0 16pt;}h4{font-size:12pt;margin:16pt 0 6pt;}
+ul{margin:4pt 0 8pt;padding-left:20pt;}li{margin:3pt 0;}p{margin:6pt 0;}</style></head><body>
+<h1>개인정보 제3자 제공 · 결제대행(PG) 위탁 동의</h1><p class="eff">시행일: 2026-01-01</p><h4>제1조 (개인정보 제3자 제공)</h4>
+<p>'공간잇다'는 게스트의 공간 예약 및 부대서비스 견적·이행을 위하여 아래와 같이 최소한의 개인정보를 파트너(호스트 및 맞춤업체)에게 제공합니다.</p>
+<ol>
+  <li><b>제공받는 자:</b> 게스트가 예약·견적을 요청한 공간의 호스트 및 부대서비스 파트너사</li>
+  <li><b>제공 항목:</b> 예약자 성명(닉네임), 휴대전화 번호, 예약·요청 상세 내역</li>
+  <li><b>제공 목적:</b> 공간 입실 안내, 예약 이행, 현장 고객 서비스 및 분쟁 처리</li>
+  <li><b>보유 및 이용 기간:</b> 서비스 이용 및 거래 완료 후 관계 법령에 따른 법정 보관기간까지</li>
+</ol>
+
+<h4>제2조 (결제대행(PG) 서비스 및 정산 업무 처리위탁)</h4>
+<p>회사는 안전한 결제 처리 및 자동 분리정산 시스템 운용을 위하여 아래와 같이 결제 전문 업체에 개인정보 처리를 위탁하고 있습니다.</p>
+<ol>
+  <li><b>수탁자:</b> 토스페이먼츠 주식회사 (PG 결제대행사)</li>
+  <li><b>위탁 업무:</b> 신용카드/계좌이체 등 결제 처리, PG 자동 분리정산, 정산 계좌 실명 확인</li>
+  <li><b>위탁 항목:</b> 결제 수단 정보, 거래 금액, 승인 번호, 정산 관련 최소 정보</li>
+  <li><b>보유 및 이용 기간:</b> 전자금융거래법 등 관련 법령에 따른 보존 기간(5년) 종료 시까지</li>
+</ol>
+
+<p>※ 본 항목은 서비스 결제 및 예약 이행을 위한 <b>필수 동의 항목</b>입니다. 동의를 거부하실 수 있으나, 거부 시 공간 예약 및 결제 서비스 이용이 제한될 수 있습니다.</p>
+<hr style="margin-top:30pt;border:none;border-top:1pt solid #ddd"><p style="color:#999;font-size:9pt">(주)와일리 · 사업자등록번호 211-88-56742 · 서울특별시 강남구 학동로 336 메이트리빌딩 7층</p>
+</body></html>

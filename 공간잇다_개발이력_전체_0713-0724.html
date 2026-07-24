@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>공간잇다 개발 전체 이력 (07.13~07.24)</title>
+<style>
+  :root{
+    --bg:#f5f6f8; --surface:#ffffff; --ink:#181b22; --ink2:#3c424e; --muted:#6b7280; --faint:#9aa1ad;
+    --line:#e5e8ee; --line2:#eef1f5; --accent:#4f46e5; --accent-soft:#eeecfd; --accent-ink:#3730a3;
+    --teal:#23809b; --terra:#cf6a41;
+    --font:"Pretendard",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","맑은 고딕",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.7;word-break:keep-all;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:840px;margin:0 auto;padding:44px 24px 72px;}
+  .head{border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:6px;}
+  .head__brand{display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:1rem;letter-spacing:-.01em;margin-bottom:14px;}
+  .head__brand i{display:flex;gap:3px;}
+  .head__brand i b{width:9px;height:9px;border-radius:50%;display:block;}
+  .dot-t{background:var(--teal);} .dot-r{background:var(--terra);}
+  .head h1{margin:0;font-size:2rem;letter-spacing:-.03em;font-weight:800;}
+  .head__sub{margin:6px 0 0;color:var(--muted);font-size:.95rem;}
+  .head__meta{display:flex;flex-wrap:wrap;gap:8px 10px;margin-top:14px;font-size:.86rem;}
+  .head__meta span{padding:5px 12px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:var(--surface);}
+  .head__meta b{color:var(--ink2);font-weight:700;}
+  .sum{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:24px 0 8px;}
+  @media(max-width:620px){.sum{grid-template-columns:repeat(2,1fr);}}
+  .sum__c{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;}
+  .sum__c b{display:block;font-size:1.4rem;font-weight:800;letter-spacing:-.02em;color:var(--accent);}
+  .sum__c span{font-size:.8rem;color:var(--muted);}
+  .phase{margin-top:34px;}
+  .phase__hd{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;background:var(--ink);color:#fff;border-radius:10px;padding:10px 16px;margin-bottom:4px;}
+  .phase__k{font-size:.74rem;font-weight:800;letter-spacing:.04em;opacity:.7;}
+  .phase__t{font-size:1.08rem;font-weight:800;letter-spacing:-.01em;}
+  .phase__d{margin-left:auto;font-size:.8rem;opacity:.75;font-variant-numeric:tabular-nums;}
+  .day{margin-top:22px;}
+  .day__hd{display:flex;align-items:baseline;gap:12px;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:16px;}
+  .day__date{font-size:1.12rem;font-weight:800;letter-spacing:-.01em;font-variant-numeric:tabular-nums;}
+  .day__wd{font-size:.82rem;color:var(--faint);font-weight:700;}
+  .day__tag{margin-left:auto;font-size:.74rem;font-weight:800;color:var(--accent-ink);background:var(--accent-soft);padding:3px 10px;border-radius:999px;}
+  .item{margin:0 0 15px;}
+  .item__t{display:flex;gap:9px;align-items:baseline;font-size:1.02rem;font-weight:800;letter-spacing:-.01em;margin-bottom:5px;}
+  .item__t .mk{flex:0 0 auto;width:6px;height:6px;border-radius:2px;background:var(--accent);margin-top:8px;}
+  .item__cat{font-size:.7rem;font-weight:800;color:var(--muted);border:1px solid var(--line);border-radius:5px;padding:1px 6px;margin-left:2px;white-space:nowrap;}
+  .item__cat--doc{color:var(--terra);border-color:#f0c9b8;}
+  .item ul{margin:4px 0 0 24px;padding:0;list-style:none;}
+  .item li{position:relative;padding-left:14px;font-size:.92rem;color:var(--ink2);margin:3px 0;}
+  .item li::before{content:"";position:absolute;left:0;top:9px;width:5px;height:5px;border-radius:50%;background:var(--line);}
+  .item li b{color:var(--ink);font-weight:700;}
+  .foot{margin-top:44px;padding-top:16px;border-top:1px solid var(--line);font-size:.8rem;color:var(--muted);}
+  .foot b{color:var(--ink2);}
+  @media print{body{background:#fff;}.sum__c{box-shadow:none;}.phase__hd{-webkit-print-color-adjust:exact;print-color-adjust:exact;}@page{size:A4;margin:15mm;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="head">
+    <div class="head__brand"><i><b class="dot-t"></b><b class="dot-r"></b></i> 공간잇다</div>
+    <h1>개발 전체 이력</h1>
+    <p class="head__sub">프로젝트 착수(2026.07.13)부터 현재까지의 누적 개발 내역 — 무엇을, 어디서부터 어디까지 만들었는가</p>
+    <div class="head__meta">
+      <span>기간 <b>2026.07.13 ~ 07.24</b></span>
+      <span>프로젝트 <b>공간잇다</b> · 공간 대여 + 부대서비스 원스톱 마켓플레이스</span>
+      <span>배포 <b>Cloudflare Workers</b> (정적 자산 + Worker + KV)</span>
+    </div>
+  </header>
+
+  <div class="sum">
+    <div class="sum__c"><b>2단계</b><span>기반 구축 → 고도화</span></div>
+    <div class="sum__c"><b>40+건</b><span>기능 개발·개선</span></div>
+    <div class="sum__c"><b>4건</b><span>보고·법무 문서</span></div>
+    <div class="sum__c"><b>3역할</b><span>회원·호스트·업체 + 관리자</span></div>
+  </div>
+
+  <!-- ===================== 1단계 ===================== -->
+  <section class="phase">
+    <div class="phase__hd"><span class="phase__k">STAGE 1</span><span class="phase__t">플랫폼 기반 구축</span><span class="phase__d">07.13 ~ 07.14</span></div>
+
+    <section class="day">
+      <div class="day__hd"><span class="day__date">07.13</span><span class="day__wd">월</span><span class="day__tag">MVP 전면 구축</span></div>
+
+      <div class="item">
+        <div class="item__t"><span class="mk"></span>마켓플레이스 기본 골격<span class="item__cat">신규</span></div>
+        <ul>
+          <li>홈 화면(에디토리얼·실사진 스타일), <b>공간 상세 + 예약 페이지</b> 구축</li>
+          <li>홈 구성 최적화 — 히어로 축소 + 검색바 상단 + <b>공간 목록 우선 노출</b>, 전국 지역 셀렉트</li>
+          <li>심볼+워드마크 <b>로고</b> 적용</li>
+        </ul>
+      </div>
+      <div class="item">
+        <div class="item__t"><span class="mk"></span>검색 · 호스트 공간 등록<span class="item__cat">신규</span></div>
+        <ul>
+          <li>검색 결과 페이지(<b>필터·정렬·3열 그리드</b>)</li>
+          <li>호스트 <b>공간 등록/수정/삭제</b>, 상세 소개에 호스트 작성글 반영</li>
+        </ul>
+      </div>
+      <div class="item">
+        <div class="item__t"><span class="mk"></span>계정 · 예약 플로우 · 알림<span class="item__cat">신규</span></div>
+        <ul>
+          <li><b>로그인·회원가입·마이페이지</b>, 찜/예약 저장, 목적별 큐레이션</li>
+          <li>예약 달력 + <b>예약 승인 플로우</b>, 실시간 알림(2줄·채팅 진입·안읽음)</li>
+          <li>후기 작성, 예약 취소·일정변경(요금 재계산), <b>1:1 채팅</b>, 회원 역할 구분</li>
+        </ul>
+      </div>
+      <div class="item">
+        <div class="item__t"><span class="mk"></span>정산 · 할인 · 가용성 · 지도<span class="item__cat">신규</span></div>
+        <ul>
+          <li>호스트 <b>정산·가용성 차단·예약 설정</b>, D-day·환불·이용권·후기</li>
+          <li><b>반짝특가·쿠폰</b> 할인, 정보수정, 1:1 문의</li>
+          <li><b>네이버 지도</b> 연동 — 주소 지오코딩·동적 마커·지도 페이지(인증 실패 시 목록 폴백)</li>
+        </ul>
+      </div>
+      <div class="item">
+        <div class="item__t"><span class="mk"></span>차별화 기능 4종<span class="item__cat">신규</span></div>
+        <ul>
+          <li><b>번개특가 · AI 한줄추천 · 양방향 매너점수 · N빵 더치페이</b></li>
+        </ul>
+      </div>
+      <div class="item">
+        <div class="item__t"><span class="mk"></span>역경매(견적요청) — 원스톱 마켓플레이스<span class="item__cat">신규</span></div>
+        <ul>
+          <li>회원이 요청 → 파트너가 입찰하는 <b>역경매 구조</b>로 확장</li>
+          <li><b>공간 + 부대서비스</b>(케이터링·렌탈·촬영·연출 등)를 한 번에 견적받는 원스톱 흐름</li>
+          <li>카테고리별 견적 그룹핑</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="day">
+      <div class="day__hd"><span class="day__date">07.14</span><span class="day__wd">화</span><span class="day__tag">견적요청 정교화</span></div>
+      <div class="item">
+        <div class="item__t"><span class="mk"></span>견적요청 리드타임 · 관리<span class="item__cat">개선</span></div>
+        <ul>
+          <li>리드타임 규칙 — <b>최소 2주 전 요청, 이용 1주 전 입찰·선정 마감</b></li>
+          <li>견적 요청 <b>수정/삭제</b> 기능</li>
+        </ul>
+      </div>
+    </section>
+  </section>
+
+  <!-- ===================== 2단계 ===================== -->
+  <section class="phase">
+    <div class="phase__hd"><span class="phase__k">STAGE 2</span><span class="phase__t">운영 고도화 · 정산 · 문서</span><span class="phase__d">07.20 ~ 07.24</span></div>
+
+    <section class="day">
+      <div class="day__hd"><span class="day__date">07.20</span><span class="day__wd">월</span><span class="day__tag">공간·패키지 구조</span></div>
+      <div class="item">
+        <div class="item__t"><span class="mk"></span>호스트 공간 숨김 기능<span class="item__cat">신규</span></div>
+        <ul>
+          <li>'내 등록 공간' <b>공개/숨김 토글 + 뱃지</b>, 공용 필터 <b>getPublicSpaces()</b>로 전 화면 일괄 제외</li>
+          <li>숨김 공간 직접 접근 시 '이용 불가' 안내(소유자·관리자만 미리보기)</li>
+        </ul>
+      </div>
+      <div class="item">
+        <div class="item__t"><span class="mk"></span>패키지 '공간 선택형' 전환<span class="item__cat">신규</span></div>
+        <ul>
+          <li>고정 공간 → <b>제휴 후보 중 선택</b>, 후보 전부 숨김일 때만 '일시 판매중지'로 파트너 매출 방어</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="day">
+      <div class="day__hd"><span class="day__date">07.21</span><span class="day__wd">화</span><span class="day__tag">예약·알림·검색</span></div>
+      <div class="item">
+        <div class="item__t"><span class="mk"></span>시간대 단위 블록아웃<span class="item__cat">신규</span></div>
+        <ul>
+          <li>날짜 전체 + <b>시간대(09~22시)별 차단</b>, 종일/시간대 개별 토글 편집기, 게스트 캘린더 부분차단 표시</li>
+        </ul>
+      </div>
+      <div class="item">
+        <div class="item__t"><span class="mk"></span>예약 리마인더 · 최근 검색어<span class="item__cat">신규</span></div>
+        <ul>
+          <li>로그인 시 <b>D-1·당일 확정 예약 알림</b>(중복 방지), 역할별 문구 구분</li>
+          <li>최근 검색어 최대 8개 저장 + 칩·삭제</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="day">
+      <div class="day__hd"><span class="day__date">07.22</span><span class="day__wd">수</span><span class="day__tag">정산·수수료·영수증</span></div>
+      <div class="item">
+        <div class="item__t"><span class="mk"></span>결제 영수증 + 전자세금계산서 승인조회<span class="item__cat">신규</span></div>
+        <ul>
+          <li>영수증(카드 매출전표)·국세청 승인조회, 공급가액/VAT 분리, 승인번호(YYYYMMDD-8-8)</li>
+          <li>결정론적 결제상세 생성기 <b>OPS.payInfo</b>(카드사·승인번호·할부·VAT)</li>
+        </ul>
+      </div>
+      <div class="item">
+        <div class="item__t"><span class="mk"></span>업체별 차등 수수료율 (적용 시작일 기반)<span class="item__cat">신규</span></div>
+        <ul>
+          <li>요율 이력 스토어 + <b>결제일 기준 as-of 조회</b> → 과거 정산 불변, 신규만 반영</li>
+          <li>관리자 요율 편집 모달 + '수수료율' 전용 탭(정렬)</li>
+        </ul>
+      </div>
+      <div class="item">
+        <div class="item__t"><span class="mk"></span>청소 보증금 별도 결제 (예수금 분리)<span class="item__cat">신규</span></div>
+        <ul>
+          <li><b>DEPOSITS 스토어</b> — 이용료와 분리 결제·관리, <b>매출·GMV·정산에서 완전 제외</b>, Node 검증</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="day">
+      <div class="day__hd"><span class="day__date">07.23</span><span class="day__wd">목</span><span class="day__tag">로그인·보고 문서</span></div>
+      <div class="item">
+        <div class="item__t"><span class="mk"></span>카카오 간편로그인<span class="item__cat">신규</span></div>
+        <ul>
+          <li>Worker <b>/oauth/kakao</b> 라우트(인가코드→토큰→프로필), <b>기존=로그인 / 신규·탈퇴=회원가입</b> 분기</li>
+        </ul>
+      </div>
+      <div class="item">
+        <div class="item__t"><span class="mk"></span>대표님 보고용 '사업 정의서'<span class="item__cat item__cat--doc">문서</span></div>
+        <ul>
+          <li>사업 정의·수익 모델·생태계·경쟁사 매트릭스·<b>TAM/SAM/SOM</b>·가격 타당성·KPI·리스크·로드맵·<b>BEP</b> (HTML·PDF, 다이어그램 6종)</li>
+        </ul>
+      </div>
+      <div class="item">
+        <div class="item__t"><span class="mk"></span>국내 시장 조사 · 약관 문서화<span class="item__cat item__cat--doc">문서</span></div>
+        <ul>
+          <li>공간대여·케이터링·렌탈·촬영 시장 조사(2021~2026, 출처 명시)</li>
+          <li>서버(KV) 저장 <b>이용약관 11종 Word 추출</b></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="day">
+      <div class="day__hd"><span class="day__date">07.24</span><span class="day__wd">금</span><span class="day__tag">결제 정합성·취소정책·UI 개편·호스트/업체 고도화</span></div>
+      <div class="item">
+        <div class="item__t"><span class="mk"></span>결제·정산 정합성 (주문 단위 승인번호)<span class="item__cat">개선</span></div>
+        <ul>
+          <li><b>결제 1회 = 주문 1건 = 승인번호 1개</b>로 통일, 부분 결제(회차별) 지원, Node 3회 검증</li>
+        </ul>
+      </div>
+      <div class="item">
+        <div class="item__t"><span class="mk"></span>관리자 '환불·주문 관리' 탭<span class="item__cat">신규</span></div>
+        <ul>
+          <li>주문 단위 통합 조회 + <b>항목별 부분환불 · 정산 회수(클로백)</b>, 공급자별 정산명세서 CSV, 공지 전체 알림</li>
+        </ul>
+      </div>
+      <div class="item">
+        <div class="item__t"><span class="mk"></span>공간 대관 취소 수수료율 (D-day 차등)<span class="item__cat">신규</span></div>
+        <ul>
+          <li>공간 <b>표준 5구간</b>(7일 100%~당일 0%) · 부대서비스 별도 정책, 위약금은 수수료 차감 후 공급자 정산 — Node 21건 검증</li>
+        </ul>
+      </div>
+      <div class="item">
+        <div class="item__t"><span class="mk"></span>결제·환불 약관 정밀 검토 + 개정안<span class="item__cat item__cat--doc">문서</span></div>
+        <ul>
+          <li>약관 4종 ↔ 실제 동작 정합성 교차 검증, <b>현행 vs 개정안 비교 문서</b>(PDF·Word·HTML)</li>
+        </ul>
+      </div>
+      <div class="item">
+        <div class="item__t"><span class="mk"></span>정산 화면 개편 + KPI 카드 통일<span class="item__cat">개선</span></div>
+        <ul>
+          <li>정산 내역 <b>한눈 카드</b>(거래액·수수료·입금액·상태) + 정렬·기간검색, KPI <b>플랫 스트립 통일</b></li>
+          <li>요약 카드 → <b>상태 필터 즉시 적용</b>(C-8), 알림 센터 슬라이드(C-9)</li>
+        </ul>
+      </div>
+      <div class="item">
+        <div class="item__t"><span class="mk"></span>호스트 마이페이지 고도화 (A-1~A-4)<span class="item__cat">신규</span></div>
+        <ul>
+          <li>캘린더 클릭 → 휴업·공사 차단/특가 · 노출/숨김 <b>토글 스위치</b> · 견적요청 <b>3단계 파이프라인</b> · 매출 리포트 차트 + 세금계산서 PDF</li>
+        </ul>
+      </div>
+      <div class="item">
+        <div class="item__t"><span class="mk"></span>맞춤업체 마이페이지 고도화 (B-1~B-3)<span class="item__cat">신규</span></div>
+        <ul>
+          <li>현장 <b>4단계 상태</b> 실시간 공유 · <b>1일 처리 수량(CAPA)</b> 한도 · <b>연동 현황 탭</b>(공간 상태·패키지 판매)</li>
+        </ul>
+      </div>
+    </section>
+  </section>
+
+  <footer class="foot">
+    <p style="margin:0"><b>공간잇다</b> · (주)와일리 · 배포 Cloudflare Workers · 데이터 localStorage(데모) + 이용약관 KV(서버)</p>
+    <p style="margin:6px 0 0">※ STAGE 1(07.13~14)은 착수일 대량 커밋을 주제별로 묶어 정리했고, STAGE 2(07.20~24)는 일자별 상세 내역입니다. 세부 버그 수정·문구 교정은 요약했으며, 모든 기능은 배포·검증 완료 상태입니다.</p>
+  </footer>
+
+</div>
+</body>
+</html>

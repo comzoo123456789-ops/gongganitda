@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://images.unsplash.com" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&display=swap" />
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css?v=20260723" />
 </head>
 <body data-require="host">
   <header class="header is-scrolled" id="header">
@@ -18,9 +18,11 @@
       <a href="index.html" class="logo"><span class="logo__dot"></span>공간잇다</a>
       <nav class="header__nav" id="nav">
         <a href="search.html" class="header__link">공간 찾기</a>
+        <a href="vendors.html" class="header__link">맞춤 업체</a>
+        
         <a href="request.html" class="header__link">견적 요청</a>
         <a href="map.html" class="header__link">지도</a>
-        <a href="host.html" class="header__link js-host-nav">호스트 등록</a>
+        <a href="host.html" class="header__link js-host-nav">사업자 등록</a>
         <span class="header__sep"></span>
         <span class="auth-area" data-authbox></span>
       </nav>
@@ -54,21 +56,47 @@
         </div>
         <div class="hf-field">
           <label class="hf-label">주소 <i>*</i></label>
-          <input type="text" id="hRegion" placeholder="예: 서울 성동구 성수동 12-3" />
+          <div class="hf-addr"><input type="text" id="hRegion" placeholder="예: 서울 성동구 성수동 12-3" /><button type="button" class="btn btn--soft" id="hAddrSearch">🔍 주소 검색</button></div>
           <span class="hf-hint">입력한 주소로 상세 페이지·지도에서 네이버 지도 위치가 연결됩니다.</span>
         </div>
         <div class="hf-field">
-          <label class="hf-label">시간당 가격 (원) <i>*</i></label>
-          <input type="number" id="hPrice" min="0" step="1000" placeholder="예: 25000" />
+          <label class="hf-label">시간당 가격 <i>*</i></label>
+          <div class="hf-suffix"><input type="number" id="hPrice" min="0" step="1000" placeholder="예: 25000" /><span class="hf-suffix__u">원</span></div>
         </div>
         <div class="hf-field">
-          <label class="hf-label">대표 사진 URL <span class="hf-opt">선택</span></label>
-          <input type="url" id="hPhoto" placeholder="https://... (비우면 기본 배경 표시)" />
-          <span class="hf-hint">이미지 주소를 붙여넣으면 오른쪽 미리보기에 반영됩니다.</span>
+          <label class="hf-label">청소 보증금 <span class="hf-opt">선택 · 예약 시 게스트에게 계좌 안내</span></label>
+          <div class="hf-suffix"><input type="number" id="hDeposit" min="0" step="1000" placeholder="예: 30000 (비우면 없음)" /><span class="hf-suffix__u">원</span></div>
+          <div class="hf-row" style="margin-top:8px">
+            <input type="text" id="hDepBank" placeholder="입금 은행 (예: 국민은행)" />
+            <input type="text" id="hDepAcct" placeholder="계좌번호 ('-' 없이)" />
+          </div>
+          <span class="hf-hint">💡 보증금을 설정하면 예약 완료 시 게스트에게 <b>호스트 계좌 입금 안내</b>가 전달돼요. 파손·미정리가 없으면 이용 후 환불하는 조건입니다.</span>
+        </div>
+        <div class="hf-field">
+          <label class="hf-label">공간 사진 <span class="hf-opt">최대 10장 · 맨 앞이 대표</span></label>
+          <div class="dropzone" id="hDrop" tabindex="0" role="button" aria-label="사진 업로드">
+            <input type="file" id="hFile" accept="image/*" multiple hidden />
+            <div class="dropzone__ic">⬆️</div>
+            <div class="dropzone__t">사진을 끌어다 놓거나 <b>클릭해 업로드</b></div>
+            <div class="dropzone__s">JPG · PNG · 최대 10장</div>
+          </div>
+          <div class="hf-urladd"><input type="url" id="hPhoto" placeholder="또는 이미지 URL 붙여넣기" /><button type="button" class="btn btn--soft btn--sm" id="hUrlAdd">추가</button></div>
+          <div class="ph-grid" id="hPhotoGrid"></div>
+          <span class="hf-hint">썸네일을 <b>드래그</b>해 순서를 바꾸면 맨 앞 사진이 대표가 돼요. ✕로 삭제합니다.</span>
         </div>
         <div class="hf-field">
           <label class="hf-label">편의시설</label>
           <div class="hf-checks" id="hAmen"></div>
+          <div class="amen-add"><input type="text" id="hAmenInput" placeholder="기타 편의시설 직접 추가 (예: 엘리베이터)" maxlength="20" /><button type="button" class="btn btn--soft btn--sm" id="hAmenAdd">+ 추가</button></div>
+        </div>
+        <div class="hf-field">
+          <label class="hf-label">핵심 옵션 태그 <span class="hf-opt">선택 · 검색·카드에 노출</span></label>
+          <div class="tagin" id="hTagBox">
+            <span class="tagin__list" id="hTagList"></span>
+            <input type="text" id="hTagInput" class="tagin__input" placeholder="예: 주차3대가능 (입력 후 Enter)" maxlength="16" />
+          </div>
+          <div class="tagsug" id="hTagSug"></div>
+          <span class="hf-hint"># 해시태그로 우리 공간만의 강점을 강조하세요. (최대 8개)</span>
         </div>
         <div class="hf-field">
           <label class="hf-label">공간 소개 <span class="hf-opt">선택</span></label>
@@ -87,13 +115,13 @@
     </div>
   </main>
 
-  <footer class="footer"><div class="footer__copy" style="border:none">© 2026 공간잇다 · wylie</div></footer>
+  <footer class="footer"><div class="footer__copy" style="border:none"><a href="help.html?tab=guide" style="color:var(--muted);font-weight:600">이용 방법</a> · <a href="help.html?tab=booking" style="color:var(--muted);font-weight:600">예약 안내</a> · <a href="help.html?tab=faq" style="color:var(--muted);font-weight:600">자주 묻는 질문</a> &nbsp;|&nbsp; © 2026 공간잇다 · wylie</div></footer>
   <div class="toast" id="toast" hidden></div>
 
-  <script src="js/icons.js"></script>
-  <script src="data/categories.js"></script>
-  <script src="data/spaces.js"></script>
-  <script src="js/auth.js"></script>
-  <script src="js/host.js"></script>
+  <script src="js/icons.js?v=20260723"></script>
+  <script src="data/categories.js?v=20260723"></script>
+  <script src="data/spaces.js?v=20260723"></script>
+  <script src="js/auth.js?v=20260723"></script>
+  <script src="js/host.js?v=20260723"></script>
 </body>
 </html>

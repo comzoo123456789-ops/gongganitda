@@ -1,0 +1,52 @@
+﻿<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><title>개인정보 처리방침</title>
+<style>body{font-family:'맑은 고딕','Malgun Gothic',sans-serif;font-size:11pt;line-height:1.7;color:#1a1a1a;}
+h1{font-size:17pt;border-bottom:2pt solid #333;padding-bottom:6pt;margin:0 0 4pt;}
+.eff{color:#777;font-size:9.5pt;margin:0 0 16pt;}h4{font-size:12pt;margin:16pt 0 6pt;}
+ul{margin:4pt 0 8pt;padding-left:20pt;}li{margin:3pt 0;}p{margin:6pt 0;}</style></head><body>
+<h1>개인정보 처리방침</h1><p class="eff">시행일: 2026-01-01</p><h3>공간잇다 개인정보 처리방침</h3>
+<p>시행일: 2026-01-01</p>
+
+<h4>제1조 (개인정보의 수집 및 이용 목적)</h4>
+<p>'공간잇다'(이하 '회사')는 회원가입, 공간 예약 및 부대서비스 중개, 고객 문의 대응, 서비스 개선을 위하여 최소한의 개인정보를 수집 및 처리합니다.</p>
+
+<h4>제2조 (수집하는 개인정보 항목)</h4>
+<ol>
+  <li><b>회원가입 시:</b> 성명, 아이디, 비밀번호, 휴대전화 번호, 이메일 주소</li>
+  <li><b>예약 및 결제 시:</b> 결제 수단 정보, 주문·예약 내역, 정산 계좌 정보(파트너)</li>
+  <li><b>자동 수집 항목:</b> IP 주소, 쿠키, 방문 및 서비스 이용 기록, 기기 정보</li>
+</ol>
+
+<h4>제3조 (개인정보의 처리위탁)</h4>
+<p>회사는 원활한 서비스 제공 및 정산 관리를 위해 아래와 같이 개인정보 처리를 위탁하고 있습니다.</p>
+<ul>
+  <li><b>결제대행 및 자동 분리정산:</b> 토스페이먼츠 주식회사</li>
+  <li><b>알림톡 및 SMS 발송:</b> 주식회사 알리고 / NHN Cloud</li>
+  <li><b>데이터 보관 및 서버 운용:</b> Amazon Web Services (AWS) / Cloudflare</li>
+</ul>
+
+<h4>제4조 (개인정보의 보유 및 파기 절차)</h4>
+<ol>
+  <li>수집 및 이용 목적이 달성된 개인정보는 지체 없이 파기합니다.</li>
+  <li>전자상거래법 등 관계 법령에 따라 계약·결제 기록은 <b>5년</b>, 소비자 불만·분쟁 처리 기록은 <b>3년</b>간 보존합니다.</li>
+  <li>전자적 파일 형태는 복구 불가능한 기술적 방법으로 삭제하며, 서면 양식은 파쇄 또는 소각합니다.</li>
+</ol>
+
+<h4>제5조 (개인정보의 안전성 확보 조치)</h4>
+<p>회사는 암호화 통신(SSL/TLS), 개인정보 암호화 저장, 접근 권한 제한 등 개인정보의 분실·유출 방지를 위해 필요한 기술적·관리적 조치를 취하고 있습니다.</p>
+
+<h4>제6조 (쿠키의 설치·운영 및 거부)</h4>
+<p>이용자는 웹 브라우저 옵션 설정을 통해 쿠키 저장을 거부할 수 있으나, 일부 서비스(자동 로그인 등) 이용에 제한이 있을 수 있습니다.</p>
+
+<h4>제7조 (만 14세 미만 아동의 개인정보 처리)</h4>
+<p>회사는 원칙적으로 만 14세 미만 아동의 개인정보를 수집하지 않으며, 필요한 경우 법정대리인의 동의를 받아 처리합니다.</p>
+
+<h4>제8조 (개인정보 보호책임자 및 접수 창구)</h4>
+<p>개인정보 보호 관련 문의, 불만 처리, 열람 청구 등은 아래의 보호책임자에게 문의하실 수 있습니다.</p>
+<ul>
+  <li><b>개인정보 보호책임자:</b> 문병훈 (인재전략실 / 운영팀)</li>
+  <li><b>이메일 문의:</b> wylie@wylie.co.kr</li>
+  <li><b>서비스 내 창구:</b> 마이페이지 > 1:1 문의</li>
+</ul>
+<hr style="margin-top:30pt;border:none;border-top:1pt solid #ddd"><p style="color:#999;font-size:9pt">(주)와일리 · 사업자등록번호 211-88-56742 · 서울특별시 강남구 학동로 336 메이트리빌딩 7층</p>
+</body></html>

@@ -6,3 +6,8 @@ compatibility_date = "2026-01-01"
 [assets]
 directory = "."
 binding = "ASSETS"
+
+# 약관 문서 서버 저장소(모든 기기 공통) — 관리자 편집본 저장/조회
+[[kv_namespaces]]
+binding = "LEGAL_KV"
+id = "9f44a3aaea1f440c94b04f5d0ec7899f"

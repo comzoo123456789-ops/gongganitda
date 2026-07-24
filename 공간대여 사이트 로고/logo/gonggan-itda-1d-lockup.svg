@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="272" height="72" viewBox="0 0 272 72" fill="none" role="img" aria-label="공간잇다 로고 1d">
+  
+  <g transform="translate(6,4)">
+    <path d="M23 12 H14 V52 H23" stroke="#211E1A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></path>
+    <path d="M41 12 H50 V52 H41" stroke="#211E1A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></path>
+    <circle cx="27" cy="32" r="4.6" fill="#4C93B8"></circle>
+    <circle cx="37" cy="32" r="4.6" fill="#D97852"></circle>
+    <line x1="29.5" y1="32" x2="34.5" y2="32" stroke="#D97852" stroke-width="4"></line>
+  </g>
+  
+  <text x="78" y="47" font-family="&#39;Gothic A1&#39;, sans-serif" font-weight="900" font-size="38" letter-spacing="-1.1">
+    <tspan fill="#211E1A">공간</tspan><tspan fill="#C8623B">잇다</tspan>
+  </text>
+</svg>

@@ -1,19 +1,21 @@
 // 등록 공간 (샘플)
 //  img: Unsplash 사진 ID  ·  g: 로딩 실패 시 폴백 그라디언트
 const SPACES = [
-  { id: 1, name: "와일리 라운지 1F", cat: "event", region: "서울 강남구 역삼동", price: 30000, capacity: 40, rating: 4.9, reviews: 128, now: true, flagship: true, tags: ["빔프로젝터", "주차 가능", "음향 시설", "냉난방"], img: "1600585154340-be6161a56a0c", g: ["#b5563b", "#cf7a5f"] },
-  { id: 2, name: "감성 파티룸 하이드", cat: "party", region: "서울 마포구 연남동", price: 25000, capacity: 15, rating: 4.8, reviews: 212, now: true, tags: ["넷플릭스", "무드 조명", "취사 가능", "블루투스 스피커"], img: "1505373877841-8d25f7d46678", g: ["#8d6e97", "#b49ac0"] },
-  { id: 3, name: "브릭 세미나룸", cat: "meeting", region: "서울 강남구 삼성동", price: 20000, capacity: 20, rating: 4.7, reviews: 96, now: true, tags: ["화이트보드", "빔프로젝터", "화상회의", "와이파이"], img: "1497366754035-f200968a6e72", g: ["#5b7f8c", "#87a7b2"] },
-  { id: 4, name: "사운드 보컬 연습실", cat: "practice", region: "서울 서초구 서초동", price: 12000, capacity: 4, rating: 4.9, reviews: 340, now: true, tags: ["방음 완비", "마이크", "녹음 가능", "앰프"], img: "1511379938547-c1f69419868d", g: ["#8a7a4e", "#b3a06b"] },
-  { id: 5, name: "화이트 호리존 스튜디오", cat: "studio", region: "서울 성동구 성수동", price: 35000, capacity: 10, rating: 4.8, reviews: 154, now: false, tags: ["호리존", "조명 장비", "분장실", "주차"], img: "1519710164239-da123dc03ef4", g: ["#5f7a5c", "#89a486"] },
-  { id: 6, name: "우드톤 공유주방", cat: "cafe", region: "서울 용산구 이태원동", price: 28000, capacity: 12, rating: 4.6, reviews: 73, now: true, tags: ["오븐", "식기 완비", "취사 가능", "냉장고"], img: "1571624436279-b272aff752b5", g: ["#9c7b56", "#c2a079"] },
-  { id: 7, name: "조용한 스터디룸", cat: "study", region: "서울 종로구 혜화동", price: 8000, capacity: 6, rating: 4.7, reviews: 189, now: true, tags: ["와이파이", "콘센트", "화이트보드", "정수기"], img: "1497215728101-856f4ea42174", g: ["#567f74", "#83a89e"] },
-  { id: 8, name: "루프탑 이벤트홀", cat: "event", region: "서울 강남구 청담동", price: 60000, capacity: 60, rating: 4.9, reviews: 88, now: true, tags: ["루프탑", "음향 시설", "케이터링", "주차"], img: "1515169067868-5387ec356754", g: ["#b5563b", "#d98a6f"] },
-  { id: 9, name: "미니 코워킹 오피스", cat: "office", region: "서울 마포구 서교동", price: 15000, capacity: 8, rating: 4.5, reviews: 64, now: false, tags: ["회의실", "프린터", "라운지", "와이파이"], img: "1560448204-e02f11c3d0e2", g: ["#6b6b8a", "#9494ad"] },
-  { id: 10, name: "댄스 연습 스튜디오", cat: "practice", region: "서울 광진구 자양동", price: 18000, capacity: 12, rating: 4.8, reviews: 276, now: true, tags: ["전면 거울", "음향", "댄스 마루", "샤워실"], img: "1600607687939-ce8a6c25118c", g: ["#8a7a4e", "#a99a68"] },
-  { id: 11, name: "북유럽 감성 파티룸", cat: "party", region: "서울 송파구 잠실동", price: 32000, capacity: 20, rating: 4.9, reviews: 301, now: true, tags: ["빔프로젝터", "무드 조명", "취사 가능", "노래방"], img: "1524758631624-e2822e304c36", g: ["#8d6e97", "#a98cba"] },
-  { id: 12, name: "라이브 방송 스튜디오", cat: "studio", region: "서울 영등포구 여의도동", price: 40000, capacity: 6, rating: 4.7, reviews: 47, now: true, tags: ["송출 장비", "조명", "방음", "편집실"], img: "1521737604893-d14cc237f11d", g: ["#5f7a5c", "#7e9a7b"] },
+  { id: 1, name: "와일리 라운지 1F", cat: "event", region: "서울 강남구 역삼동", price: 30000, capacity: 40, rating: 4.9, reviews: 128, now: true, flagship: true, tags: ["빔프로젝터", "주차 가능", "음향 시설", "냉난방"], optTags: ["주차10대가능", "대형스크린", "역3분", "음향완비"], img: "1600585154340-be6161a56a0c", g: ["#b5563b", "#cf7a5f"] },
+  { id: 2, name: "감성 파티룸 하이드", cat: "party", region: "서울 마포구 연남동", price: 25000, capacity: 15, rating: 4.8, reviews: 212, now: true, tags: ["넷플릭스", "무드 조명", "취사 가능", "블루투스 스피커"], optTags: ["포토존", "넷플릭스", "취사가능", "심야이용"], timePkg: [{ label: "낮 패키지 12~17시", price: 99000 }, { label: "올나잇 22~08시", price: 149000 }], img: "1505373877841-8d25f7d46678", g: ["#8d6e97", "#b49ac0"] },
+  { id: 3, name: "브릭 세미나룸", cat: "meeting", region: "서울 강남구 삼성동", price: 20000, capacity: 20, rating: 4.7, reviews: 96, now: true, tags: ["화이트보드", "빔프로젝터", "화상회의", "와이파이"], optTags: ["빔프로젝터", "화상회의", "무선마이크"], img: "1497366754035-f200968a6e72", g: ["#5b7f8c", "#87a7b2"] },
+  { id: 4, name: "사운드 보컬 연습실", cat: "practice", region: "서울 서초구 서초동", price: 12000, capacity: 4, rating: 4.9, reviews: 340, now: true, tags: ["방음 완비", "마이크", "녹음 가능", "앰프"], optTags: ["방음완비", "녹음가능", "24시간운영"], timePkg: [{ label: "올나잇 22~08시", price: 69000 }], img: "1511379938547-c1f69419868d", g: ["#8a7a4e", "#b3a06b"] },
+  { id: 5, name: "화이트 호리존 스튜디오", cat: "studio", region: "서울 성동구 성수동", price: 35000, capacity: 10, rating: 4.8, reviews: 154, now: false, tags: ["호리존", "조명 장비", "분장실", "주차"], optTags: ["호리존", "조명장비", "분장실", "주차2대가능"], img: "1519710164239-da123dc03ef4", g: ["#5f7a5c", "#89a486"] },
+  { id: 6, name: "우드톤 공유주방", cat: "cafe", region: "서울 용산구 이태원동", price: 28000, capacity: 12, rating: 4.6, reviews: 73, now: true, tags: ["오븐", "식기 완비", "취사 가능", "냉장고"], optTags: ["취사가능", "오븐구비", "식기완비"], img: "1571624436279-b272aff752b5", g: ["#9c7b56", "#c2a079"] },
+  { id: 7, name: "조용한 스터디룸", cat: "study", region: "서울 종로구 혜화동", price: 8000, capacity: 6, rating: 4.7, reviews: 189, now: true, tags: ["와이파이", "콘센트", "화이트보드", "정수기"], optTags: ["역5분", "콘센트多", "화이트보드"], img: "1497215728101-856f4ea42174", g: ["#567f74", "#83a89e"] },
+  { id: 8, name: "루프탑 이벤트홀", cat: "event", region: "서울 강남구 청담동", price: 60000, capacity: 60, rating: 4.9, reviews: 88, now: true, tags: ["루프탑", "음향 시설", "케이터링", "주차"], optTags: ["루프탑뷰", "야경명소", "케이터링가능", "주차20대"], timePkg: [{ label: "이브닝 18~23시", price: 249000 }], img: "1515169067868-5387ec356754", g: ["#b5563b", "#d98a6f"] },
+  { id: 9, name: "미니 코워킹 오피스", cat: "office", region: "서울 마포구 서교동", price: 15000, capacity: 8, rating: 4.5, reviews: 64, now: false, tags: ["회의실", "프린터", "라운지", "와이파이"], optTags: ["프린터무료", "라운지", "역7분"], img: "1560448204-e02f11c3d0e2", g: ["#6b6b8a", "#9494ad"] },
+  { id: 10, name: "댄스 연습 스튜디오", cat: "practice", region: "서울 광진구 자양동", price: 18000, capacity: 12, rating: 4.8, reviews: 276, now: true, tags: ["전면 거울", "음향", "댄스 마루", "샤워실"], optTags: ["전면거울", "댄스마루", "샤워실", "심야이용"], img: "1600607687939-ce8a6c25118c", g: ["#8a7a4e", "#a99a68"] },
+  { id: 11, name: "북유럽 감성 파티룸", cat: "party", region: "서울 송파구 잠실동", price: 32000, capacity: 20, rating: 4.9, reviews: 301, now: true, tags: ["빔프로젝터", "무드 조명", "취사 가능", "노래방"], optTags: ["노래방", "빔프로젝터", "포토존", "파티세팅"], timePkg: [{ label: "낮 패키지 12~18시", price: 139000 }, { label: "올나잇 22~08시", price: 199000 }], img: "1524758631624-e2822e304c36", g: ["#8d6e97", "#a98cba"] },
+  { id: 12, name: "라이브 방송 스튜디오", cat: "studio", region: "서울 영등포구 여의도동", price: 40000, capacity: 6, rating: 4.7, reviews: 47, now: true, tags: ["송출 장비", "조명", "방음", "편집실"], optTags: ["송출장비", "방음완비", "편집실"], img: "1521737604893-d14cc237f11d", g: ["#5f7a5c", "#7e9a7b"] },
 ];
+// 샘플 공간 소유 호스트 배정(정산·내 등록공간 연동) — 미지정 시 host1~3 순환
+SPACES.forEach((s, i) => { if (!s.ownerId) s.ownerId = ["host1", "host2", "host3"][i % 3]; });
 // 썸네일 URL — 등록 공간은 photo(직접 URL), 샘플은 Unsplash id, 없으면 "" (그라디언트 폴백)
 function thumbUrl(s, w, h) {
   if (s.photo) return s.photo;
@@ -29,6 +31,8 @@ const _COORDS = {
   9: [37.5556, 126.9188], 10: [37.5347, 127.0820], 11: [37.5133, 127.1000], 12: [37.5215, 126.9243],
 };
 SPACES.forEach((s) => { const c = _COORDS[s.id]; if (c) { s.lat = c[0]; s.lng = c[1]; } });
+// 기존 등록 대관을 데모 호스트 3곳에 배정 (견적요청 테스트용) — host1:1,4,7,10 · host2:2,5,8,11 · host3:3,6,9,12
+SPACES.forEach((s, i) => { s.ownerId = ["host", "host1", "host2", "host3"][i % 4]; }); // 기본 데모 host 계정도 샘플 공간 관리 가능
 // 네이버 지도 검색 URL (주소로 위치 표시)
 function naverMapUrl(q) { return "https://map.naver.com/p/search/" + encodeURIComponent(q || ""); }
 // 카드용 지역 축약 — 앞의 시/도를 떼고 구·동 위주로
@@ -39,9 +43,26 @@ function regionShort(r) {
 // 전국 지역 (광역시·도)
 const REGIONS = ["서울", "경기", "인천", "강원", "대전", "세종", "충북", "충남", "부산", "대구", "울산", "경북", "경남", "광주", "전북", "전남", "제주"];
 
+// 호스트가 숨김 처리한 공간 id 집합 (공사·이용 불가 등 — 호스트 마이페이지에서 토글)
+function _spaceHiddenSet() { try { return new Set(JSON.parse(localStorage.getItem("gi_spaces_hidden") || "[]")); } catch (e) { return new Set(); } }
+function isSpaceHidden(id) { return _spaceHiddenSet().has(id); }
+function setSpaceHidden(id, hide) { const set = _spaceHiddenSet(); if (hide) set.add(id); else set.delete(id); try { localStorage.setItem("gi_spaces_hidden", JSON.stringify([...set])); } catch (e) {} }
+
 // 호스트가 등록한 공간(localStorage) + 샘플 공간 병합
 function getAllSpaces() {
-  let mine = [];
+  let mine = [], flags = {}, removed = [];
   try { mine = JSON.parse(localStorage.getItem("gi_spaces") || "[]"); } catch (e) {}
-  return [...mine, ...SPACES];
+  try { flags = JSON.parse(localStorage.getItem("gi_spaceflags") || "{}"); } catch (e) {}
+  try { removed = JSON.parse(localStorage.getItem("gi_spaces_removed") || "[]"); } catch (e) {}
+  const mineIds = new Set(mine.map((s) => s.id));
+  const rm = new Set(removed);
+  const hidden = _spaceHiddenSet();
+  // gi_spaces(등록·수정 오버라이드)가 우선, 중복 id 샘플은 제외, 삭제된 공간은 숨김
+  const merged = [...mine, ...SPACES.filter((s) => !mineIds.has(s.id))].filter((s) => !rm.has(s.id));
+  return merged.map((s) => {
+    const f = flags[s.id], h = hidden.has(s.id) || !!s.hidden;
+    return (f || h) ? Object.assign({}, s, { blinded: !!(f && f.blinded), rejected: !!(f && f.rejected), hidden: h }) : s;
+  });
 }
+// 게스트에게 실제 노출되는 공간만 (블라인드·반려·호스트 숨김 제외)
+function getPublicSpaces() { return getAllSpaces().filter((s) => !s.blinded && !s.rejected && !s.hidden); }

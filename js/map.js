@@ -5,25 +5,31 @@
 (function () {
   const $ = (s) => document.querySelector(s);
   const won = (n) => (+n || 0).toLocaleString("ko-KR");
-  const spaces = getAllSpaces();
+  const spaces = getPublicSpaces();
   const key = window.NAVER_MAP_KEY;
   let map = null, authFailed = false;
 
-  // 네이버 인증 실패 시 자동 호출됨 → 목록형으로 폴백 + 안내
-  window.navermap_authFailure = function () { authFailed = true; fallback(); };
+  // 신규 콘솔=ncpKeyId, 구버전=ncpClientId. 인증 실패 시에도 대체 파라미터로 재시도.
+  const PARAMS = ["ncpKeyId", "ncpClientId"];
+  let attempt = 0, settled = false;
+  // 네이버 인증 실패 시 자동 호출됨 → 다음 파라미터로 재시도, 모두 실패면 목록 폴백
+  window.navermap_authFailure = function () { if (!settled) nextOrFail(true); };
 
-  if (key) {
-    // 신규 콘솔은 ncpKeyId, 구버전은 ncpClientId — 순차 시도(스크립트 로드 실패 시)
-    loadNaver("ncpKeyId", onReady, () => loadNaver("ncpClientId", onReady, fallback));
-  } else {
-    fallback();
+  if (key) nextOrFail(false); else fallback();
+
+  function removeNavScripts() { document.querySelectorAll("script[data-navmap]").forEach((s) => s.remove()); }
+  function nextOrFail(auth) {
+    if (settled) return;
+    removeNavScripts(); try { delete window.naver; } catch (e) { window.naver = undefined; }
+    if (attempt < PARAMS.length) loadNaver(PARAMS[attempt++]);
+    else { settled = true; authFailed = auth; fallback(); }
   }
-
-  function loadNaver(param, done, fail) {
+  function loadNaver(param) {
     const sc = document.createElement("script");
+    sc.dataset.navmap = "1";
     sc.src = `https://oapi.map.naver.com/openapi/v3/maps.js?${param}=${encodeURIComponent(key)}&submodules=geocoder`;
-    sc.onload = () => { setTimeout(() => (window.naver && naver.maps ? done() : fail()), 60); };
-    sc.onerror = fail;
+    sc.onload = () => setTimeout(() => { if (settled) return; if (window.naver && naver.maps) { settled = true; onReady(); } }, 400);
+    sc.onerror = () => nextOrFail(false);
     document.head.appendChild(sc);
   }
 
@@ -64,7 +70,7 @@
     $("#map").style.display = "none";
     $("#mapFallback").hidden = false;
     $("#mapNote").innerHTML = authFailed
-      ? '⚠️ 네이버 지도 인증에 실패했어요. 콘솔에서 <b>Web 서비스 URL에 이 사이트 도메인</b>을 등록했는지 확인해 주세요. 아래는 지역별 목록입니다.'
+      ? iconSVG("alert", 14) + ' 네이버 지도 인증에 실패했어요. 네이버 클라우드 콘솔 <b>Maps 애플리케이션 → Web 서비스 URL</b>에 <b><code>' + location.origin + '</code></b> 이 정확히 등록되어 있는지 확인해 주세요. 아래는 지역별 목록입니다.'
       : "지역별 공간 목록이에요. 항목을 누르면 네이버 지도에서 위치가 열립니다.";
     const byGu = {};
     spaces.forEach((s) => { const gu = (s.region || "기타").split(" ").slice(0, 2).join(" "); (byGu[gu] = byGu[gu] || []).push(s); });
@@ -79,6 +85,32 @@
         </div>
       </div>`).join("");
   }
+
+  // 내 주변 공간 찾기 (지오로케이션)
+  function toast(m) { const t = $("#toast"); if (!t) return; t.textContent = m; t.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => (t.hidden = true), 2600); }
+  function dist(a, b, c, d) { const R = 6371, dLat = (c - a) * Math.PI / 180, dLng = (d - b) * Math.PI / 180, la = a * Math.PI / 180, lc = c * Math.PI / 180; const x = Math.sin(dLat / 2) ** 2 + Math.cos(la) * Math.cos(lc) * Math.sin(dLng / 2) ** 2; return R * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1 - x)); }
+  const nearBtn = $("#mapNear");
+  if (nearBtn) nearBtn.addEventListener("click", () => {
+    if (!navigator.geolocation) { toast("이 브라우저는 위치 기능을 지원하지 않아요"); return; }
+    nearBtn.disabled = true; nearBtn.textContent = "위치 확인 중…";
+    navigator.geolocation.getCurrentPosition((pos) => {
+      const { latitude: lat, longitude: lng } = pos.coords;
+      nearBtn.disabled = false; nearBtn.innerHTML = iconSVG("pin", 14) + " 내 주변 공간 찾기";
+      // 거리 계산 후 가장 가까운 공간 안내
+      const withGeo = spaces.filter((s) => s.lat && s.lng).map((s) => ({ s, km: dist(lat, lng, s.lat, s.lng) })).sort((a, b) => a.km - b.km);
+      if (map && naver && naver.maps) {
+        const me = new naver.maps.LatLng(lat, lng);
+        map.setCenter(me); map.setZoom(13);
+        new naver.maps.Marker({ position: me, map, icon: { content: '<div style="width:18px;height:18px;background:#4f46e5;border:3px solid #fff;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,.4)"></div>', anchor: new naver.maps.Point(9, 9) } });
+        if (withGeo[0]) toast(`가장 가까운 공간: ${withGeo[0].s.name} (약 ${withGeo[0].km.toFixed(1)}km)`);
+      } else {
+        // 폴백 목록을 거리순으로 재정렬
+        const fb = $("#mapFallback");
+        $("#mapNote").innerHTML = `${iconSVG("pin", 14)} <b>내 위치 기준 가까운 순</b>으로 정렬했어요.`;
+        fb.innerHTML = `<div class="mapf-group"><h3 class="mapf-group__t">가까운 공간</h3><div class="mapf-list">${withGeo.map(({ s, km }) => `<div class="mapf-item"><div class="mapf-item__main" onclick="location.href='space.html?id=${s.id}'"><b>${s.name}</b><span>${s.region} · 약 ${km.toFixed(1)}km · ${won(s.price)}원/시간</span></div><a class="mapf-item__pin" href="${naverMapUrl(s.addr || s.region)}" target="_blank" rel="noopener">${iconSVG("pin", 16)}</a></div>`).join("")}</div></div>`;
+      }
+    }, () => { nearBtn.disabled = false; nearBtn.innerHTML = iconSVG("pin", 14) + " 내 주변 공간 찾기"; toast("위치 권한이 필요해요"); }, { enableHighAccuracy: true, timeout: 8000 });
+  });
 
   const hm = $("#hmenu"), nav = $("#nav");
   if (hm) hm.addEventListener("click", () => { hm.classList.toggle("is-open"); nav.classList.toggle("is-open"); });

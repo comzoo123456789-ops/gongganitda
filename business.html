@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>사업자 등록 · 공간잇다</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&display=swap" />
+  <link rel="stylesheet" href="css/style.css?v=20260723" />
+</head>
+<body>
+  <header class="header is-scrolled">
+    <div class="header__inner">
+      <a href="index.html" class="logo"><span class="logo__dot"></span>공간잇다</a>
+      <nav class="header__nav" id="nav"><a href="index.html" class="header__link">← 홈</a></nav>
+    </div>
+  </header>
+
+  <main class="hostreg">
+    <div class="hostreg__head">
+      <span class="section__kicker">BUSINESS SIGN-UP</span>
+      <h1 class="hostreg__title">사업자 등록</h1>
+      <p class="hostreg__sub">공간을 빌려주는 <b>호스트</b>, 서비스를 제공하는 <b>파트너</b>로 입점하세요. 심사를 위해 사업자 서류를 함께 제출합니다.</p>
+    </div>
+
+    <form class="hf" id="bzForm" novalidate>
+      <div class="hf-sec">가입 유형 <span style="font-family:'Pretendard',sans-serif;font-size:0.78rem;font-weight:500;color:var(--faint)">중복 선택 가능 · 최소 1개 <i style="color:var(--accent)">*</i></span></div>
+      <div class="biz-roles" id="bzRoles">
+        <label class="biz-role"><input type="checkbox" id="bzRoleHost" value="host" checked />
+          <span class="biz-role__ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5"/></svg></span>
+          <span class="biz-role__tx"><b>공간 임대 (호스트)</b><span>공간을 등록하고 대관 수익</span></span></label>
+        <label class="biz-role"><input type="checkbox" id="bzRoleVendor" value="vendor" />
+          <span class="biz-role__ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7.5" width="18" height="12.5" rx="2"/><path d="M8.5 7.5V6a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v1.5"/><path d="M3 12.5h18"/></svg></span>
+          <span class="biz-role__tx"><b>서비스 제공 (맞춤 업체)</b><span>촬영·케이터링·렌탈 등 견적 입찰</span></span></label>
+      </div>
+      <div class="hf-sec">사업자 정보</div>
+      <div class="hf-row">
+        <div class="hf-field"><label class="hf-label" id="bzNameLbl">상호 (파트너명) <i>*</i></label><input type="text" id="bzName" placeholder="예: 와일리 스튜디오" /></div>
+        <div class="hf-field"><label class="hf-label">대표자명 <i>*</i></label><input type="text" id="bzOwner" placeholder="예: 홍길동" /></div>
+      </div>
+      <div class="hf-row">
+        <div class="hf-field"><label class="hf-label">사업자등록번호 <i>*</i></label><input type="text" id="bzNo" inputmode="numeric" placeholder="000-00-00000" /></div>
+        <div class="hf-field"><label class="hf-label">개업일자 (선택)</label><input type="date" id="bzOpen" /></div>
+      </div>
+      <div class="hf-row">
+        <div class="hf-field"><label class="hf-label">담당자 연락처 <i>*</i></label><input type="tel" id="bzPhone" placeholder="010-0000-0000" /></div>
+        <div class="hf-field"><label class="hf-label">이메일 <i>*</i></label><input type="email" id="bzEmail" placeholder="business@company.kr" /></div>
+      </div>
+      <div class="hf-field"><label class="hf-label">활동 지역 <i>*</i></label><select id="bzRegion" class="filt__sel"></select></div>
+      <div class="hf-field">
+        <label class="hf-label">사업장 주소 <i>*</i></label>
+        <div class="addr-row">
+          <input type="text" id="bzAddr" placeholder="[우편번호 검색]으로 자동 입력" readonly />
+          <button type="button" class="btn btn--soft" id="bzAddrBtn">우편번호 검색</button>
+        </div>
+        <input type="text" id="bzAddrDetail" class="addr-detail" placeholder="상세 주소 (건물명·동·호수 등)" />
+      </div>
+      <div class="hf-sec">PG 정산 계좌 <span style="font-family:'Pretendard',sans-serif;font-size:0.78rem;font-weight:500;color:var(--faint)">선택 · 가입 후 마이페이지에서도 등록 가능</span></div>
+      <div class="hf-row">
+        <div class="hf-field"><label class="hf-label">정산 은행 <span class="hf-opt">선택</span></label><select id="bzBank"><option value="">은행 선택</option></select></div>
+        <div class="hf-field"><label class="hf-label">계좌번호 <span class="hf-opt">선택</span></label><input type="text" id="bzAccount" inputmode="numeric" placeholder="'-' 없이 숫자만" /></div>
+      </div>
+      <div class="hf-field">
+        <label class="hf-label">예금주명 · 계좌 실명인증 <span class="hf-opt">선택</span></label>
+        <div class="hf-verify"><input type="text" id="bzHolder" placeholder="대표자명 또는 상호와 동일하게" /><button type="button" class="btn btn--dark" id="bzVerify">계좌 인증</button></div>
+        <span class="hf-hint" id="bzVerifyMsg">결제대행사(PG)가 <b>예금주 실명조회</b>로 계좌를 검증합니다. <b>통장 사본 제출은 필요 없어요.</b></span>
+      </div>
+
+      <!-- 파트너: 취급 카테고리 -->
+      <div id="bzSvcWrap" hidden>
+        <div class="hf-field">
+          <label class="hf-label">제공 서비스 (1개) <i>*</i></label>
+          <div class="hf-checks" id="bzSvc"></div>
+          <span class="hf-hint">파트너는 담당 카테고리 1개로 입점합니다. 회원의 견적 요청에 견적서를 제출할 수 있어요.</span>
+        </div>
+      </div>
+      <!-- 호스트 안내 -->
+      <p class="hf-hint" id="bzHostHint" hidden>호스트로 가입하면 공간을 등록하고, 회원의 공간 견적 요청을 받아 대관 수익을 만들 수 있어요.</p>
+
+      <div class="hf-field">
+        <label class="hf-label">한 줄 소개 (선택)</label>
+        <textarea id="bzIntro" rows="2" placeholder="파트너·공간을 소개해 주세요. 마이페이지·맞춤 업체에 노출됩니다."></textarea>
+      </div>
+
+      <div class="hf-sec">제출 서류</div>
+      <p class="hf-hint" style="margin-top:-4px">이미지(JPG/PNG) 또는 PDF를 첨부하세요. 데모에서는 브라우저에만 저장됩니다.</p>
+      <div id="bzDocs" class="bz-docs"></div>
+
+      <div class="hf-sec">계정 정보</div>
+      <div class="hf-row">
+        <div class="hf-field"><label class="hf-label">아이디 <i>*</i></label><input type="text" id="bzId" autocomplete="username" placeholder="로그인 아이디" /></div>
+        <div class="hf-field"><label class="hf-label">비밀번호 <i>*</i></label><input type="password" id="bzPw" autocomplete="new-password" placeholder="비밀번호" /></div>
+      </div>
+      <label class="hf-chk hf-chk--space"><input type="checkbox" id="bzAgree" /><span><button type="button" class="su-link" data-legal="partner">파트너 입점 약관</button> 및 <button type="button" class="su-link" data-legal="privacy">개인정보 처리방침</button>에 동의합니다. <i style="color:var(--accent)">*</i></span></label>
+
+      <p class="hf-err" id="bzErr" hidden></p>
+      <button type="submit" class="btn btn--accent btn--lg btn--block" id="bzSubmit">사업자 등록 신청</button>
+      <p class="hf-note">이미 계정이 있으신가요? <a href="login.html" style="color:var(--accent);font-weight:700">로그인</a> · 일반 회원은 <a href="signup.html" style="color:var(--accent);font-weight:700">회원가입</a></p>
+    </form>
+  </main>
+
+  <footer class="footer"><div class="footer__copy" style="border:none"><a href="help.html?tab=guide" style="color:var(--muted);font-weight:600">이용 방법</a> · <a href="help.html?tab=booking" style="color:var(--muted);font-weight:600">예약 안내</a> · <a href="help.html?tab=faq" style="color:var(--muted);font-weight:600">자주 묻는 질문</a> &nbsp;|&nbsp; © 2026 공간잇다 · wylie</div></footer>
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="//t1.daumcdn.net/mapjsdata/bundle/postcode/prod/postcode.v2.js"></script>
+  <script src="js/icons.js?v=20260723"></script>
+  <script src="data/categories.js?v=20260723"></script>
+  <script src="data/spaces.js?v=20260723"></script>
+  <script src="js/auth.js?v=20260723"></script>
+  <script src="js/business.js?v=20260723"></script>
+</body>
+</html>

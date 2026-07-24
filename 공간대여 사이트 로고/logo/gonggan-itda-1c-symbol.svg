@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none" role="img" aria-label="공간잇다 심볼 1c">
+  
+  <path d="M32 6 C21 6 12 14.5 12 25 C12 36 22 42 32 54 C42 42 52 36 52 25 C52 14.5 43 6 32 6 Z" stroke="#211E1A" stroke-width="5" stroke-linejoin="round"></path>
+  
+  <circle cx="28" cy="24" r="4.6" fill="#4C93B8"></circle>
+  <circle cx="36" cy="24" r="4.6" fill="#D97852"></circle>
+</svg>

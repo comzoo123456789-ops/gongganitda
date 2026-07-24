@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>이용 안내 · 공간잇다</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&display=swap" />
+  <link rel="stylesheet" href="css/style.css?v=20260723" />
+</head>
+<body>
+  <header class="header is-scrolled" id="header">
+    <div class="header__inner">
+      <a href="index.html" class="logo"><span class="logo__dot"></span>공간잇다</a>
+      <nav class="header__nav" id="nav">
+        <a href="search.html" class="header__link">공간 찾기</a>
+        <a href="vendors.html" class="header__link">맞춤 업체</a>
+        
+        <a href="request.html" class="header__link">견적 요청</a>
+        <a href="map.html" class="header__link">지도</a>
+        <a href="host.html" class="header__link js-host-nav">사업자 등록</a>
+        <span class="header__sep"></span>
+        <span class="auth-area" data-authbox></span>
+      </nav>
+      <button class="hmenu" id="hmenu" aria-label="메뉴"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main class="help">
+    <div class="help__head">
+      <span class="section__kicker">HELP CENTER</span>
+      <h1 class="help__title">이용 안내</h1>
+      <p class="help__sub">공간잇다를 처음 이용하시나요? 이용 방법부터 예약·결제, 자주 묻는 질문까지 한 곳에 모았어요.</p>
+    </div>
+
+    <nav class="help-tabs" id="helpTabs">
+      <button type="button" class="help-tab is-active" data-htab="guide">이용 방법</button>
+      <button type="button" class="help-tab" data-htab="booking">예약 안내</button>
+      <button type="button" class="help-tab" data-htab="faq">자주 묻는 질문</button>
+      <button type="button" class="help-tab" data-htab="host">호스트·파트너</button>
+    </nav>
+
+    <div id="helpBody"></div>
+  </main>
+
+  <footer class="footer"><div class="footer__copy" style="border:none">© 2026 공간잇다 · wylie</div></footer>
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="js/icons.js?v=20260723"></script>
+  <script src="data/categories.js?v=20260723"></script>
+  <script src="data/spaces.js?v=20260723"></script>
+  <script src="js/auth.js?v=20260723"></script>
+  <script src="js/help.js?v=20260723"></script>
+</body>
+</html>

@@ -1,0 +1,800 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--
+  ✏️ 수정 방법
+  1) 이 파일을 메모장 또는 VS Code로 엽니다.
+  2) 아래 한글 문구를 원하는 대로 고치고 저장(Ctrl+S)합니다.
+  3) 파일을 더블클릭하면 브라우저에서 결과를 볼 수 있습니다.
+  ※ 태그(<...>)는 건드리지 말고, 글자만 수정하세요.
+-->
+<title>공간잇다 사업정의서</title>
+<style>
+:root {
+    --bg: #f4f5f8; --surface: #ffffff; --surface-2: #f8f9fb;
+    --ink: #15171e; --ink-2: #3b414d; --muted: #6a7280; --faint: #99a0ac;
+    --line: #e4e7ee; --line-2: #eef0f4;
+    --accent: #4f46e5; --accent-soft: #edecfd; --accent-ink: #3730a3;
+    --space: #23809b; --space-soft: #e2f1f5;
+    --service: #cf6a41; --service-soft: #fbeadf;
+    --good: #1f9d63; --good-soft: #e2f5ec;
+    --shadow: 0 1px 2px rgba(20,22,30,.04), 0 8px 24px -12px rgba(20,22,30,.14);
+    --shadow-lg: 0 20px 48px -20px rgba(20,22,30,.28);
+    --maxw: 880px;
+    --font: "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d0f14; --surface: #161a22; --surface-2: #1c212b;
+      --ink: #eef1f7; --ink-2: #c4cad4; --muted: #8b93a2; --faint: #6b7382;
+      --line: #262c37; --line-2: #20252f;
+      --accent: #8f8af6; --accent-soft: #21234a; --accent-ink: #c7c4fb;
+      --space: #4fb4d2; --space-soft: #123039; --service: #e78f68; --service-soft: #3a251b;
+      --good: #46cf92; --good-soft: #123528;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 28px -14px rgba(0,0,0,.6);
+      --shadow-lg: 0 24px 56px -22px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #f4f5f8; --surface: #ffffff; --surface-2: #f8f9fb;
+    --ink: #15171e; --ink-2: #3b414d; --muted: #6a7280; --faint: #99a0ac;
+    --line: #e4e7ee; --line-2: #eef0f4;
+    --accent: #4f46e5; --accent-soft: #edecfd; --accent-ink: #3730a3;
+    --space: #23809b; --space-soft: #e2f1f5; --service: #cf6a41; --service-soft: #fbeadf;
+    --good: #1f9d63; --good-soft: #e2f5ec;
+    --shadow: 0 1px 2px rgba(20,22,30,.04), 0 8px 24px -12px rgba(20,22,30,.14);
+    --shadow-lg: 0 20px 48px -20px rgba(20,22,30,.28);
+  }
+  :root[data-theme="dark"] {
+    --bg: #0d0f14; --surface: #161a22; --surface-2: #1c212b;
+    --ink: #eef1f7; --ink-2: #c4cad4; --muted: #8b93a2; --faint: #6b7382;
+    --line: #262c37; --line-2: #20252f;
+    --accent: #8f8af6; --accent-soft: #21234a; --accent-ink: #c7c4fb;
+    --space: #4fb4d2; --space-soft: #123039; --service: #e78f68; --service-soft: #3a251b;
+    --good: #46cf92; --good-soft: #123528;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 28px -14px rgba(0,0,0,.6);
+    --shadow-lg: 0 24px 56px -22px rgba(0,0,0,.7);
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font); line-height: 1.72; -webkit-font-smoothing: antialiased; font-feature-settings: "tnum"; word-break: keep-all; overflow-wrap: break-word; overflow-x: clip; }
+  .scroll { max-width: 100%; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+  .doc { padding: 12px 0 80px; }
+
+  /* ---------- Cover ---------- */
+  .cover { padding: 64px 0 40px; border-bottom: 1px solid var(--line); }
+  .brand { display: inline-flex; align-items: center; gap: 9px; font-weight: 800; font-size: 1.05rem; letter-spacing: -.01em; }
+  .brand__dots { display: inline-flex; gap: 3px; }
+  .brand__dots i { width: 9px; height: 9px; border-radius: 50%; display: block; }
+  .brand__dots i:first-child { background: var(--space); }
+  .brand__dots i:last-child { background: var(--service); }
+  .brand em { font-style: normal; color: var(--accent); }
+  .logo-lockup { height: 42px; width: auto; display: block; }
+  .logo-lockup .ll-stroke { stroke: var(--ink); }
+  .logo-lockup .ll-fill { fill: var(--ink); }
+  .logo-lockup text { font-family: var(--font); }
+  .cover__eyebrow { margin: 30px 0 10px; font-size: .74rem; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: var(--accent); }
+  .cover h1 { margin: 0; font-size: clamp(2.1rem, 5.5vw, 3.1rem); line-height: 1.12; letter-spacing: -.03em; font-weight: 800; text-wrap: balance; }
+  .cover__sub { margin: 16px 0 0; font-size: 1.12rem; color: var(--ink-2); max-width: 42ch; text-wrap: balance; }
+  .cover__meta { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 8px 10px; font-size: .82rem; }
+  .cover__meta span { padding: 5px 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); background: var(--surface); }
+  .cover__meta b { color: var(--ink-2); font-weight: 700; }
+
+  /* ---------- Executive summary ---------- */
+  .exec { margin-top: 34px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 26px 28px; box-shadow: var(--shadow); }
+  .exec__t { margin: 0 0 6px; font-size: .74rem; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+  .exec p { margin: 0; font-size: 1.16rem; line-height: 1.6; letter-spacing: -.01em; }
+  .exec p b { color: var(--accent); }
+  .exec__row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 22px; }
+  .exec__kpi { border-top: 2px solid var(--line); padding-top: 12px; }
+  .exec__kpi b { display: block; font-size: 1.08rem; font-weight: 800; letter-spacing: -.01em; color: var(--accent-ink); }
+  .exec__kpi span { font-size: .84rem; color: var(--muted); }
+
+  /* ---------- Section ---------- */
+  section.sec { padding-top: 56px; }
+  .sec__head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 8px; }
+  .sec__no { font-size: .8rem; font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; letter-spacing: .04em; padding-top: 3px; }
+  .sec__head h2 { margin: 0; font-size: 1.85rem; letter-spacing: -.03em; font-weight: 800; text-wrap: balance; }
+  .sec__lead { margin: 0 0 22px 34px; color: var(--ink-2); font-size: 1.1rem; line-height: 1.62; max-width: 58ch; }
+  @media (max-width: 560px) { .sec__lead { margin-left: 0; } }
+  .sec p { color: var(--ink-2); }
+  .sec p + p { margin-top: 12px; }
+
+  /* ---------- Cards ---------- */
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px; box-shadow: var(--shadow); }
+  .card > b:first-child { display: block; font-size: 1.08rem; font-weight: 800; letter-spacing: -.01em; margin-bottom: 4px; color: var(--ink); }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media (max-width: 720px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+  .vp__tag { display: inline-block; font-size: .72rem; font-weight: 800; letter-spacing: .04em; padding: 3px 9px; border-radius: 6px; margin-bottom: 10px; }
+  .vp--guest .vp__tag { background: var(--accent-soft); color: var(--accent-ink); }
+  .vp--host .vp__tag { background: var(--space-soft); color: var(--space); }
+  .vp--partner .vp__tag { background: var(--service-soft); color: var(--service); }
+  .vp h3 { margin: 0 0 6px; font-size: 1.06rem; letter-spacing: -.01em; }
+  .vp ul { margin: 8px 0 0; padding-left: 18px; color: var(--ink-2); font-size: .93rem; }
+  .vp li { margin: 4px 0; }
+
+  /* problem/solution */
+  .ps { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 640px) { .ps { grid-template-columns: 1fr; } }
+  .ps__col h3 { margin: 0 0 12px; font-size: .95rem; letter-spacing: .02em; display: flex; align-items: center; gap: 8px; }
+  .ps__col ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 9px; }
+  .ps__col li { position: relative; padding-left: 17px; font-size: .95rem; color: var(--ink-2); line-height: 1.55; }
+  .ps__col li::before { content: ""; position: absolute; left: 0; top: 8px; width: 7px; height: 7px; border-radius: 2px; }
+  .ps--problem li::before { background: var(--service); }
+  .ps--solution li::before { background: var(--good); }
+  .ps__dot { width: 9px; height: 9px; border-radius: 50%; }
+
+  /* ---------- Diagram frame ---------- */
+  .figure { margin-top: 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 26px 24px 22px; box-shadow: var(--shadow); }
+  .figure__cap { margin: 16px 0 0; font-size: .82rem; color: var(--muted); text-align: center; }
+  .figure__cap b { color: var(--ink-2); }
+  .scroll { overflow-x: auto; }
+
+  /* ecosystem */
+  .eco { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 14px; min-width: 620px; }
+  .eco__side { display: flex; flex-direction: column; gap: 12px; justify-content: center; }
+  .node { border: 1.5px solid var(--line); border-radius: 12px; padding: 14px 16px; background: var(--surface-2); text-align: center; }
+  .node b { display: block; font-size: 1rem; letter-spacing: -.01em; }
+  .node span { font-size: .82rem; color: var(--muted); }
+  .node--host { border-color: var(--space); }
+  .node--host b { color: var(--space); }
+  .node--partner { border-color: var(--service); }
+  .node--partner b { color: var(--service); }
+  .node--guest { border-color: var(--accent); }
+  .node--guest b { color: var(--accent); }
+  .hub { text-align: center; color: #fff; background: linear-gradient(150deg, var(--accent), #6f68ee); border-radius: 16px; padding: 22px 20px; box-shadow: var(--shadow-lg); min-width: 168px; }
+  .hub b { display: block; font-size: 1.18rem; font-weight: 800; }
+  .hub span { font-size: .8rem; opacity: .9; }
+  .eco__lane { text-align: center; }
+  .eco__arrow { font-size: .72rem; color: var(--muted); margin: 6px 0; }
+  .eco__flow { font-size: .72rem; color: var(--muted); background: var(--surface); border: 1px dashed var(--line); border-radius: 999px; padding: 3px 10px; display: inline-block; }
+  .eco__infra { margin-top: 16px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .chip-infra { display: inline-flex; flex-direction: column; align-items: center; gap: 2px; text-align: center; line-height: 1.35; font-size: .78rem; color: var(--muted); background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 9px 16px; }
+  .chip-infra b { color: var(--ink); font-size: .83rem; }
+  .chip-infra small { color: var(--muted); font-size: .72rem; }
+
+  /* flow lanes */
+  .flow { display: flex; flex-direction: column; gap: 16px; }
+  .flow__entries { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  @media (max-width: 680px) { .flow__entries { grid-template-columns: 1fr; } }
+  .entry { border: 1.5px solid var(--line); border-radius: 12px; padding: 14px 16px; background: var(--surface-2); position: relative; }
+  .entry__k { font-size: .72rem; font-weight: 800; color: var(--accent); letter-spacing: .04em; }
+  .entry b { display: block; margin: 4px 0 3px; font-size: 1rem; letter-spacing: -.01em; }
+  .entry span { font-size: .84rem; color: var(--muted); }
+  .flow__merge { text-align: center; color: var(--faint); font-size: 1.3rem; line-height: 1; }
+  .pipe { display: flex; align-items: stretch; gap: 0; background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .pipe__step { flex: 1; padding: 13px 12px; text-align: center; position: relative; }
+  .pipe__step + .pipe__step { border-left: 1px solid var(--line); }
+  .pipe__step b { display: block; font-size: .92rem; letter-spacing: -.01em; }
+  .pipe__step span { font-size: .76rem; color: var(--muted); }
+  .pipe__step--pay { background: var(--accent-soft); }
+  .pipe__step--pay b { color: var(--accent-ink); }
+  @media (max-width: 680px) { .pipe { flex-direction: column; } .pipe__step + .pipe__step { border-left: 0; border-top: 1px solid var(--line); } }
+
+  /* revenue */
+  .rev { display: grid; grid-template-columns: 1.1fr 1fr; gap: 22px; align-items: center; }
+  @media (max-width: 720px) { .rev { grid-template-columns: 1fr; } }
+  .rev__amt { font-size: .82rem; color: var(--muted); }
+  .rev__amt b { font-size: 1.9rem; color: var(--ink); font-weight: 800; letter-spacing: -.02em; display: block; margin-top: 2px; }
+  .bar { display: flex; height: 46px; border-radius: 10px; overflow: hidden; margin: 16px 0 10px; box-shadow: var(--shadow); }
+  .bar__seg { display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: .9rem; }
+  .bar__seg--provider { background: var(--space); flex-basis: 95%; }
+  .bar__seg--fee { background: var(--accent); flex-basis: 5%; min-width: 54px; }
+  .rev__legend { display: flex; gap: 16px; font-size: .82rem; color: var(--ink-2); flex-wrap: wrap; }
+  .rev__legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: middle; }
+  .rev__note { font-size: .82rem; color: var(--muted); margin-top: 12px; }
+
+  /* fee table */
+  table.fee { width: 100%; border-collapse: collapse; font-size: .92rem; }
+  table.fee th, table.fee td { text-align: left; padding: 11px 12px; border-bottom: 1px solid var(--line); }
+  table.fee thead th { font-size: .74rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+  table.fee td.num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 800; }
+  table.fee tr:last-child td { border-bottom: 0; }
+  .fee__pill { font-size: .72rem; font-weight: 800; padding: 2px 8px; border-radius: 6px; background: var(--accent-soft); color: var(--accent-ink); }
+
+  /* journey */
+  .journey { counter-reset: step; display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; min-width: 640px; }
+  .jstep { background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 16px 14px; position: relative; }
+  .jstep::before { counter-increment: step; content: counter(step); display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 800; font-size: .82rem; margin-bottom: 10px; }
+  .jstep b { display: block; font-size: .92rem; letter-spacing: -.01em; margin-bottom: 3px; }
+  .jstep span { font-size: .8rem; color: var(--muted); }
+
+  /* diff list */
+  .diff { display: flex; flex-direction: column; gap: 10px; }
+  .diff__row { display: flex; gap: 14px; align-items: flex-start; padding: 15px 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); }
+  .diff__n { flex: 0 0 auto; font-weight: 800; color: var(--accent); font-size: .95rem; font-variant-numeric: tabular-nums; }
+  .diff__row b { letter-spacing: -.01em; }
+  .diff__row p { margin: 3px 0 0; font-size: .92rem; color: var(--muted); }
+
+  /* roadmap */
+  .road { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media (max-width: 720px) { .road { grid-template-columns: 1fr; } }
+  .road__col { border-top: 3px solid var(--line); padding-top: 14px; }
+  .road__col--now { border-top-color: var(--good); }
+  .road__col--next { border-top-color: var(--accent); }
+  .road__col--later { border-top-color: var(--service); }
+  .road__k { font-size: .74rem; letter-spacing: .1em; text-transform: uppercase; font-weight: 800; color: var(--muted); }
+  .road__col ul { margin: 10px 0 0; padding-left: 17px; font-size: .9rem; color: var(--ink-2); }
+  .road__col li { margin: 5px 0; }
+
+  .callout { margin-top: 14px; background: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--accent) 24%, transparent); border-radius: 12px; padding: 14px 18px; font-size: .92rem; color: var(--accent-ink); }
+
+  /* footer */
+  .foot { margin-top: 64px; padding-top: 22px; border-top: 1px solid var(--line); font-size: .8rem; color: var(--muted); }
+  .foot b { color: var(--ink-2); }
+  .foot__conf { display: inline-block; margin-bottom: 8px; font-size: .72rem; font-weight: 800; letter-spacing: .08em; color: var(--service); }
+
+  /* ---- 시장·실행 파트 ---- */
+  .part-div { margin: 70px 0 10px; padding-top: 40px; border-top: 2px solid var(--line); }
+  .part-div span { font-size: .74rem; letter-spacing: .22em; text-transform: uppercase; color: var(--accent); font-weight: 800; }
+  .part-div h2 { margin: 6px 0 4px; font-size: clamp(1.7rem, 4vw, 2.1rem); letter-spacing: -.03em; }
+  .part-div p { margin: 0; color: var(--muted); font-size: .95rem; }
+  .tam { display: flex; flex-direction: column; gap: 10px; }
+  .tam__row { border: 1px solid var(--line); border-left: 5px solid var(--accent); border-radius: 12px; padding: 15px 18px; background: var(--surface); box-shadow: var(--shadow); }
+  .tam__row--sam { border-left-color: var(--space); }
+  .tam__row--som { border-left-color: var(--service); }
+  .tam__k { font-size: .72rem; font-weight: 800; letter-spacing: .1em; color: var(--muted); }
+  .tam__v { font-size: 1.42rem; font-weight: 800; letter-spacing: -.02em; margin: 3px 0; }
+  .tam__row p { margin: 3px 0 0; font-size: .86rem; color: var(--muted); }
+  .pill-ok { font-size: .7rem; font-weight: 800; padding: 2px 8px; border-radius: 6px; background: var(--good-soft); color: var(--good); white-space: nowrap; }
+  .pill-warn { font-size: .7rem; font-weight: 800; padding: 2px 8px; border-radius: 6px; background: var(--service-soft); color: var(--service); white-space: nowrap; }
+  .srcline { font-size: .76rem; color: var(--faint); margin-top: 10px; }
+  .persona { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media (max-width: 720px) { .persona { grid-template-columns: 1fr; } }
+  .persona__k { font-size: .72rem; font-weight: 800; letter-spacing: .04em; padding: 3px 9px; border-radius: 6px; display: inline-block; margin-bottom: 8px; background: var(--accent-soft); color: var(--accent-ink); }
+  .timeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  @media (max-width: 720px) { .timeline { grid-template-columns: 1fr 1fr; } }
+  .tl { border-top: 3px solid var(--line); padding-top: 12px; }
+  .tl--0 { border-top-color: var(--good); } .tl--1 { border-top-color: var(--accent); } .tl--2 { border-top-color: var(--space); } .tl--3 { border-top-color: var(--service); }
+  .tl__k { font-size: .72rem; font-weight: 800; letter-spacing: .06em; color: var(--muted); }
+  .tl b { display: block; margin: 3px 0 7px; letter-spacing: -.01em; }
+  .tl ul { margin: 0; padding-left: 16px; font-size: .85rem; color: var(--ink-2); }
+  .tl li { margin: 4px 0; }
+  .honesty { margin-top: 16px; background: var(--surface-2); border: 1px dashed var(--line); border-radius: 12px; padding: 14px 18px; font-size: .82rem; color: var(--muted); line-height: 1.6; }
+  .honesty b { color: var(--ink-2); }
+  table.fee td .pill-ok, table.fee td .pill-warn { display: inline-block; }
+  /* 경쟁사 비교 매트릭스 */
+  .cmatrix { width: 100%; border-collapse: separate; border-spacing: 0; font-size: .9rem; min-width: 560px; }
+  .cmatrix th, .cmatrix td { padding: 12px 10px; border-bottom: 1px solid var(--line); text-align: center; vertical-align: middle; }
+  .cmatrix thead th { font-size: .84rem; letter-spacing: -.01em; padding-bottom: 14px; }
+  .cmatrix thead th.us { color: var(--accent-ink); }
+  .cmatrix tbody th { text-align: left; font-weight: 700; color: var(--ink-2); font-size: .86rem; }
+  .cmatrix .us { background: color-mix(in srgb, var(--accent) 7%, transparent); }
+  .cmatrix thead th.us { background: var(--accent-soft); border-radius: 10px 10px 0 0; }
+  .cmatrix tbody tr:last-child td { border-bottom: 0; }
+  .cmatrix tbody tr:last-child .us { border-radius: 0 0 10px 10px; }
+  .cmark { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; font-weight: 800; font-size: .82rem; }
+  .cmark--o { background: var(--good-soft); color: var(--good); }
+  .cmark--t { background: var(--service-soft); color: var(--service); }
+  .cmark--x { background: var(--surface-2); color: var(--faint); }
+  .cmatrix td small { display: block; font-size: .68rem; color: var(--muted); margin-top: 3px; font-weight: 500; }
+  .cmatrix-legend { display: flex; gap: 18px; justify-content: center; font-size: .78rem; color: var(--muted); margin-top: 14px; flex-wrap: wrap; }
+  /* 재무목표(BEP) 강조 */
+  .bep { margin-top: 16px; background: linear-gradient(140deg, var(--accent-soft), transparent); border: 1px solid color-mix(in srgb, var(--accent) 26%, transparent); border-radius: 14px; padding: 20px 22px; }
+  .bep__k { font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 800; color: var(--accent); }
+  .bep__v { font-size: 1.28rem; line-height: 1.5; margin: 8px 0 0; letter-spacing: -.01em; }
+  .bep__v b { color: var(--accent-ink); }
+  .bep__assume { font-size: .8rem; color: var(--muted); margin: 10px 0 0; }
+  /* 목차 */
+  .toc { columns: 2; column-gap: 40px; margin-top: 22px; }
+  @media (max-width: 600px) { .toc { columns: 1; } }
+  .toc__row { display: flex; gap: 10px; align-items: baseline; padding: 7px 0; border-bottom: 1px solid var(--line-2); break-inside: avoid; font-size: .92rem; color: var(--ink-2); }
+  .toc__n { font-variant-numeric: tabular-nums; font-weight: 800; color: var(--accent); font-size: .8rem; min-width: 20px; }
+  .toc__part { font-size: 1rem; letter-spacing: .02em; color: var(--accent); font-weight: 800; margin: 20px 0 8px; padding-bottom: 7px; border-bottom: 2px solid var(--accent-soft); break-inside: avoid; }
+  .toc__part:first-child { margin-top: 0; }
+  /* 성장 램프 */
+  .ramp { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 14px 0 0; }
+  @media (max-width: 640px) { .ramp { grid-template-columns: 1fr; } }
+  .ramp__c { border: 1px solid var(--line); border-radius: 12px; padding: 15px 16px; background: var(--surface); box-shadow: var(--shadow); }
+  .ramp__c--bep { border-color: var(--accent); background: var(--accent-soft); }
+  .ramp__k { font-size: .72rem; font-weight: 800; letter-spacing: .06em; color: var(--muted); }
+  .ramp__v { font-size: 1.3rem; font-weight: 800; letter-spacing: -.02em; margin: 4px 0 2px; }
+  .ramp__c p { margin: 0; font-size: .82rem; color: var(--muted); }
+  /* 제언(The Ask) */
+  .ask { margin-top: 64px; background: linear-gradient(140deg, var(--accent), #6f68ee); color: #fff; border-radius: 18px; padding: 34px 32px; box-shadow: var(--shadow-lg); }
+  .ask__k { font-size: .74rem; letter-spacing: .2em; text-transform: uppercase; font-weight: 800; opacity: .85; }
+  .ask h2 { margin: 8px 0 6px; font-size: clamp(1.5rem, 4vw, 1.9rem); letter-spacing: -.025em; color: #fff; text-wrap: balance; }
+  .ask > p { margin: 0 0 20px; opacity: .92; max-width: 52ch; }
+  .ask ol { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 10px; }
+  .ask li { font-size: 1rem; line-height: 1.5; }
+  .ask li b { font-weight: 800; }
+  /* Why Now / Unfair 강조 */
+  .whynow { margin-top: 16px; display: flex; gap: 12px; align-items: flex-start; background: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--accent) 24%, transparent); border-radius: 12px; padding: 15px 18px; }
+  .whynow__k { flex: 0 0 auto; font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-ink); background: var(--surface); border-radius: 6px; padding: 4px 8px; margin-top: 1px; }
+  .whynow p { margin: 0; font-size: .93rem; color: var(--ink-2); line-height: 1.55; }
+  /* ===== 모바일 ===== */
+  @media (max-width: 600px) {
+    .wrap { padding: 0 16px; }
+    .cover { padding: 36px 0 26px; }
+    .cover h1 { font-size: 1.9rem; }
+    .exec { padding: 20px 18px; }
+    .exec p { font-size: 1.02rem; }
+    .exec__row { grid-template-columns: 1fr; gap: 12px; }
+    .exec__kpi { border-top: 0; border-left: 2px solid var(--line); padding: 2px 0 2px 12px; }
+    section.sec { padding-top: 40px; }
+    .sec__head h2 { font-size: 1.32rem; }
+    .part-div { margin-top: 52px; }
+    .part-div h2 { font-size: 1.5rem; }
+    .grid-2, .grid-3, .persona, .exec__row { grid-template-columns: 1fr; }
+    .ramp, .timeline { grid-template-columns: 1fr; }
+    .ask { padding: 24px 20px; margin-top: 44px; }
+    .ask h2 { font-size: 1.4rem; }
+    .tam__row, .whynow { padding: 14px 15px; }
+    .whynow { flex-direction: column; gap: 8px; }
+    .cmatrix-legend { gap: 12px; }
+    .cover__meta { gap: 6px; }
+    .logo-lockup { height: 34px; }
+  }
+  @media print {
+    @page { size: A4; margin: 12mm 10mm; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    body { background: var(--bg); }
+    .wrap { max-width: 100%; padding: 0 4mm; }
+    .figure, .card, .exec, .diff__row, .tam__row, .bep, .ramp__c, .hub, .ask { box-shadow: none; }
+    section.sec, .part-div, .ask { break-inside: avoid-page; }
+    .figure, .card, .exec, .tam__row, .ramp__c, .diff__row, .toc__row, table { break-inside: avoid; }
+    .cover { padding-top: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc">
+  <div class="wrap">
+
+    <!-- COVER -->
+    <header class="cover">
+      <svg class="logo-lockup" viewBox="0 0 272 72" role="img" aria-label="공간잇다 로고">
+        <g transform="translate(6,4)">
+          <path class="ll-stroke" d="M32 6 C21 6 12 14.5 12 25 C12 36 22 42 32 54 C42 42 52 36 52 25 C52 14.5 43 6 32 6 Z" fill="none" stroke-width="5" stroke-linejoin="round"></path>
+          <circle cx="28" cy="24" r="4.6" fill="#4C93B8"></circle>
+          <circle cx="36" cy="24" r="4.6" fill="#D97852"></circle>
+        </g>
+        <text x="78" y="47" font-weight="900" font-size="38" letter-spacing="-1.1"><tspan class="ll-fill">공간</tspan><tspan fill="#C8623B">잇다</tspan></text>
+      </svg>
+      <p class="cover__eyebrow">사업정의서 · Business Definition</p>
+      <h1>공간과 부대서비스를 한 번에 잇는<br />원스톱 공간 마켓플레이스</h1>
+      <p class="cover__sub">행사·모임·촬영에 필요한 공간과 <span style="white-space:nowrap">케이터링·촬영·데코·장비를 한 곳에서 예약·견적·결제하는 중개 플랫폼.</p>
+      <div class="cover__meta">
+        <span>운영사 <b>(주)와일리</b></span>
+        <span>문서 구분 <b>내부 보고용</b></span>
+        <span>작성일 <b>2026-07-23</b></span>
+        <span>버전 <b>v1.0</b></span>
+      </div>
+
+      <div class="exec">
+        <p class="exec__t">한 줄 정의</p>
+        <p>공간잇다는 <b>공간(호스트)</b>과 <b>부대서비스(파트너)</b>를 결합하여 고객에게 제공하는 <b>원스톱 중개 마켓플레이스</b>이며 모든 거래에서 <b>중개 수수료</b>를 수취해 수익을 창출합니다.</p>
+        <div class="exec__row">
+          <div class="exec__kpi"><b>거래 수수료</b><span>호스트·파트너·패키지 중개 수수료 기반</span></div>
+          <div class="exec__kpi"><b>PG 자동분리</b><span>결제 즉시 수수료·정산금 분리 입금</span></div>
+          <div class="exec__kpi"><b>원스톱</b><span>공간 + 부대서비스 통합 판매</span></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 목차 -->
+    <section class="sec" style="padding-top:48px">
+      <div class="sec__head"><span class="sec__no" style="opacity:.4">—</span><h2 style="font-size:1.3rem">목차</h2></div>
+      <div class="toc">
+        <div class="toc__part">PART 1 · 사업 개요</div>
+        <div class="toc__row"><span class="toc__n">01</span> 사업 개요 및 핵심 가치</div>
+        <div class="toc__row"><span class="toc__n">02</span> 시장의 문제와 기회</div>
+        <div class="toc__row"><span class="toc__n">03</span> 참여자 생태계</div>
+        <div class="toc__row"><span class="toc__n">04</span> 고객 이용 흐름</div>
+        <div class="toc__row"><span class="toc__n">05</span> 수익 모델 및 수수료 구조</div>
+        <div class="toc__row"><span class="toc__n">06</span> 공급자 운영 프로세스</div>
+        <div class="toc__row"><span class="toc__n">07</span> 플랫폼 운영</div>
+        <div class="toc__row"><span class="toc__n">08</span> 차별화 및 경쟁사 비교</div>
+        <div class="toc__row"><span class="toc__n">09</span> 현황 (구현 완료)</div>
+        <div class="toc__part">PART 2 · 시장 및 실행 계획</div>
+        <div class="toc__row"><span class="toc__n">10</span> 시장 규모 (TAM·SAM·SOM)</div>
+        <div class="toc__row"><span class="toc__n">11</span> 타겟 시장</div>
+        <div class="toc__row"><span class="toc__n">12</span> 패키지 가격 타당성 검증</div>
+        <div class="toc__row"><span class="toc__n">13</span> 핵심 지표 (KPI)</div>
+        <div class="toc__row"><span class="toc__n">14</span> 리스크 관리 & 대응</div>
+        <div class="toc__row"><span class="toc__n">15</span> 론칭 로드맵 및 재무 목표</div>
+      </div>
+    </section>
+
+    <!-- 01 정의 -->
+    <section class="sec">
+      <div class="sec__head"><span class="sec__no">01</span><h2>사업 개요 및 핵심 가치</h2></div>
+      <p class="sec__lead">공간잇다는 "빌릴 공간"과 "행사에 필요한 서비스"를 각각 준비하며 파편화되어 있던 과정을 하나로 통합합니다. 고객은 한 화면에서 공간을 예약하고, 필요한 부대서비스까지 견적·결제합니다.</p>
+      <div class="grid-3">
+        <div class="card vp vp--guest">
+          <span class="vp__tag">고객 (게스트)</span>
+          <h3>준비를 한 번에</h3>
+          <ul><li>공간 검색·비교·즉시 예약</li><li>필요 서비스 통합 견적요청</li><li>패키지 원클릭 결제</li></ul>
+        </div>
+        <div class="card vp vp--host">
+          <span class="vp__tag">호스트 (공간)</span>
+          <h3>유휴 공간 수익화</h3>
+          <ul><li>공간 등록·가격·가용일 관리</li><li>예약·견적 수주</li><li>자동 정산 + 세금계산서</li></ul>
+        </div>
+        <div class="card vp vp--partner">
+          <span class="vp__tag">파트너 (부대서비스)</span>
+          <h3>새 수주 채널</h3>
+          <ul><li>케이터링·촬영·데코·장비 등</li><li>견적 경쟁으로 신규 고객 확보</li><li>패키지 참여로 매출 확대</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 문제/기회 -->
+    <section class="sec">
+      <div class="sec__head"><span class="sec__no">02</span><h2>시장의 문제와 기회</h2></div>
+      <p class="sec__lead">공간·케이터링·촬영·장비가 모두 따로 움직여, 한 번의 행사를 위해 여러 업체를 각각 찾고 조율해야 합니다. 이 파편화가 곧 기회입니다.</p>
+      <div class="card">
+        <div class="ps">
+          <div class="ps__col ps--problem">
+            <h3><span class="ps__dot" style="background:var(--service)"></span> 지금의 불편</h3>
+            <ul>
+              <li>공간, 케이터링, 장비 등 서비스별 개별 검색·문의·계약의 번거로움</li>
+              <li>가격·품질 비교 기준이 흩어져 있어 판단이 어려움</li>
+              <li>업체는 노출·수주 채널이 부족하고 정산·세금 처리가 번거로움</li>
+            </ul>
+          </div>
+          <div class="ps__col ps--solution">
+            <h3><span class="ps__dot" style="background:var(--good)"></span> 공간잇다의 해법</h3>
+            <ul>
+              <li>공간+부대서비스를 <b>한 번에</b> 예약·견적·결제</li>
+              <li>역경매 견적으로 <b>여러 업체가 경쟁</b> → 합리적 가격</li>
+              <li>PG 자동 분리정산 + 국세청 전자세금계산서로 <b>정산·세무 자동화</b></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="whynow"><span class="whynow__k">Why Now</span><p>브랜드 <b>팝업 검색량 3년 +486%</b> · <b>코워킹·회의공간 CAGR 22.5%</b> · 코로나 이후 소규모·프라이빗 모임<br />
+정착 — 공간과 부대서비스의 <b>통합 수요가 동시에 폭발하는 지금</b>이 진입 적기입니다.</p></div>
+      <div class="card" style="margin-top:14px;border-color:var(--accent)">
+        <b style="font-size:1rem">왜 와일리(Wylie)인가 · Unfair Advantage</b>
+        <ul style="margin:8px 0 0;padding-left:18px;color:var(--ink-2);font-size:.93rem">
+          <li>보유한 <b>B2B 네트워크(기업 행사·워크숍 수요)</b>를 초기 수요·공급 확보에 즉시 활용</li>
+          <li><b>자체 IT 구축·운영 역량</b>으로 초기 개발·유지보수 비용(Burn rate)을 최소화 외주 대비 빠른 실험·개선</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 03 생태계 -->
+    <section class="sec">
+      <div class="sec__head"><span class="sec__no">03</span><h2>참여자 생태계</h2></div>
+      <p class="sec__lead">수요(고객)와 공급(호스트·파트너)을 플랫폼이 잇고,<br /> PG사·국세청 인프라가 결제와 세무를 자동으로 처리합니다.</p>
+      <div class="figure">
+        <div class="scroll">
+          <div class="eco">
+            <div class="eco__side">
+              <div class="node node--guest"><b>고객 (게스트)</b><span>공간·서비스 수요</span></div>
+            </div>
+            <div class="eco__lane">
+              <div class="eco__flow">예약·견적·결제 →</div>
+              <div class="hub"><b>공간잇다</b><span>중개 플랫폼 · (주)와일리</span></div>
+              <div class="eco__flow">← 공간·서비스·정산</div>
+            </div>
+            <div class="eco__side">
+              <div class="node node--host"><b>호스트</b><span>공간 공급</span></div>
+              <div class="node node--partner"><b>파트너</b><span>부대서비스 공급</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="eco__infra">
+          <span class="chip-infra"><b>PG사 · 토스페이먼츠</b><small>자동 분리정산</small></span>
+          <span class="chip-infra"><b>국세청 e세로</b><small>전자세금계산서 자동발급</small></span>
+          <span class="chip-infra"><b>실명계좌 인증</b><small>정산 계좌 검증</small></span>
+        </div>
+        <p class="figure__cap"><b>그림 1.</b> 플랫폼이 수요·공급을 매개하며, 결제·정산·세무 인프라가 관련 절차를 자동 지원합니다.</p>
+      </div>
+    </section>
+
+    <!-- 04 이용 흐름 -->
+    <section class="sec">
+      <div class="sec__head"><span class="sec__no">04</span><h2>고객 이용 흐름 세 갈래 진입</h2></div>
+      <p class="sec__lead">고객은 목적에 따라 세 방식 중 하나로 시작하고, 이후 결제·정산·이용<br />후기까지 하나의 파이프라인으로 흐릅니다.</p>
+      <div class="figure">
+        <div class="flow">
+          <div class="flow__entries">
+            <div class="entry"><span class="entry__k">진입 ①</span><b>공간 직접 예약</b><span>원하는 공간을 검색해 시간 단위로 즉시 예약</span></div>
+            <div class="entry"><span class="entry__k">진입 ②</span><b>통합 견적요청</b><span>필요 항목을 올리면 여러 파트너가 견적 경쟁</span></div>
+            <div class="entry"><span class="entry__k">진입 ③</span><b>패키지</b><span>공간+서비스 묶음을 제휴 공간 중 선택해 결제</span></div>
+          </div>
+          <div class="flow__merge">↓</div>
+          <div class="scroll">
+            <div class="pipe">
+              <div class="pipe__step"><b>선정 · 확정</b><span>공간·견적 선택</span></div>
+              <div class="pipe__step pipe__step--pay"><b>결제</b><span>PG 승인</span></div>
+              <div class="pipe__step"><b>자동 분리정산</b><span>수수료·정산금 분리</span></div>
+              <div class="pipe__step"><b>이용</b><span>공간·서비스 제공</span></div>
+              <div class="pipe__step"><b>후기 · 매너점수</b><span>양방향 평가</span></div>
+            </div>
+          </div>
+        </div>
+        <p class="figure__cap"><b>그림 2.</b> 진입 경로는 세 가지이나, 결제 이후에는 동일한 정산·세무 프로세스가 적용됩니다.</p>
+      </div>
+    </section>
+
+    <!-- 05 수익 모델 -->
+    <section class="sec">
+      <div class="sec__head"><span class="sec__no">05</span><h2>수익 모델 및 수수료 구조</h2></div>
+      <p class="sec__lead">모든 성사 거래에서 <b>중개 수수료</b>를 수취합니다. <br />고객 결제 시 PG 결제 시스템이 즉시 와일리 수수료와 공급자 정산금을 분리해 각 계좌로 자동 입금합니다.</p>
+
+      <div class="figure">
+        <div class="rev">
+          <div>
+            <div class="rev__amt">고객 결제액 (공간 예시)<b>100,000<span style="font-size:1rem;font-weight:600;color:var(--muted)">원</span></b></div>
+            <div class="bar">
+              <div class="bar__seg bar__seg--provider">공급자 정산 95,000</div>
+              <div class="bar__seg bar__seg--fee">5,000</div>
+            </div>
+            <div class="rev__legend">
+              <span><i style="background:var(--space)"></i>공급자(호스트) 정산 95%</span>
+              <span><i style="background:var(--accent)"></i>와일리 수수료 5%</span>
+            </div>
+            <p class="rev__note">※ 와일리 수취분 = 공급자 수수료 5% (회원 서비스료 0% — 회원은 별도 수수료 부담 없음). 쿠폰·포인트 할인 반영 후 최종 결제액 기준.</p>
+          </div>
+          <div class="card" style="box-shadow:none">
+            <table class="fee">
+              <thead><tr><th>거래 유형</th><th>기준 수수료</th></tr></thead>
+              <tbody>
+                <tr><td>공급자 수수료 <span style="color:var(--muted);font-size:.86em">(공간·부대서비스·패키지 공통)</span></td><td class="num">5%</td></tr>
+                <tr><td>고객(회원) 서비스료</td><td class="num">0%</td></tr>
+              </tbody>
+            </table>
+            <p style="margin:12px 0 0;font-size:.82rem;color:var(--muted)"><span class="fee__pill">유연</span> 업체별·기간별 <b>차등 수수료율</b> 적용 가능 (적용 시작일 기준 이력 관리 → 과거 거래는 당시 요율 유지).</p>
+            <p style="margin:8px 0 0;font-size:.76rem;color:var(--faint)">※ 수수료 5%는 플랫폼 수취 기준이며, PG 결제수수료(약 2~3%)는 별도 차감됩니다. 업체·기간별 차등 요율은 필요 시 개별 적용할 수 있습니다.</p>
+          </div>
+        </div>
+        <p class="figure__cap"><b>그림 3.</b> 결제 완료 즉시 PG 자동 분리정산 수행 — 별도의 수기 정산 및 세금계산서 수동 발급 절차가 불필요합니다.</p>
+      </div>
+
+      <div class="grid-3" style="margin-top:14px">
+        <div class="card"><b>본 수익</b><p style="margin:6px 0 0;font-size:.9rem;color:var(--muted)">거래 성사 시 중개 수수료 (호스트·파트너·패키지)</p></div>
+        <div class="card"><b>부가 수익</b><p style="margin:6px 0 0;font-size:.9rem;color:var(--muted)">기획전·번개특가 등 프리미엄 노출, 광고</p></div>
+        <div class="card"><b>마케팅 비용</b><p style="margin:6px 0 0;font-size:.9rem;color:var(--muted)">플랫폼 부담 쿠폰은 수수료 매출에서 차감 관리</p></div>
+      </div>
+    </section>
+
+    <!-- 06 파트너 운영 -->
+    <section class="sec">
+      <div class="sec__head"><span class="sec__no">06</span><h2>공급자 운영 프로세스</h2></div>
+      <p class="sec__lead">입점부터 정산까지 5단계로 자동화됩니다.<br />공급자는 상품 등록 및 서비스 이행에 집중하며<br /> 정산과 세무 처리는 플랫폼이 자동 수행합니다.</p>
+      <div class="figure">
+        <div class="scroll">
+          <div class="journey">
+            <div class="jstep"><b>입점 · 인증</b><span>사업자 등록 + 실명 계좌 인증</span></div>
+            <div class="jstep"><b>상품 등록</b><span>공간·서비스·가격·사진·옵션</span></div>
+            <div class="jstep"><b>수주</b><span>예약 수락 / 견적 경쟁 낙찰</span></div>
+            <div class="jstep"><b>이용 제공</b><span>가용일·시간대 관리(블록아웃)</span></div>
+            <div class="jstep"><b>자동 정산</b><span>PG 분리입금 + 전자세금계산서</span></div>
+          </div>
+        </div>
+        <p class="figure__cap"><b>그림 4.</b> 입점 → 등록 → 수주 → 이용 → 정산. 정산·세무·계좌검증은 시스템이 자동 처리.</p>
+      </div>
+      <div class="callout">업체별 수수료율은 <b>협의로 차등 적용</b>할 수 있고, 요율을 바꿔도 <b>이미 결제된 과거 거래는 당시 요율로 그대로 정산</b>됩니다(적용 시작일 이력 관리). 예: 어떤 업체를 3% → 특정일부터 6%로 올려도 그 이전 건은 3% 유지.</div>
+    </section>
+
+    <!-- 07 플랫폼 운영 -->
+    <section class="sec">
+      <div class="sec__head"><span class="sec__no">07</span><h2>플랫폼 운영 (관리자 콘솔)</h2></div>
+      <p class="sec__lead">거래·정산·정책을 한 곳에서 <b>관리하며</b>,<br /> 매출과 정산 흐름이 실시간으로 집계됩니다.</p>
+      <div class="grid-2">
+        <div class="card"><b>매출 · 정산</b><p style="margin:6px 0 0;font-size:.92rem;color:var(--muted)">GMV·수수료 매출·공급자 정산·패키지 매출 실시간 집계, 공급자별 정산 내역·영수증·국세청 승인 조회</p></div>
+        <div class="card"><b>수수료율 관리</b><p style="margin:6px 0 0;font-size:.92rem;color:var(--muted)">공급자·패키지별 요율을 적용 시작일 기준으로 설정·정렬</p></div>
+        <div class="card"><b>상품 · 사업자 승인</b><p style="margin:6px 0 0;font-size:.92rem;color:var(--muted)">공간·서비스 검수, 사업자 인증·승인, 노출 관리</p></div>
+        <div class="card"><b>정책 · 고객</b><p style="margin:6px 0 0;font-size:.92rem;color:var(--muted)">약관·개인정보·쿠폰·CS 문의, 접근 로그(권한 게이트)</p></div>
+      </div>
+    </section>
+
+    <!-- 08 차별화 -->
+    <section class="sec">
+      <div class="sec__head"><span class="sec__no">08</span><h2>차별화 및 경쟁사 비교</h2></div>
+      <p class="sec__lead">"기존 스페이스클라우드·크몽/숨고와 뭐가 다른가?"<br />공간잇다는 <b>공간과 부대서비스를 한 플랫폼에서 원스톱</b>으로,<br /> 그것도 <b>경매·자동 분리정산</b>으로 제공하는 유일한 포지션입니다.</p>
+      <div class="figure">
+        <div class="scroll">
+          <table class="cmatrix">
+            <thead><tr><th></th><th class="us">공간잇다</th><th>스페이스클라우드</th><th>크몽 · 숨고</th></tr></thead>
+            <tbody>
+              <tr><th>공간 대관</th><td class="us"><span class="cmark cmark--o">O</span></td><td><span class="cmark cmark--o">O</span><small>주력</small></td><td><span class="cmark cmark--x">X</span></td></tr>
+              <tr><th>부대서비스 (케이터링·촬영·데코 등)</th><td class="us"><span class="cmark cmark--o">O</span></td><td><span class="cmark cmark--t">△</span><small>제한적</small></td><td><span class="cmark cmark--o">O</span><small>주력</small></td></tr>
+              <tr><th>공간 + 부대 원스톱 패키지</th><td class="us"><span class="cmark cmark--o">O</span></td><td><span class="cmark cmark--x">X</span></td><td><span class="cmark cmark--x">X</span></td></tr>
+              <tr><th>역경매 견적 경쟁</th><td class="us"><span class="cmark cmark--o">O</span></td><td><span class="cmark cmark--x">X</span></td><td><span class="cmark cmark--t">△</span><small>건별 견적</small></td></tr>
+              <tr><th>PG 자동 분리정산</th><td class="us"><span class="cmark cmark--o">O</span></td><td><span class="cmark cmark--t">△</span><small>수동·부분</small></td><td><span class="cmark cmark--t">△</span><small>건별 결제</small></td></tr>
+              <tr><th>양방향 매너·신뢰</th><td class="us"><span class="cmark cmark--o">O</span></td><td><span class="cmark cmark--t">△</span></td><td><span class="cmark cmark--t">△</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="cmatrix-legend"><span><b style="color:var(--good)">O</b> 제공</span><span><b style="color:var(--service)">△</b> 부분·제한</span><span><b style="color:var(--faint)">X</b> 미제공</span></div>
+        <p class="figure__cap"><b>그림 5.</b> 경쟁사는 공간 또는 서비스 한쪽만 제공하나, 공간잇다는 양쪽을 원스톱, 역경매로 결합합니다.</p>
+      </div>
+      <div class="diff" style="margin-top:18px">
+        <div class="diff__row"><span class="diff__n">01</span><div><b>원스톱 통합</b><p>공간과 부대서비스를 한 번에 — 경쟁 서비스는 대개 공간만 또는 서비스만 취급.</p></div></div>
+        <div class="diff__row"><span class="diff__n">02</span><div><b>경매 견적</b><p>고객이 요청하면 여러 파트너가 경쟁 견적 — 가격·선택권을 고객에게.</p></div></div>
+        <div class="diff__row"><span class="diff__n">03</span><div><b>유연 패키지(공간 선택형)</b><p>패키지의 공간이 사정으로 빠져도 제휴 공간 중 선택 가능 — 파트너 매출 끊김 방지.</p></div></div>
+        <div class="diff__row"><span class="diff__n">04</span><div><b>PG 자동 분리정산</b><p>결제 즉시 수수료·정산금 분리 입금 — 운영자 수기 지급·세금계산서 발행 없음.</p></div></div>
+        <div class="diff__row"><span class="diff__n">05</span><div><b>양방향 신뢰</b><p>고객·호스트 상호 매너점수와 후기로 거래 신뢰를 축적.</p></div></div>
+      </div>
+    </section>
+
+    <!-- 09 현황 -->
+    <section class="sec">
+      <div class="sec__head"><span class="sec__no">09</span><h2>현황 & 구현 완료 범위</h2></div>
+      <p class="sec__lead">핵심 거래·정산 흐름을 데모로 <b>이미 구현·검증</b>했습니다.<br /> 다음 단계·확장 계획은 <b>15. 론칭 로드맵</b>에서 다룹니다.</p>
+      <div class="grid-3">
+        <div class="card"><b>거래 · 판매</b><p style="margin:6px 0 0;font-size:.9rem;color:var(--muted)">검색·예약 · 경매 견적 · 패키지</p></div>
+        <div class="card"><b>정산 · 수수료</b><p style="margin:6px 0 0;font-size:.9rem;color:var(--muted)">PG 자동 분리정산 · 업체별 차등 수수료(이력) · 영수증·세금계산서 조회</p></div>
+        <div class="card"><b>운영 · 계정</b><p style="margin:6px 0 0;font-size:.9rem;color:var(--muted)">관리자 콘솔 · 약관·쿠폰 관리 · 카카오 간편로그인</p></div>
+      </div>
+    </section>
+
+    <!-- ============ II부. 시장 · 실행 계획 ============ -->
+    <div class="part-div">
+      <span>PART 2</span>
+      <h2>시장 및 실행 계획</h2>
+      <p>국내 공개 데이터(2021~2026) 기반 시장 규모·타겟·가격 검증과 실행 로드맵.</p>
+    </div>
+
+    <!-- 10 시장 규모 -->
+    <section class="sec">
+      <div class="sec__head"><span class="sec__no">10</span><h2>시장 규모 (TAM · SAM · SOM)</h2></div>
+      <p class="sec__lead">국내에는 '공간대여 + 부대서비스'만 떼어낸 공식 통계가 없어, <br />상위 O2O 통계·대표 플랫폼 공개 데이터·플랫폼 실거래 단가로 규모를 추정합니다.</p>
+      <div class="tam">
+        <div class="tam__row">
+          <div class="tam__k">TAM · 전체 시장 (상위)</div>
+          <div class="tam__v">국내 O2O 로컬서비스 거래액 <b style="color:var(--accent)">약 172.7조 원</b></div>
+          <p>2020~23 연평균 +11.4% 성장. 음식·공간·생활서비스를 온·오프로 잇는 전체 시장<br /> <span class="src">[과기정통부·KISDI 「2023 O2O 서비스산업 시장조사」]</span></p>
+        </div>
+        <div class="tam__row tam__row--sam">
+          <div class="tam__k">SAM · 유효 시장 (공간대여 + 행사 부대서비스, 추정)</div>
+          <div class="tam__v">공간대여 플랫폼 저변 + 케이터링·렌탈·촬영·데코 결합 수요</div>
+          <p>대리지표 — 대표 플랫폼(스페이스클라우드) 단독 <b>연 이용자 314만 명 · 등록 공간 12만 개 · 호스트 8만 명<br />누적 거래액 1,000억 원</b>. 여기에 행사당 케이터링(평균 74.8만)·촬영(30~50만)·데코/부스(수십만~수백만) 부대 수요가 결합됨. <span class="src">[스페이스클라우드 10주년 리포트 2025 · 숨고/크몽 실거래 2024~26 · 정량화는 추가 조사 필요]</span></p>
+        </div>
+        <div class="tam__row tam__row--som">
+          <div class="tam__k">SOM · 초기 획득 목표 (3년, 예시)</div>
+          <div class="tam__v">수도권 핵심 상권 거점부터 등록 공간·파트너 확보 후 연 GMV 목표 설정</div>
+          <p>부대서비스 원스톱·역경매라는 차별점으로, 공간 전용 플랫폼이 못 잡는 "행사 통합 발주" 수요를 우선 포획<br /> (구체 목표치는 파일럿 데이터로 확정)</p>
+        </div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <b style="font-size:.95rem">성장 동인</b>
+        <ul style="margin:8px 0 0;padding-left:18px;color:var(--ink-2);font-size:.92rem">
+          <li>코워킹·회의공간 시장 <b>연 22.5% 고성장 전망</b>(2024~30) B2B 소규모 행사 수요 확대 <span class="src">[Next Move, 2024]</span></li>
+          <li>브랜드 <b>팝업스토어 검색량 2016→2023 +486%</b> 단기 공간+시공+촬영 통합 수요 급증 <span class="src">[스위트스팟, 2024]</span></li>
+          <li>코로나 이후 <b>소규모·프라이빗 모임 정착</b>, '가정집·이색공간' 대여 전년비 2.8배 <span class="src">[스페이스클라우드, 2024]</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 11 타겟 시장 -->
+    <section class="sec">
+      <div class="sec__head"><span class="sec__no">11</span><h2>타겟 시장</h2></div>
+      <p class="sec__lead">"공간만" 또는 "서비스만" 필요한 고객이 아니라, <br /><b>공간+부대서비스를 함께 준비해야 하는</b> 행사 주최자를 정조준합니다.</p>
+      <div class="persona">
+        <div class="card"><span class="persona__k">1순위 · MZ 프라이빗 모임</span><h3 style="margin:0 0 4px;font-size:1.02rem">파티·브라이덜·돌잔치</h3><p style="margin:0;font-size:.9rem;color:var(--muted)">파티룸+데코+케이터링+스냅을 한 번에. 취미·클래스 플랫폼 이용자 90%+가 2030세대 <span class="src">[오픈서베이 2023]</span></p></div>
+        <div class="card"><span class="persona__k" style="background:var(--space-soft);color:var(--space)">1순위 · 소규모 기업</span><h3 style="margin:0 0 4px;font-size:1.02rem">워크숍·세미나·행사</h3><p style="margin:0;font-size:.9rem;color:var(--muted)">세미나룸+빔+케이터링+행사기록 통합. 코워킹·회의공간 CAGR 22.5% B2B 성장 <span class="src"><br />[Next Move 2024]</span></p></div>
+        <div class="card"><span class="persona__k" style="background:var(--service-soft);color:var(--service)">1순위 · 브랜드</span><h3 style="margin:0 0 4px;font-size:1.02rem">팝업스토어·전시</h3><p style="margin:0;font-size:.9rem;color:var(--muted)">공간+부스 시공+사인물+현장 촬영 원스톱. 팝업 검색량 3년 +486% <span class="src">[스위트스팟 2024]</span></p></div>
+      </div>
+      <div class="grid-2" style="margin-top:14px">
+        <div class="card"><b>2순위 · 촬영 수요</b><p style="margin:6px 0 0;font-size:.9rem;color:var(--muted)">스튜디오+장비+소품, 라이브커머스 방송 세트<br /> 대관 건당 11~13만 촬영 외주 스냅 30만·영상 50만<br /><span class="src">[숨고·크몽 2024~26]</span></p></div>
+        <div class="card"><b>2순위 · 원데이클래스·공방</b><p style="margin:6px 0 0;font-size:.9rem;color:var(--muted)">공유주방·공방+테이블 세팅+재료+스냅. 1회<br /> <b>평균 지출 약 2.8만</b>, 평균 3.6회 참여. <span class="src">[오픈서베이 2023]</span></p></div>
+      </div>
+    </section>
+
+    <!-- 12 패키지 가격 벤치마킹 -->
+    <section class="sec">
+      <div class="sec__head"><span class="sec__no">12</span><h2>패키지 가격 타당성 검증</h2></div>
+      <p class="sec__lead">패키지의 구성 단가를 플랫폼 실거래 시세와 대조한 결과, <b>대관·케이터링·촬영·음향·데코 전 항목이 시세 범위 내</b>이며 묶음 할인율도 적정합니다.</p>
+      <div class="figure">
+        <div class="scroll">
+          <table class="fee" style="min-width:560px">
+            <thead><tr><th>구성 항목</th><th>패키지 책정가</th><th>시장 시세(실거래)</th><th>판정</th></tr></thead>
+            <tbody>
+              <tr><td>공간 대관 (회의·세미나)</td><td class="num">12만~26만</td><td>회의실 건당 ~10만, 도심 프리미엄·장시간</td><td><span class="pill-ok">적정</span></td></tr>
+              <tr><td>공간 대관 (파티룸·스튜디오)</td><td class="num">9만~17.5만</td><td>스튜디오 건당 11~13만, 파티룸 낮·올나잇 10만대</td><td><span class="pill-ok">적정</span></td></tr>
+              <tr><td>케이터링</td><td class="num">6.5만~32만</td><td>행사당 평균 74.8만, 1인 2.5~6만(다과·도시락 저단가)</td><td><span class="pill-ok">적정</span></td></tr>
+              <tr><td>촬영 (스냅·행사기록)</td><td class="num">14만~18만</td><td>스냅 기업 30만·영상 스케치 50만(기본가 15만~)</td><td><span class="pill-ok">기본가 기준 적정</span></td></tr>
+              <tr><td>음향·조명 (소규모 세팅)</td><td class="num">4.5만~11만</td><td>무대장비 대여 평균 100만(대형 기준)</td><td><span class="pill-ok">소규모 기준 적정</span></td></tr>
+              <tr><td>데코 (풍선·포토존)</td><td class="num">7만~9만</td><td>표준가 부재, 소규모 수십만</td><td><span class="pill-ok">적정</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="figure__cap"><b>표.</b> 시세 출처: 숨고·크몽·미소 실거래 평균(2024~26). 패키지 책정가는 현재 구성 기준.</p>
+      </div>
+      <div class="grid-3" style="margin-top:14px">
+        <div class="card"><b>묶음 할인율</b><p style="margin:6px 0 0;font-size:.9rem;color:var(--muted)">정가 합계 대비 <b>8~19%</b>(평균 약 13%)로, 과도하지 않아 마진 방어에 적정합니다.</p></div>
+        <div class="card"><b>전 항목 시세 부합</b><p style="margin:6px 0 0;font-size:.9rem;color:var(--muted)">대관·케이터링·촬영·음향·데코 구성가가 실거래 시세 범위 내.</p></div>
+        <div class="card"><b>객단가 상향 여력</b><p style="margin:6px 0 0;font-size:.9rem;color:var(--muted)">케이터링(행사 평균 74.8만)·촬영(영상 50만) 시세 상단 대비 여유 → <b>프리미엄 라인·부착 서비스</b>로 AOV 확대 가능.</p></div>
+      </div>
+    </section>
+
+    <!-- 13 KPI -->
+    <section class="sec">
+      <div class="sec__head"><span class="sec__no">13</span><h2>핵심 지표 (KPI)</h2></div>
+      <p class="sec__lead"><b>공급(파트너)·수요(고객)·거래(GMV)·수익(수수료)</b> 선순환 구조를 바탕으로 운영되며. 아래 지표를 대시보드로 실시간 추적합니다.</p>
+      <div class="figure">
+        <div class="scroll">
+          <table class="fee" style="min-width:560px">
+            <thead><tr><th>지표</th><th>정의</th><th>왜 중요한가</th></tr></thead>
+            <tbody>
+              <tr><td><b>GMV</b> (총거래액)</td><td>고객 결제 총액(보증금 제외)</td><td>플랫폼 규모의 핵심 선행지표</td></tr>
+              <tr><td><b>Take Rate</b></td><td>수수료 매출 ÷ GMV</td><td>수익성 — 현재 모델 약 5% (PG 차감 전)</td></tr>
+              <tr><td><b>순 수수료 매출</b></td><td>호스트·파트너·패키지 수수료 합</td><td>실제 회사 매출</td></tr>
+              <tr><td><b>활성 공급</b></td><td>등록 공간 수 · 활성 파트너 수</td><td>거래를 만드는 공급 저변</td></tr>
+              <tr><td><b>견적 전환율</b></td><td>견적요청 → 선정·결제 비율</td><td>역경매 모델의 핵심 효율</td></tr>
+              <tr><td><b>재구매율</b></td><td>90일 내 재예약 비율</td><td>리텐션 — LTV 결정</td></tr>
+              <tr><td><b>AOV</b> (객단가)</td><td>건당 평균 결제액</td><td>패키지·부대서비스 부착률과 연동</td></tr>
+              <tr><td><b>분쟁·환불률</b></td><td>취소·환불·클레임 비율</td><td>품질·신뢰 관리 지표</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="figure__cap">이미 관리자 대시보드에서 GMV·수수료·정산·거래건수를 실시간 집계 중. 나머지 지표는 서버 전환 후 계측 확대.</p>
+      </div>
+    </section>
+
+    <!-- 14 리스크 -->
+    <section class="sec">
+      <div class="sec__head"><span class="sec__no">14</span><h2>리스크 관리 & 대응 방안</h2></div>
+      <div class="figure">
+        <div class="scroll">
+          <table class="fee" style="min-width:600px">
+            <thead><tr><th>리스크</th><th>영향</th><th>대응 방안</th></tr></thead>
+            <tbody>
+              <tr><td><b>초기 콜드스타트(Cold Start)</b><br /><span class="src">네트워크 효과 구축 지연</span></td><td>초기 공급·수요 임계치 미달 → 이탈</td><td>거점 지역 집중 공략 + 호스트·파트너 온보딩 인센티브·직접 영업</td></tr>
+              <tr><td><b>플랫폼 우회 거래</b></td><td>중개 수수료 누수</td><td>직거래 금지 약관 + 연락처 노출 제한 + 플랫폼 결제 혜택·정산 편의로 유인 <span class="src">(이미 약관·정책 구축)</span></td></tr>
+              <tr><td><b>서비스 미이행(No-Show)·품질·분쟁</b></td><td>거래 신뢰 하락</td><td>양방향 후기·매너점수 + 청소 보증금(예수금) + CS·중재 + 파트너 검수</td></tr>
+              <tr><td><b>결제·정산 사고</b></td><td>자금·회계 리스크</td><td>PG 자동 분리정산 + 보증금 예수금 분리 + 실명계좌 인증 <span class="src">(모의 검증 완료)</span></td></tr>
+              <tr><td><b>규제 준수</b><br /><span class="src">통신판매중개·개인정보보호법·전자금융거래법</span></td><td>법적 리스크</td><td>이용약관·개인정보처리방침·전자금융거래·위치기반 고지 체계 구축 + 법무 검토 + 전자세금계산서 자동화</td></tr>
+              <tr><td><b>경쟁</b> (공간 전용 플랫폼)</td><td>차별성 약화</td><td>부대서비스 <b>원스톱</b> + <b>역경매</b> + <b>유연 패키지</b>로 대체 불가 포지션</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 15 로드맵 & 자원 -->
+    <section class="sec">
+      <div class="sec__head"><span class="sec__no">15</span><h2>론칭 로드맵 및 재무 목표</h2></div>
+      <p class="sec__lead">기능은 데모로 검증 완료. 실서비스 전환의 관건은 <br />데이터 서버화·실 결제 연동·거점 공급 확보입니다.</p>
+      <div class="figure">
+        <div class="scroll">
+          <div class="timeline">
+            <div class="tl tl--0"><div class="tl__k">PHASE 0 · 완료</div><b>기능 데모·PoC</b><ul><li>검색·예약·역경매</li><li>PG 분리정산·수수료 이력</li><li>관리자·약관·카카오로그인</li></ul></div>
+            <div class="tl tl--1"><div class="tl__k">PHASE 1 · 0–3개월</div><b>실서비스 기반</b><ul><li>데이터 서버화(D1/KV)</li><li>실 PG(토스) 연동</li><li>관리자·API 인증 강화</li><li>거점 공급 확보(공간 100~300·파트너 30~50)</li></ul></div>
+            <div class="tl tl--2"><div class="tl__k">PHASE 2 · 3–6개월</div><b>정식 론칭</b><ul><li>마케팅·카카오 알림톡</li><li>카테고리 확장</li><li>초기 GMV 목표 달성</li></ul></div>
+            <div class="tl tl--3"><div class="tl__k">PHASE 3 · 6–12개월</div><b>확장</b><ul><li>지역 확대·모바일 앱</li><li>B2B 세일즈</li><li>데이터 기반 추천</li></ul></div>
+          </div>
+        </div>
+        <p class="figure__cap"><b>그림 6.</b> 12개월 단계별 실행 로드맵.</p>
+      </div>
+
+      <h3 class="sec__lead" style="margin:24px 0 10px;color:var(--ink);font-weight:800;font-size:1.05rem">초기 공급 확보 콜드스타트(Cold Start) 타개 전략</h3>
+      <div class="grid-2">
+        <div class="card"><b>앵커 파트너 유치</b><p style="margin:6px 0 0;font-size:.9rem;color:var(--muted)"><b>오픈 후 3개월 플랫폼 수수료 0%</b> 프로모션으로 <br />초기 호스트·파트너 확보. 케이터링·촬영 <b>앵커 파트너 선확보</b> → 패키지 즉시 판매 가능.</p></div>
+        <div class="card"><b>타겟 직접 영업</b><p style="margin:6px 0 0;font-size:.9rem;color:var(--muted)">스페이스클라우드 <b>상위 호스트 대상 타겟 DM·직접 영업</b> + 거점 상권(강남·성수) 집중 → <b>밀도 있는 공급</b>으로 첫 거래 창출.</p></div>
+      </div>
+
+      <h3 class="sec__lead" style="margin:26px 0 8px;color:var(--ink);font-weight:800;font-size:1.05rem">재무 목표 점진 성장 & 손익분기점(BEP)</h3>
+      <p style="margin:0;color:var(--ink-2);font-size:.95rem">수수료율을 <b>전 거래 일괄 5%(회원 서비스료 0%)</b>로 낮춘 저(低) Take Rate 구조입니다. 그만큼 순수수료 매출은 <b>거래액(GMV) 규모에 정비례</b>하며, 흑자 전환은 매출액이 아니라 <b>거래액 확대</b>에 좌우됩니다. 초기 수개월은 적자 구간을 전제로 합니다.</p>
+      <div class="ramp">
+        <div class="ramp__c"><div class="ramp__k">론칭 초기 · 1~3개월</div><div class="ramp__v">월 GMV 약 500만~2,000만 원</div><p>거점 소수 공간·초기 거래 · 순수수료(5%) 약 <b>25만~100만 원</b></p></div>
+        <div class="ramp__c"><div class="ramp__k">성장기 · 4~9개월</div><div class="ramp__v">월 GMV 약 5,000만~1.5억 원</div><p>공급·수요 확대·재구매 · 순수수료(5%) 약 <b>250만~750만 원</b></p></div>
+        <div class="ramp__c ramp__c--bep"><div class="ramp__k" style="color:var(--accent)">BEP 도달 · 중기 목표</div><div class="ramp__v">월 GMV 약 6~10억 원</div><p>순수수료(5%) 약 <b>3,000만~5,000만 원</b> = 월 운영비 상회 → 손익분기</p></div>
+      </div>
+      <p class="bep__assume" style="margin-top:10px;font-size:.8rem;color:var(--muted)">가정: 평균 Take Rate 약 5%(PG 결제수수료 차감 전). 낮은 Take Rate 특성상 BEP 도달에 필요한 GMV 규모가 커지므로, <b>거점 공급 밀도와 재구매율 확대가 핵심</b>입니다. 실제 수치는 운영비·마케팅비에 따라 변동하는 <b>방향성 가이드</b>입니다.</p>
+      <div class="honesty">
+        <b>데이터 정직성 안내.</b> 국내에는 '공간대여+부대서비스' 단일 공식 시장통계가 없어, 상위 O2O 통계(과기정통부·KISDI)·대표 플랫폼 공개데이터(스페이스클라우드)·플랫폼 실거래 단가(숨고·크몽·미소)를 조합해 <b>추정</b>했습니다. TAM(172.7조)은 공식 O2O 수치, SAM·SOM은 대리지표 기반 추정치이며, 인용 전 원문 재확인을 권장합니다. 조사 기간: 2021~2026, 조사일 2026-07-23.
+      </div>
+    </section>
+
+    <footer class="foot">
+      <span class="foot__conf">CONFIDENTIAL · 내부 보고용</span>
+      <p style="margin:0"><b>(주)와일리</b> · 대표 박수인 · 사업자등록번호 211-88-56742 · 서울특별시 강남구 학동로 336 메이트리빌딩 7층 · wylie@wylie.co.kr</p>
+      <p style="margin:6px 0 0">본 문서의 수수료율·정산 예시는 현재 운영/데모 기준이며, 실제 계약·정책에 따라 조정될 수 있습니다.</p>
+    </footer>
+
+  </div>
+</div>
+
+</body>
+</html>

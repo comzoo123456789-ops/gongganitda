@@ -1,0 +1,20 @@
+﻿<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><title>주문 내용 및 결제 조건 확인</title>
+<style>body{font-family:'맑은 고딕','Malgun Gothic',sans-serif;font-size:11pt;line-height:1.7;color:#1a1a1a;}
+h1{font-size:17pt;border-bottom:2pt solid #333;padding-bottom:6pt;margin:0 0 4pt;}
+.eff{color:#777;font-size:9.5pt;margin:0 0 16pt;}h4{font-size:12pt;margin:16pt 0 6pt;}
+ul{margin:4pt 0 8pt;padding-left:20pt;}li{margin:3pt 0;}p{margin:6pt 0;}</style></head><body>
+<h1>주문 내용 및 결제 조건 확인</h1><p class="eff">시행일: 2026-01-01</p>
+      <h4>제1조 (주문 내용 확인)</h4>
+      <p>이용자는 결제 진행 전 주문 상품(공간 대관·부대서비스·패키지)의 <b>구성·이용일시·인원·수량</b> 및 <b>최종 결제금액</b>을 확인하였으며, 그 내용에 동의하고 결제를 진행합니다.</p>
+      <h4>제2조 (결제 금액의 구성)</h4>
+      <p>최종 결제금액은 대관료·부대서비스 비용에 <b>서비스 이용료 및 부가세(VAT 포함)</b>가 반영된 금액이며, 적용 가능한 <b>쿠폰·포인트 할인</b>이 반영된 최종 금액입니다.</p>
+      <h4>제3조 (결제 확정 및 이행)</h4>
+      <p>결제가 완료되면 해당 예약·견적이 <b>확정</b>되며, 확정된 항목은 파트너(호스트·맞춤업체)가 이행합니다. 항목별 <b>부분 결제</b> 시 결제한 항목만 확정·진행됩니다.</p>
+      <h4>제4조 (청약 철회 및 취소)</h4>
+      <p>결제 후 취소·환불은 <b>'취소·환불 정책'</b> 및 각 상세 페이지에 표시된 파트너의 개별 환불 정책을 따릅니다.</p>
+      <h4>제5조 (거래 정보의 확인·보관)</h4>
+      <p>결제·거래 내역은 관계 법령에 따라 보관되며, 이용자는 마이페이지의 예약·결제 내역에서 언제든지 확인할 수 있습니다.</p>
+      <p class="terms-demo">※ 본 약관은 데모용 예시로, 실제 서비스 적용 시 전자상거래법 등 관계 법령에 맞게 보완되어야 합니다.</p>
+<hr style="margin-top:30pt;border:none;border-top:1pt solid #ddd"><p style="color:#999;font-size:9pt">(주)와일리 · 사업자등록번호 211-88-56742 · 서울특별시 강남구 학동로 336 메이트리빌딩 7층</p>
+</body></html>

@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://images.unsplash.com" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&display=swap" />
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css?v=20260723" />
 </head>
 <body>
   <header class="header is-scrolled" id="header">
@@ -18,9 +18,11 @@
       <a href="index.html" class="logo"><span class="logo__dot"></span>공간잇다</a>
       <nav class="header__nav" id="nav">
         <a href="search.html" class="header__link">공간 찾기</a>
+        <a href="vendors.html" class="header__link">맞춤 업체</a>
+        
         <a href="request.html" class="header__link">견적 요청</a>
         <a href="map.html" class="header__link">지도</a>
-        <a href="host.html" class="header__link js-host-nav">호스트 등록</a>
+        <a href="host.html" class="header__link js-host-nav">사업자 등록</a>
         <span class="header__sep"></span>
         <span class="auth-area" data-authbox></span>
       </nav>
@@ -31,7 +33,7 @@
   <main class="sp" id="sp"><!-- JS 렌더 --></main>
 
   <footer class="footer">
-    <div class="footer__copy" style="border:none">© 2026 공간잇다 · wylie</div>
+    <div class="footer__copy" style="border:none"><a href="help.html?tab=guide" style="color:var(--muted);font-weight:600">이용 방법</a> · <a href="help.html?tab=booking" style="color:var(--muted);font-weight:600">예약 안내</a> · <a href="help.html?tab=faq" style="color:var(--muted);font-weight:600">자주 묻는 질문</a> &nbsp;|&nbsp; © 2026 공간잇다 · wylie</div>
   </footer>
 
   <div class="modal" id="modal" hidden>
@@ -41,10 +43,11 @@
 
   <div class="toast" id="toast" hidden></div>
 
-  <script src="js/icons.js"></script>
-  <script src="data/categories.js"></script>
-  <script src="data/spaces.js"></script>
-  <script src="js/auth.js"></script>
-  <script src="js/space.js"></script>
+  <script src="js/icons.js?v=20260723"></script>
+  <script src="data/categories.js?v=20260723"></script>
+  <script src="data/spaces.js?v=20260723"></script>
+  <script src="js/auth.js?v=20260723"></script>
+  <script src="js/space.js?v=20260723"></script>
+  <script src="js/quickmenu.js?v=20260723"></script>
 </body>
 </html>

@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://images.unsplash.com" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&display=swap" />
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css?v=20260723" />
 </head>
 <body>
   <header class="header is-scrolled" id="header">
@@ -18,9 +18,11 @@
       <a href="index.html" class="logo"><span class="logo__dot"></span>공간잇다</a>
       <nav class="header__nav" id="nav">
         <a href="search.html" class="header__link">공간 찾기</a>
+        <a href="vendors.html" class="header__link">맞춤 업체</a>
+        
         <a href="request.html" class="header__link">견적 요청</a>
         <a href="map.html" class="header__link">지도</a>
-        <a href="host.html" class="header__link js-host-nav">호스트 등록</a>
+        <a href="host.html" class="header__link js-host-nav">사업자 등록</a>
         <span class="header__sep"></span>
         <span class="auth-area" data-authbox></span>
       </nav>
@@ -33,83 +35,113 @@
       <div>
         <span class="section__kicker">SEARCH</span>
         <h1 class="srch__title">공간 찾기</h1>
+        <p class="mp__sub" style="margin-top:6px">원하는 조건으로 공간을 찾고, 비교하고, 바로 예약하세요.</p>
       </div>
     </div>
 
-    <div class="srch__layout">
-      <!-- 필터 -->
-      <aside class="filters">
-        <button class="filters__mtoggle" id="fMobile">필터 ▾</button>
-        <div class="filters__body" id="filtersBody">
-          <div class="filt">
-            <span class="filt__t">지역</span>
-            <select id="fRegion" class="filt__sel"><option value="">전국</option></select>
+    <!-- 키워드 검색 + 지역 + 상세 필터 -->
+    <div class="v-controls">
+      <form class="srch-kw" id="kwForm">
+        <span class="srch-kw__ic"><svg class="ic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></span>
+        <input type="text" id="fKeyword" placeholder="공간 이름·키워드로 검색 — 예: 역삼 세미나룸, 촬영, 루프탑" autocomplete="off" />
+        <button type="button" class="srch-kw__clear" id="kwClear" hidden aria-label="지우기">✕</button>
+      </form>
+      <select id="fRegion" class="filt__sel v-region"><option value="">지역 전체</option></select>
+      <button type="button" class="v-morefilt" id="fMobile">상세 필터 <span aria-hidden="true">▾</span></button>
+    </div>
+
+    <!-- 공간 유형 칩 (가로 스크롤) -->
+    <div class="v-filterbar"><div id="fType" class="chips"></div></div>
+
+    <!-- 상세 필터 (접이식) -->
+    <div class="filters">
+      <div class="filters__body" id="filtersBody">
+        <div class="filt">
+          <span class="filt__t">시간당 가격</span>
+          <div class="filt__list">
+            <label class="filt__chk"><input type="checkbox" name="price" value="0-10000" />1만원 이하</label>
+            <label class="filt__chk"><input type="checkbox" name="price" value="10000-20000" />1~2만원</label>
+            <label class="filt__chk"><input type="checkbox" name="price" value="20000-30000" />2~3만원</label>
+            <label class="filt__chk"><input type="checkbox" name="price" value="30000-9999999" />3만원 이상</label>
           </div>
-          <div class="filt">
-            <span class="filt__t">공간 유형</span>
-            <div id="fType" class="filt__list"></div>
-          </div>
-          <div class="filt">
-            <span class="filt__t">시간당 가격</span>
-            <div class="filt__list">
-              <label class="filt__chk"><input type="checkbox" name="price" value="0-10000" />1만원 이하</label>
-              <label class="filt__chk"><input type="checkbox" name="price" value="10000-20000" />1~2만원</label>
-              <label class="filt__chk"><input type="checkbox" name="price" value="20000-30000" />2~3만원</label>
-              <label class="filt__chk"><input type="checkbox" name="price" value="30000-9999999" />3만원 이상</label>
-            </div>
-          </div>
-          <div class="filt">
-            <span class="filt__t">인원</span>
-            <select id="fCap" class="filt__sel">
-              <option value="0">전체</option>
-              <option value="4">4인 이상</option>
-              <option value="10">10인 이상</option>
-              <option value="20">20인 이상</option>
-              <option value="40">40인 이상</option>
-            </select>
-          </div>
-          <div class="filt">
-            <span class="filt__t">편의시설</span>
-            <div id="fAmen" class="filt__list"></div>
-          </div>
-          <div class="filt">
-            <label class="filt__toggle"><input type="checkbox" id="fNow" /><span>지금 예약 가능만</span></label>
-          </div>
+        </div>
+        <div class="filt">
+          <span class="filt__t">인원</span>
+          <select id="fCap" class="filt__sel">
+            <option value="0">전체</option>
+            <option value="4">4인 이상</option>
+            <option value="10">10인 이상</option>
+            <option value="20">20인 이상</option>
+            <option value="40">40인 이상</option>
+          </select>
+        </div>
+        <div class="filt">
+          <span class="filt__t">편의시설</span>
+          <div id="fAmen" class="filt__list"></div>
+        </div>
+        <div class="filt">
+          <span class="filt__t">옵션</span>
+          <label class="filt__toggle filt__toggle--sm"><input type="checkbox" id="fPkg" /><span>⏱ 패키지(타임) 요금제만</span></label>
+          <label class="filt__toggle" style="margin-top:12px"><input type="checkbox" id="fNow" /><span>지금 예약 가능만</span></label>
+        </div>
+        <div class="filt filt--reset">
           <button class="btn btn--outline btn--block" id="fReset">필터 초기화</button>
         </div>
-      </aside>
+      </div>
+    </div>
 
-      <!-- 결과 -->
-      <div class="results">
-        <div class="results__head">
-          <span class="results__count" id="srchCount"></span>
-          <div class="results__sort">
-            <span>정렬</span>
-            <select id="sort" class="filt__sel">
-              <option value="reco">추천순</option>
-              <option value="priceLow">가격 낮은순</option>
-              <option value="priceHigh">가격 높은순</option>
-              <option value="rating">평점순</option>
-              <option value="reviews">후기 많은순</option>
-            </select>
-          </div>
+    <!-- 결과 수 + 정렬 + 목록/지도 -->
+    <div class="v-listhead">
+      <span class="results__count" id="srchCount"></span>
+      <div class="results__tools">
+        <div class="viewtoggle" id="viewToggle">
+          <button type="button" class="viewtoggle__b is-active" data-view="list">목록</button>
+          <button type="button" class="viewtoggle__b" data-view="map">지도</button>
         </div>
-        <div class="grid" id="results"></div>
-        <div class="srch__empty" id="srchEmpty" hidden>
-          <p>조건에 맞는 공간이 없어요.</p>
-          <button class="btn btn--outline" id="fReset2">필터 초기화</button>
+        <div class="results__sort">
+          <span>정렬</span>
+          <select id="sort" class="filt__sel">
+            <option value="reco">추천순</option>
+            <option value="priceLow">가격 낮은순</option>
+            <option value="priceHigh">가격 높은순</option>
+            <option value="rating">평점순</option>
+            <option value="reviews">후기 많은순</option>
+          </select>
         </div>
       </div>
+    </div>
+
+    <!-- 통합 스마트 필터 (행사 목적 + 부대서비스) -->
+    <div class="smartbar" id="smartbar"></div>
+
+    <!-- 즉시예약 토글 + 태그 슬라이더 -->
+    <div class="qbar">
+      <button type="button" class="qsw" id="fNowTop" aria-pressed="false"><span class="qsw__track"><span class="qsw__knob"></span></span><span class="qsw__label"><svg class="ic" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2.5 4.5 13.5H11l-1 8 8.5-11H12l1-8Z"/></svg> 즉시 예약 가능만</span></button>
+      <div class="qtags-wrap"><div class="qtags" id="qtags"></div></div>
+    </div>
+
+    <div class="v-grid" id="results"></div>
+    <div class="srch-map" id="srchMap" hidden>
+      <div id="srchMapCanvas" class="srch-map__canvas"></div>
+      <div id="srchMapFb" class="srch-map__fb"></div>
+    </div>
+    <div class="empty-state" id="srchEmpty" hidden>
+      <div class="empty-state__ic"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg></div>
+      <b>검색 결과가 없습니다</b>
+      <p>키워드·지역·유형·태그 조건을 바꿔 다시 찾아보세요.</p>
+      <button class="btn btn--outline btn--sm" id="fReset2">필터 초기화</button>
     </div>
   </main>
 
-  <footer class="footer"><div class="footer__copy" style="border:none">© 2026 공간잇다 · wylie</div></footer>
+  <footer class="footer"><div class="footer__copy" style="border:none"><a href="help.html?tab=guide" style="color:var(--muted);font-weight:600">이용 방법</a> · <a href="help.html?tab=booking" style="color:var(--muted);font-weight:600">예약 안내</a> · <a href="help.html?tab=faq" style="color:var(--muted);font-weight:600">자주 묻는 질문</a> &nbsp;|&nbsp; © 2026 공간잇다 · wylie</div></footer>
   <div class="toast" id="toast" hidden></div>
 
-  <script src="js/icons.js"></script>
-  <script src="data/categories.js"></script>
-  <script src="data/spaces.js"></script>
-  <script src="js/auth.js"></script>
-  <script src="js/search.js"></script>
+  <script src="js/icons.js?v=20260723"></script>
+  <script src="data/categories.js?v=20260723"></script>
+  <script src="data/spaces.js?v=20260723"></script>
+  <script src="js/config.js?v=20260723"></script>
+  <script src="js/auth.js?v=20260723"></script>
+  <script src="js/search.js?v=20260723"></script>
+  <script src="js/quickmenu.js?v=20260723"></script>
 </body>
 </html>

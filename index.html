@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://images.unsplash.com" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&display=swap" />
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css?v=20260723" />
 </head>
 <body>
   <!-- ===== 헤더 ===== -->
@@ -20,9 +20,11 @@
       <a href="index.html" class="logo"><span class="logo__dot"></span>공간잇다</a>
       <nav class="header__nav" id="nav">
         <a href="search.html" class="header__link">공간 찾기</a>
+        <a href="vendors.html" class="header__link">맞춤 업체</a>
+        
         <a href="request.html" class="header__link">견적 요청</a>
         <a href="map.html" class="header__link">지도</a>
-        <a href="host.html" class="header__link js-host-nav">호스트 등록</a>
+        <a href="host.html" class="header__link js-host-nav">사업자 등록</a>
         <span class="header__sep"></span>
         <span class="auth-area" data-authbox></span>
       </nav>
@@ -31,76 +33,72 @@
   </header>
 
   <main>
-    <!-- ===== 히어로 (밝은 스플릿 + 사진 콜라주) ===== -->
-    <section class="hero">
+    <div class="noticebar" id="noticeBar" hidden></div>
+    <!-- ===== 히어로 (목적 온보딩) ===== -->
+    <section class="hero hero--intent">
       <div class="hero__inner">
-        <div class="hero__text">
-          <span class="hero__eyebrow">공간 + 필요한 모든 것, 한 번에</span>
-          <h1 class="hero__title">공간부터 장비·케이터링까지<br /><em>견적 한 번</em>에 잇다</h1>
-          <p class="hero__sub">공간을 빌리고, 카메라·케이터링·복합기까지 —<br class="hero__br" />요청 한 번이면 업체들이 견적을 보내드려요.</p>
-          <div class="hero__cta">
-            <a href="search.html" class="btn btn--accent btn--lg">공간 찾기</a>
-            <a href="request.html" class="btn btn--outline btn--lg">견적 요청하기</a>
-          </div>
-          <div class="hero__stats" id="heroStats"></div>
-        </div>
-        <div class="hero__gallery" aria-hidden="true">
-          <div class="hero__gcol">
-            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=520&h=520&fit=crop&q=80" alt="" loading="lazy" />
-            <img src="https://images.unsplash.com/photo-1571624436279-b272aff752b5?w=520&h=420&fit=crop&q=80" alt="" loading="lazy" />
-          </div>
-          <div class="hero__gcol">
-            <img src="https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=520&h=460&fit=crop&q=80" alt="" loading="lazy" />
-            <img src="https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=520&h=560&fit=crop&q=80" alt="" loading="lazy" />
-          </div>
-          <div class="hero__chip">★ 4.8 · 검증된 공간·업체</div>
-        </div>
+        <span class="hero__eyebrow">공간 대관부터 장비 렌탈까지 한 번에</span>
+        <h1 class="hero__title">당신의 기획이 완성되는 곳,<br />필요한 모든 것을 잇다</h1>
+        <p class="hero__sub">복잡한 준비는 남겨두세요. 완벽한 하루를 위한 공간과 서비스, <span class="brand-ink">공간잇다</span></p>
       </div>
     </section>
 
-    <!-- ===== 검색 + 카테고리 ===== -->
+    <!-- ===== 통합 검색 (목적 탭 + 검색 박스) ===== -->
     <section class="section section--search" id="cats">
-      <div class="section__head">
-        <div>
-          <span class="section__kicker">CATEGORY</span>
-          <h2 class="section__title">어떤 공간이 필요하세요?</h2>
+      <div class="searchwrap">
+      <nav class="intent-tabs" id="intentChips"></nav>
+      <div class="searchbox">
+        <!-- 검색 바 -->
+        <form class="searchbar searchbar--light" id="searchbar">
+          <div class="searchbar__field">
+            <span class="searchbar__label">지역</span>
+            <div class="searchbar__input" data-ic="pin"><select id="sfRegion"><option value="">지역 전체</option></select></div>
+          </div>
+          <div class="searchbar__div"></div>
+          <div class="searchbar__field">
+            <span class="searchbar__label">공간 유형</span>
+            <div class="searchbar__input" data-ic="grid"><select id="sfType"><option value="">전체</option></select></div>
+          </div>
+          <div class="searchbar__div"></div>
+          <div class="searchbar__field">
+            <span class="searchbar__label">날짜</span>
+            <div class="searchbar__input" data-ic="clock"><input type="date" id="sfDate" /></div>
+          </div>
+          <div class="searchbar__div"></div>
+          <div class="searchbar__field searchbar__field--sm">
+            <span class="searchbar__label">인원</span>
+            <div class="searchbar__input" data-ic="users"><input type="number" id="sfCap" min="1" placeholder="0" /></div>
+          </div>
+          <button type="submit" class="searchbar__go" aria-label="검색"></button>
+        </form>
+
+        <!-- AI 한 줄 추천 (강조) -->
+        <form class="ai-box ai-box--hl" id="aiForm">
+          <span class="ai-box__tag"><span class="ai-box__spark"><svg class="ic" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18"/></svg></span> AI 추천</span>
+          <input type="text" id="aiInput" placeholder="한 줄로 말해보세요 — 예: 6명 브라이덜샤워 강남 3만원대" />
+          <button type="submit" class="btn btn--accent">추천받기</button>
+        </form>
+
+        <!-- 프로모션 배너 캐러셀 -->
+        <div class="promo" id="promo">
+          <div class="promo__track" id="promoTrack">
+            <a class="promo__slide promo__slide--b" href="request.html">
+              <span class="promo__deco" aria-hidden="true">⚡</span>
+              <span class="promo__badge">QUOTE</span>
+              <span class="promo__tx"><b>요청 한 번이면 견적이 쌓여요</b><span>필요한 것만 적으면 파트너들이 <em>경쟁 견적</em> · 발품 제로</span></span>
+              <span class="promo__cta">견적 요청 →</span>
+            </a>
+            <a class="promo__slide promo__slide--c" href="vendors.html">
+              <span class="promo__deco" aria-hidden="true">✨</span>
+              <span class="promo__badge">PARTNERS</span>
+              <span class="promo__tx"><b>검증된 맞춤 업체 둘러보기</b><span>촬영·케이터링·렌탈 파트너를 <em>직접 고르고</em> 견적받기</span></span>
+              <span class="promo__cta">업체 보기 →</span>
+            </a>
+          </div>
+          <div class="promo__dots" id="promoDots"></div>
         </div>
-        <p class="section__sub">지역·유형·날짜·인원으로 찾아보세요</p>
       </div>
-
-      <!-- 검색 바 -->
-      <form class="searchbar searchbar--light" id="searchbar">
-        <div class="searchbar__field">
-          <span class="searchbar__label">지역</span>
-          <div class="searchbar__input" data-ic="pin"><select id="sfRegion"><option value="">지역 전체</option></select></div>
-        </div>
-        <div class="searchbar__div"></div>
-        <div class="searchbar__field">
-          <span class="searchbar__label">공간 유형</span>
-          <div class="searchbar__input" data-ic="grid"><select id="sfType"><option value="">전체</option></select></div>
-        </div>
-        <div class="searchbar__div"></div>
-        <div class="searchbar__field">
-          <span class="searchbar__label">날짜</span>
-          <div class="searchbar__input" data-ic="clock"><input type="date" id="sfDate" /></div>
-        </div>
-        <div class="searchbar__div"></div>
-        <div class="searchbar__field searchbar__field--sm">
-          <span class="searchbar__label">인원</span>
-          <div class="searchbar__input" data-ic="users"><input type="number" id="sfCap" min="1" placeholder="0" /></div>
-        </div>
-        <button type="submit" class="searchbar__go" aria-label="검색"></button>
-      </form>
-
-      <!-- AI 한 줄 추천 -->
-      <form class="ai-box" id="aiForm">
-        <span class="ai-box__tag">🧭 AI 추천</span>
-        <input type="text" id="aiInput" placeholder="한 줄로 말해보세요 — 예: 6명 브라이덜샤워 강남 3만원대" />
-        <button type="submit" class="btn btn--accent">추천받기</button>
-      </form>
-
-      <!-- 카테고리 -->
-      <div class="cats" id="catGrid"><!-- JS --></div>
+      </div>
     </section>
 
     <!-- ===== 지금 예약 가능한 공간 (목록 우선) ===== -->
@@ -108,7 +106,7 @@
       <div class="section__head">
         <div>
           <span class="section__kicker">AVAILABLE NOW</span>
-          <h2 class="section__title">지금 바로 예약 가능한 공간</h2>
+          <h2 class="section__title">지금 바로 예약 가능한 공간 <span class="livebar livebar--inline" id="liveTicker"></span></h2>
         </div>
         <div class="chips" id="catChips"><!-- JS --></div>
       </div>
@@ -119,7 +117,7 @@
     <section class="section section--flash" id="flashsec" hidden>
       <div class="section__head">
         <div>
-          <span class="section__kicker" style="color:#e2402f">⚡ FLASH DEAL</span>
+          <span class="section__kicker" style="color:#e2402f"><svg class="ic" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2.5 4.5 13.5H11l-1 8 8.5-11H12l1-8Z"/></svg> FLASH DEAL</span>
           <h2 class="section__title">지금 번개 특가</h2>
         </div>
         <p class="section__sub">기간 한정 할인 중 — 서두르세요!</p>
@@ -130,34 +128,37 @@
     <!-- ===== 우리 건물 1층 플래그십 ===== -->
     <section class="flag" id="flag"><!-- JS --></section>
 
-    <!-- ===== 목적별 큐레이션 ===== -->
-    <section class="section" id="curation">
+
+    <!-- ===== 부대 서비스 마켓 (원스톱) ===== -->
+    <section class="section section--svc" id="svcmarket">
       <div class="section__head">
         <div>
-          <span class="section__kicker">COLLECTIONS</span>
-          <h2 class="section__title">목적별로 골라보세요</h2>
+          <span class="section__kicker">ALL-IN-ONE</span>
+          <h2 class="section__title">공간에 필요한 모든 것, 한 곳에서</h2>
         </div>
-        <p class="section__sub">상황에 맞는 공간을 모았어요</p>
+        <p class="section__sub">촬영장비부터 인테리어까지 — 필요한 서비스를 골라 견적을 받아보세요</p>
       </div>
-      <div class="collections" id="colGrid"><!-- JS --></div>
+      <div class="svc-grid" id="svcGrid"><!-- JS --></div>
     </section>
 
-    <!-- ===== 원스톱 · 역경매 소개 ===== -->
+    <!-- ===== 원스톱 소개 ===== -->
     <section class="section how" id="how">
       <div class="section__head">
         <div>
-          <span class="section__kicker">ONE-STOP · 역경매</span>
+          <span class="section__kicker">ONE-STOP</span>
           <h2 class="section__title">필요한 건 요청만 하세요</h2>
         </div>
-        <p class="section__sub">업체들이 견적을 보내드려요 — 비교하고 고르기만 하면 끝</p>
+        <p class="section__sub">여러 파트너가 견적으로 경쟁해요 — 카테고리별로 비교하고 고르기만 하면 끝</p>
       </div>
       <div class="how-steps">
-        <div class="how-step"><span class="how-step__n">1</span><b>견적 요청</b><span>날짜·지역·인원과 필요한 서비스를 한 번에 요청</span></div>
-        <div class="how-step"><span class="how-step__n">2</span><b>업체 견적 도착</b><span>촬영장비·케이터링·복합기 업체가 견적서를 입찰</span></div>
-        <div class="how-step"><span class="how-step__n">3</span><b>비교하고 선택</b><span>가격·제안을 비교하고 채팅 후 결정</span></div>
+        <div class="how-step"><span class="how-step__n">1</span><b>견적 요청</b><span>날짜·지역·인원·예산과 필요한 서비스를 한 번에 요청</span></div>
+        <div class="how-step"><span class="how-step__n">2</span><b>파트너 견적 경쟁</b><span>촬영장비·케이터링·청소·인테리어 등 파트너가 입찰</span></div>
+        <div class="how-step"><span class="how-step__n">3</span><b>카테고리별 선택</b><span>최저가·제안을 비교하고 서비스별로 한 곳씩 선택</span></div>
       </div>
-      <div class="how-svc" id="howSvc"></div>
-      <a href="request.html" class="btn btn--accent btn--lg" style="margin-top:6px">견적 요청 시작하기 →</a>
+      <div class="how-cta">
+        <a href="request.html" class="btn btn--accent btn--lg">견적 요청 시작하기 →</a>
+        <button type="button" class="btn btn--outline btn--lg guide-btn" data-guide><svg class="guide-play" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="var(--accent)"/><path d="M10 8.2l6 3.8-6 3.8z" fill="#fff"/></svg> 1분 가이드 보기</button>
+      </div>
     </section>
 
     <!-- ===== 호스트 CTA ===== -->
@@ -167,7 +168,7 @@
         <h2 class="host__title">비어있는 공간,<br />수익으로 잇다</h2>
         <p class="host__sub">카페·사무실·연습실·행사장 — 쉬는 시간에 공간을 빌려주고 수익을 만드세요.<br />등록은 무료, 예약이 성사될 때만 수수료가 발생합니다.</p>
         <div class="host__actions">
-          <a href="host.html" class="btn btn--light btn--lg">공간 등록하기 →</a>
+          <a href="host.html" id="hostCta" class="btn btn--light btn--lg">공간 등록하기 →</a>
           <span class="host__note">평균 5분이면 등록 완료</span>
         </div>
       </div>
@@ -184,8 +185,8 @@
       </div>
       <div class="footer__cols">
         <div class="footer__col"><h4>공간</h4><a href="#">파티룸</a><a href="#">회의·세미나</a><a href="#">연습실</a><a href="#">스튜디오</a></div>
-        <div class="footer__col"><h4>이용</h4><a href="#">이용 방법</a><a href="#">예약 안내</a><a href="#">자주 묻는 질문</a></div>
-        <div class="footer__col"><h4>호스트</h4><a href="#">공간 등록</a><a href="#">호스트 가이드</a><a href="#">수수료 안내</a></div>
+        <div class="footer__col"><h4>이용</h4><a href="help.html?tab=guide">이용 방법</a><a href="help.html?tab=booking">예약 안내</a><a href="help.html?tab=faq">자주 묻는 질문</a></div>
+        <div class="footer__col"><h4>호스트</h4><a href="host.html">공간 등록</a><a href="help.html?tab=host">호스트 가이드</a><a href="help.html?tab=host">수수료 안내</a></div>
       </div>
     </div>
     <div class="footer__copy">© 2026 공간잇다 · wylie</div>
@@ -193,10 +194,14 @@
 
   <div class="toast" id="toast" hidden></div>
 
-  <script src="js/icons.js"></script>
-  <script src="data/categories.js"></script>
-  <script src="data/spaces.js"></script>
-  <script src="js/auth.js"></script>
-  <script src="js/main.js"></script>
+  <script src="js/icons.js?v=20260723"></script>
+  <script src="data/categories.js?v=20260723"></script>
+  <script src="data/spaces.js?v=20260723"></script>
+  <script src="data/packages.js?v=20260723"></script>
+  <script src="js/auth.js?v=20260723"></script>
+  <script src="js/live.js?v=20260723"></script>
+  <script src="js/guide.js?v=20260723"></script>
+  <script src="js/main.js?v=20260723"></script>
+  <script src="js/quickmenu.js?v=20260723"></script>
 </body>
 </html>

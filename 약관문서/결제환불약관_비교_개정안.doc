@@ -1,0 +1,218 @@
+﻿<!doctype html>
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40" lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>공간잇다 · 결제·환불 약관 정합성 비교 및 개정안</title>
+<style>
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { margin: 0; font-family: "Malgun Gothic", "맑은 고딕", "Pretendard", -apple-system, sans-serif; color: #1f2430; line-height: 1.65; background: #fff; font-size: 13px; }
+  .page { max-width: 980px; margin: 0 auto; padding: 40px 44px 60px; }
+  header.doc { border-bottom: 3px solid #2f6f7e; padding-bottom: 18px; margin-bottom: 26px; }
+  .doc__eyebrow { color: #2f6f7e; font-weight: 800; letter-spacing: .04em; font-size: 12px; }
+  h1 { font-size: 25px; margin: 6px 0 8px; letter-spacing: -.01em; }
+  .doc__meta { color: #6b7280; font-size: 12px; }
+  .doc__meta b { color: #374151; }
+  h2 { font-size: 17px; margin: 34px 0 12px; padding: 8px 12px; background: #eef5f6; border-left: 4px solid #2f6f7e; border-radius: 4px; }
+  h3 { font-size: 14px; margin: 20px 0 8px; color: #2f6f7e; }
+  p { margin: 6px 0; }
+  .lead { background: #fafafa; border: 1px solid #e5e8ee; border-radius: 10px; padding: 14px 18px; margin: 0 0 10px; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 6px; font-size: 12px; table-layout: fixed; }
+  th, td { border: 1px solid #d7dce4; padding: 9px 11px; vertical-align: top; text-align: left; }
+  th { background: #2f6f7e; color: #fff; font-weight: 700; font-size: 12px; }
+  .cmp th:nth-child(1), .cmp td:nth-child(1) { width: 15%; }
+  .cmp th:nth-child(2), .cmp td:nth-child(2) { width: 38%; }
+  .cmp th:nth-child(3), .cmp td:nth-child(3) { width: 32%; }
+  .cmp th:nth-child(4), .cmp td:nth-child(4) { width: 15%; }
+  td.cur { background: #fbfbfc; color: #4b5563; }
+  td.new { background: #f2fbf5; }
+  .sum th:nth-child(1), .sum td:nth-child(1) { width: 22%; }
+  .sum th:nth-child(2), .sum td:nth-child(2) { width: 20%; }
+  .sum th:nth-child(3), .sum td:nth-child(3) { width: 58%; }
+  .b { display: inline-block; font-size: 10.5px; font-weight: 800; padding: 1px 7px; border-radius: 999px; color: #fff; letter-spacing: .02em; white-space: nowrap; }
+  .b--keep { background: #6b7280; }
+  .b--edit { background: #b45309; }
+  .b--new { background: #059669; }
+  .b--del { background: #b91c1c; }
+  .b--code { background: #4338ca; }
+  .art { font-weight: 700; color: #111827; }
+  del { color: #b91c1c; }
+  ins { text-decoration: none; background: #dcfce7; padding: 0 2px; }
+  .muted { color: #6b7280; }
+  .note { font-size: 11px; color: #6b7280; margin-top: 4px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 0; }
+  .verdict { font-weight: 800; }
+  .v-ok { color: #059669; }
+  .v-part { color: #b45309; }
+  .v-no { color: #b91c1c; }
+  footer.doc { margin-top: 40px; border-top: 1px solid #e5e8ee; padding-top: 14px; color: #9aa1ad; font-size: 11px; }
+  @media print { .page { padding: 0 8mm; max-width: none; } h2 { break-after: avoid; } table { break-inside: auto; } tr { break-inside: avoid; } h2, h3 { break-inside: avoid; } }
+@page WordSection1 { size: A4 landscape; margin: 12mm 12mm; } div.WordSection1 { page: WordSection1; }
+</style>
+</head>
+<body>
+<div class="WordSection1"><div class="page">
+  <header class="doc">
+    <div class="doc__eyebrow">공간잇다 (Wylie) · 법무 검토 문서</div>
+    <h1>결제·환불 약관 정합성 비교 및 개정안</h1>
+    <div class="doc__meta">
+      대상 약관: <b>취소·환불 정책 / 주문·결제 조건 / 개인정보 제3자 제공·PG 위탁 / 파트너 입점약관(정산·취소)</b><br />
+      작성일: <b>2026-07-24</b> · 현행 시행일: 2026-01-01 · 검토 기준: 실제 시스템 동작 대조 + 전자상거래법·소비자분쟁해결기준
+    </div>
+    <div class="legend">
+      <span class="b b--keep">유지</span>
+      <span class="b b--edit">수정</span>
+      <span class="b b--new">신설</span>
+      <span class="b b--del">삭제</span>
+      <span class="b b--code">코드 조치</span>
+    </div>
+  </header>
+
+  <p class="lead">
+    본 문서는 현재 서비스에 <b>실제 적용된 약관 조문</b>과 <b>수정·추가가 필요한 개정안</b>을 나란히 비교합니다.
+    핵심 기준은 <b>"약관 문구 = 시스템 실제 동작 = 관계 법령"</b> 의 3자 일치이며, 특히 <b>약관에는 있으나 코드에 없는 조항</b>(분쟁 리스크)을 우선 정리했습니다.
+  </p>
+
+  <h2>0. 정합성 점검 요약</h2>
+  <table class="sum">
+    <thead><tr><th>점검 항목</th><th>판정</th><th>실제 상태 및 조치</th></tr></thead>
+    <tbody>
+      <tr><td>PG 자동 분리정산 · 결제1회=주문1건=승인번호1개</td><td class="verdict v-ok">일치 ✅</td><td>시스템·약관 모두 구현·명시(파트너약관 제3조 "회사는 정산 대금을 직접 보유하지 않습니다"). <b>조번호만 정정</b> 필요(PG약관은 제2조).</td></tr>
+      <tr><td>이용일 경과 건 정산 회수(클로백)</td><td class="verdict v-no">불일치 ❌</td><td>명시적 클로백 로직 <b>없음</b>(D-day 정책으로 대체). 약관에도 "차기 정산금 회수" 조항 <b>부재</b>. 관리자 안내문구만 잔존 → <b>약관 신설 + 문구 정리</b>.</td></tr>
+      <tr><td>항목별 부분 환불</td><td class="verdict v-ok">일치 ✅</td><td>구현됨. 단 약관에 <b>부분취소 조항 신설</b> 필요. "파트너 개별 환불정책"과는 별개.</td></tr>
+      <tr><td>파트너별 개별 환불정책 (현행 refund 제2조)</td><td class="verdict v-no">불일치 ❌</td><td>약관은 "개별정책 우선"이나 <b>기능 미구현</b>. → 문구 삭제(표준 공통 적용) 또는 기능 구현.</td></tr>
+      <tr><td>결제 직후 청약철회(쿨링오프)</td><td class="verdict v-no">부재 ❌</td><td>약관·시스템 <b>모두 없음</b>. 전자상거래법 제17조 취지 반영해 <b>신설 권고</b>.</td></tr>
+      <tr><td>서비스 이용료율</td><td class="verdict v-part">불일치 ⚠️</td><td>결제화면 <b>3%(안전결제 수수료)</b> ↔ 정산모델 <b>5%(CUSTOMER_FEE)</b>. → <b>5%로 통일(코드) + 약관 명시</b>.</td></tr>
+      <tr><td>호스트(파트너) 귀책 취소</td><td class="verdict v-part">약관만 존재 ⚠️</td><td>약관은 "전액환불+비용 파트너 부담". 시스템에 <b>귀책 사유 선택·위약금·보상 로직 없음</b>.</td></tr>
+      <tr><td>이용일 기준 차등 환불율</td><td class="verdict v-ok">일치 ✅</td><td>실제 = <b>5구간</b>(7일 100·5~6일 70·3~4일 50·1~2일 30·당일 0). 자동계산 연동 완료.</td></tr>
+    </tbody>
+  </table>
+  <p class="note">종합: 핵심 결제·정산·부분환불은 견고하나, "약관에만 존재하는 조항(개별정책·클로백)"과 "쿨링오프 부재"·"3%/5% 불일치"가 미해결. 체감 정합성 약 70%.</p>
+
+  <h2>1. 취소·환불 정책</h2>
+  <table class="cmp">
+    <thead><tr><th>조항</th><th>현행(실제 적용)</th><th>개정·신설안</th><th>구분·사유</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="art">제1조<br />기본 환불 규정</td>
+        <td class="cur">공간 대관 — 7일 전 100% · 5~6일 70% · 3~4일 50% · 1~2일 30% · 당일·노쇼 0%.<br />부대서비스 — 7일 전 100% · 3~6일 50% · 2일 이내 0%.<br />위약금은 공급자에게 정산, 환불액만 고객 반환.</td>
+        <td class="new">동일(유지). 단, "<ins>결제 금액 기준</ins>으로 위 환불율을 적용한다" 문구를 명시.</td>
+        <td><span class="b b--keep">유지</span> <span class="b b--edit">수정</span><br /><span class="muted">기준액(결제금액) 명확화</span></td>
+      </tr>
+      <tr>
+        <td class="art">제2조<br />공간·서비스별 정책 우선</td>
+        <td class="cur">"파트너가 상세페이지에 별도 환불정책을 명시한 경우 <b>그 개별 정책이 기본 규정에 우선</b>한다."</td>
+        <td class="new"><del>개별 정책 우선 조항 전체 삭제</del><br /><ins>"본 정책은 플랫폼 <b>표준 정책이며 전 파트너에 공통 적용</b>된다."</ins><br /><span class="muted">(개별정책 기능 도입 시 재삽입)</span></td>
+        <td><span class="b b--del">삭제</span><br /><span class="muted">미구현 기능을 규정 → 소비자 오인·분쟁 리스크</span></td>
+      </tr>
+      <tr>
+        <td class="art">제(신설)<br />결제 직후 청약철회 보호</td>
+        <td class="cur muted">해당 조항 없음</td>
+        <td class="new"><ins>"결제 후 <b>24시간 이내</b>이면서 이용일이 <b>7일 이상</b> 남은 경우, 제1조와 무관하게 <b>전액 환불</b>한다."</ins></td>
+        <td><span class="b b--new">신설</span><br /><span class="muted">전자상거래법 제17조 소비자보호</span></td>
+      </tr>
+      <tr>
+        <td class="art">제(신설)<br />환불 금액의 산정</td>
+        <td class="cur muted">해당 조항 없음</td>
+        <td class="new"><ins>"환불율은 <b>서비스 이용료를 포함한 실제 결제금액</b>에 적용한다. 위약금(취소 수수료)은 <b>정상 거래와 동일한 수수료를 차감한 뒤 공급자에게 정산</b>되며, 환불액만 고객 결제수단으로 반환한다."</ins></td>
+        <td><span class="b b--new">신설</span><br /><span class="muted">위약금 귀속·수수료 처리 명확화(현행은 "공급자 정산"만 표기)</span></td>
+      </tr>
+      <tr>
+        <td class="art">제(신설)<br />항목별 부분 취소</td>
+        <td class="cur muted">해당 조항 없음</td>
+        <td class="new"><ins>"여러 항목을 결제한 경우 <b>항목 단위로 부분 취소·환불</b>할 수 있으며, 각 항목에 제1조 기준이 개별 적용된다."</ins></td>
+        <td><span class="b b--new">신설</span><br /><span class="muted">시스템 지원 기능의 약관 근거</span></td>
+      </tr>
+      <tr>
+        <td class="art">제3조<br />파트너 귀책 취소</td>
+        <td class="cur">"파트너 귀책사유로 취소 시 게스트는 결제 금액 <b>전액</b>을 환불받는다."</td>
+        <td class="new">유지 + <ins>"이미 파트너에게 정산이 완료된 경우, 회사는 <b>차기 정산금에서 상계·회수</b>하여 환불 재원을 확보한다."</ins></td>
+        <td><span class="b b--edit">수정</span><br /><span class="muted">클로백(정산 회수) 법적 근거 신설</span></td>
+      </tr>
+      <tr>
+        <td class="art">제4조 노쇼 / 제5조 불가항력 / 제6조 처리기간 / 제7조 보증금</td>
+        <td class="cur">노쇼 환불불가 · 불가항력 협의 · PG 원결제수단 3~7영업일 · 청소보증금 이용 후 환불.</td>
+        <td class="new">전부 유지(조번호만 후속 신설 반영해 재정렬).</td>
+        <td><span class="b b--keep">유지</span></td>
+      </tr>
+      <tr>
+        <td class="art">제(신설)<br />법령 우선 · 개정 고지</td>
+        <td class="cur muted">해당 조항 없음</td>
+        <td class="new"><ins>"본 정책이 전자상거래법·소비자분쟁해결기준 등과 상충하는 경우 <b>소비자에게 유리한 기준</b>을 우선 적용한다. 정책 개정 시 시행 <b>7일 전</b>(소비자 불리 시 <b>30일 전</b>) 공지한다."</ins></td>
+        <td><span class="b b--new">신설</span><br /><span class="muted">세이프가드·개정 절차</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>2. 주문 내용 및 결제 조건</h2>
+  <table class="cmp">
+    <thead><tr><th>조항</th><th>현행(실제 적용)</th><th>개정·신설안</th><th>구분·사유</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="art">제2조<br />결제 금액의 구성</td>
+        <td class="cur">"대관료·부대서비스 비용에 <b>서비스 이용료 및 부가세</b>가 반영된 금액이며 쿠폰·포인트 할인 반영 최종 금액."</td>
+        <td class="new">"…에 <ins><b>서비스 이용료(결제금액의 5%)</b></ins> 및 부가세가 반영된 금액…" + <ins>"환불 시 서비스 이용료는 <b>환불 대상 금액에 포함</b>하여 동일 환불율로 정산한다."</ins></td>
+        <td><span class="b b--edit">수정</span><br /><span class="muted">3%↔5% 불일치 해소·환불 시 처리 명시</span></td>
+      </tr>
+      <tr>
+        <td class="art">제3조 확정·이행 / 제4조 청약철회 / 제5조 보관</td>
+        <td class="cur">부분 결제 시 결제 항목만 확정 · 취소는 취소·환불 정책 준수 · 거래내역 보관.</td>
+        <td class="new">유지. 제4조에 <ins>"결제 직후 청약철회 보호(24시간)"</ins> 교차 참조 추가.</td>
+        <td><span class="b b--keep">유지</span> <span class="b b--edit">수정</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>3. 파트너(호스트·맞춤업체) 입점약관 — 정산·취소</h2>
+  <table class="cmp">
+    <thead><tr><th>조항</th><th>현행(실제 적용)</th><th>개정·신설안</th><th>구분·사유</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="art">제3조<br />수수료 및 정산</td>
+        <td class="cur">"호스트 10%·맞춤업체 8%·패키지 15% 기준. PG사 자동 분리정산, 이용일 경과 후 자동 입금. <b>회사는 정산 대금을 직접 보유하지 않는다.</b>"</td>
+        <td class="new">유지(우수). + <ins>"환불·분쟁 발생 시 회사는 해당 건의 정산을 <b>보류하거나 차기 정산금에서 조정(회수)</b>할 수 있다."</ins></td>
+        <td><span class="b b--edit">수정</span><br /><span class="muted">클로백 원장 근거</span></td>
+      </tr>
+      <tr>
+        <td class="art">제4조<br />취소·환불 및 책임</td>
+        <td class="cur">"파트너 귀책사유로 취소 시 게스트 전액 환불되고 <b>해당 비용은 파트너가 부담</b>한다."</td>
+        <td class="new">유지 + <ins>"파트너 귀책 취소의 경우 회사는 <b>취소 사유를 '파트너 귀책'으로 분류</b>하고, 게스트 전액환불액과 대체 서비스 비용을 <b>파트너 정산금에서 차감</b>할 수 있다."</ins></td>
+        <td><span class="b b--edit">수정</span><br /><span class="muted">호스트 귀책 처리 근거(시스템 연동 예정)</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>4. 개인정보 제3자 제공 · PG 위탁</h2>
+  <table class="cmp">
+    <thead><tr><th>조항</th><th>현행(실제 적용)</th><th>개정·신설안</th><th>구분·사유</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="art">제1~2조</td>
+        <td class="cur">예약자 이름·연락처 파트너 제공 · PG 결제처리·자동 분리정산·실명확인 위탁.</td>
+        <td class="new">유지. + <ins>"환불·부분취소 처리를 위한 <b>결제 취소(부분취소 포함) 요청</b>을 PG에 위탁한다."</ins> 1줄 보강.</td>
+        <td><span class="b b--keep">유지</span> <span class="b b--edit">수정</span><br /><span class="muted">부분취소 위탁 근거</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>5. 시스템(코드) 조치 필요 항목 — 약관과 별개</h2>
+  <table class="sum">
+    <thead><tr><th>항목</th><th>구분</th><th>내용</th></tr></thead>
+    <tbody>
+      <tr><td>서비스 이용료율 통일</td><td><span class="b b--code">필수</span></td><td>결제화면 "안전결제 수수료 3%" → <b>5%</b>로 수정(정산모델 CUSTOMER_FEE=0.05와 일치).</td></tr>
+      <tr><td>파트너 개별 환불정책</td><td><span class="b b--code">선택</span></td><td>약관에서 삭제(권장) <b>또는</b> 호스트별 정책(관대/표준/엄격) 선택 기능 구현.</td></tr>
+      <tr><td>정산 회수(클로백) 원장</td><td><span class="b b--code">선택</span></td><td>파트너 귀책·정산완료 후 환불 시 차기 정산금 상계 기록. 현재는 D-day 정책으로 이용일 경과 건 환불이 0%라 자동 방지되나, 파트너 귀책 전액환불에는 명시적 회수 기록이 필요.</td></tr>
+      <tr><td>호스트 귀책 처리</td><td><span class="b b--code">선택</span></td><td>관리자 환불 시 <b>취소 사유(파트너 귀책/고객 변심/불가항력)</b> 선택 → 귀책 시 위약금 면제·파트너 차감 로직 연결.</td></tr>
+      <tr><td>쿨링오프</td><td><span class="b b--code">선택</span></td><td>약관 신설 시, 결제시각 기준 24시간·D-7 자동 판별하여 전액환불 처리기 추가.</td></tr>
+      <tr><td>안내문구 정리</td><td><span class="b b--code">권장</span></td><td>환불·주문 탭 안내문의 "정산 회수(클로백)" 표현을 실제 동작(D-day 정책)에 맞게 수정.</td></tr>
+    </tbody>
+  </table>
+
+  <footer class="doc">
+    ⚠️ 본 문서는 내부 검토용 초안입니다. 실제 시행 전 전자상거래법·소비자분쟁해결기준·개인정보보호법 및 개별 파트너 계약과 대조하여 법무 최종 검토가 필요합니다.<br />
+    공간잇다 · Wylie Inc. · 결제·환불 약관 정합성 비교 및 개정안 · 2026-07-24
+  </footer>
+</div>
+</body>
+</html>

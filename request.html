@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&display=swap" />
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css?v=20260723" />
 </head>
 <body data-require="auth">
   <header class="header is-scrolled" id="header">
@@ -17,9 +17,11 @@
       <a href="index.html" class="logo"><span class="logo__dot"></span>공간잇다</a>
       <nav class="header__nav" id="nav">
         <a href="search.html" class="header__link">공간 찾기</a>
+        <a href="vendors.html" class="header__link">맞춤 업체</a>
+        
         <a href="request.html" class="header__link">견적 요청</a>
         <a href="map.html" class="header__link">지도</a>
-        <a href="host.html" class="header__link js-host-nav">호스트 등록</a>
+        <a href="host.html" class="header__link js-host-nav">사업자 등록</a>
         <span class="header__sep"></span>
         <span class="auth-area" data-authbox></span>
       </nav>
@@ -29,42 +31,111 @@
 
   <main class="hostreg">
     <div class="hostreg__head">
-      <span class="section__kicker">REVERSE AUCTION</span>
-      <h1 class="hostreg__title" id="rqTitle">견적 요청 (역경매)</h1>
-      <p class="hostreg__sub">필요한 것을 한 번에 요청하면, 업체들이 <b>견적서를 보내드립니다</b>. 비교하고 골라보세요.</p>
+      <span class="section__kicker">QUOTE REQUEST</span>
+      <h1 class="hostreg__title" id="rqTitle">견적 요청</h1>
+      <p class="hostreg__sub">필요한 것을 한 번에 요청하면, 파트너들이 <b>견적서를 보내드립니다</b>. 비교하고 골라보세요.</p>
+      <button type="button" class="btn btn--outline btn--sm guide-btn" data-guide style="margin-top:12px"><svg class="guide-play" width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="var(--accent)"/><path d="M10 8.2l6 3.8-6 3.8z" fill="#fff"/></svg> 처음이세요? 1분 가이드 보기</button>
     </div>
 
-    <div class="rq-notice">📌 원활한 준비를 위해 <b>이용일 최소 2주 전</b>에 요청해 주세요. 업체 견적·선정·준비(물품 수령 등)는 <b>이용 1주 전까지</b> 마무리됩니다.</div>
+    <div class="rq-venue" id="rqVenue" hidden></div>
+
+    <!-- 진행 단계 -->
+    <div class="wz-bar" id="wzBar">
+      <div class="wz-i is-active" data-si="1"><span class="wz-i__n">1</span><span class="wz-i__l">기본 정보</span></div>
+      <span class="wz-i__line"></span>
+      <div class="wz-i" data-si="2"><span class="wz-i__n">2</span><span class="wz-i__l">서비스 선택</span></div>
+      <span class="wz-i__line"></span>
+      <div class="wz-i" data-si="3"><span class="wz-i__n">3</span><span class="wz-i__l">연락처·제출</span></div>
+    </div>
 
     <form class="hf" id="reqForm" novalidate>
-      <div class="hf-row">
-        <div class="hf-field"><label class="hf-label">이용 날짜 <i>*</i></label><input type="date" id="rqDate" /></div>
-        <div class="hf-field"><label class="hf-label">지역 <i>*</i></label><select id="rqRegion"></select></div>
+      <!-- STEP 1: 기본 정보 -->
+      <div class="wz-step" data-step="1">
+        <div class="hf-row">
+          <div class="hf-field"><label class="hf-label">이용 날짜 <i>*</i></label><input type="date" id="rqDate" /></div>
+          <div class="hf-field"><label class="hf-label">지역 <i>*</i></label><select id="rqRegion"></select></div>
+        </div>
+        <div class="hf-row">
+          <div class="hf-field"><label class="hf-label">수용 인원 <i>*</i></label><input type="number" id="rqCap" min="1" placeholder="예: 20명" /></div>
+          <div class="hf-field"><label class="hf-label">주차 대수</label><input type="number" id="rqPark" min="0" placeholder="예: 4대" /></div>
+        </div>
+        <div class="hf-field">
+          <label class="hf-label">총 예산 <span style="color:var(--faint);font-weight:500">(선택)</span></label>
+          <div class="rq-budget">
+            <select id="rqBudgetRange" class="filt__sel">
+              <option value="">예산 범위 선택</option>
+              <option value="1000000">100만 원 이하</option>
+              <option value="3000000">100~300만 원</option>
+              <option value="5000000">300~500만 원</option>
+              <option value="8000000">500만 원 이상</option>
+              <option value="custom">직접 입력</option>
+            </select>
+            <input type="number" id="rqBudget" min="0" step="10000" placeholder="직접 입력 (원)" />
+            <label class="rq-flex"><input type="checkbox" id="rqBudgetFlex" /><span>협의 가능</span></label>
+          </div>
+          <span class="hf-hint" id="rqBudgetHint"></span>
+        </div>
+        <div class="wz-nav"><span></span><button type="button" class="btn btn--accent btn--lg" data-next>다음 단계 →</button></div>
       </div>
-      <div class="hf-row">
-        <div class="hf-field"><label class="hf-label">수용 인원 <i>*</i></label><input type="number" id="rqCap" min="1" placeholder="예: 20" /></div>
-        <div class="hf-field"><label class="hf-label">주차 대수</label><input type="number" id="rqPark" min="0" placeholder="예: 4" /></div>
+
+      <!-- STEP 2: 서비스 선택 -->
+      <div class="wz-step" data-step="2" hidden>
+        <div class="hf-field">
+          <label class="hf-label" id="rqNeedLabel">무엇이 필요하세요? <i>*</i></label>
+          <label class="hf-chk hf-chk--space" id="rqSpaceWrap"><input type="checkbox" id="rqSpace" /><span>공간 대관 — 원하는 장소를 호스트에게 견적받기</span></label>
+          <div class="hf-space" id="rqSpaceOpts" hidden>
+            <div class="hf-row">
+              <div class="hf-field"><label class="hf-label">이용 시작</label><select id="rqStart"></select></div>
+              <div class="hf-field"><label class="hf-label">이용 종료</label><select id="rqEnd"></select></div>
+              <div class="hf-field"><label class="hf-label">공간 유형 (선택)</label><select id="rqSpaceType"></select></div>
+            </div>
+            <span class="hf-hint" id="rqTimeHint"></span>
+          </div>
+          <div class="hf-sublabel" id="rqSvcLabel">부대 서비스 — 필요한 항목을 골라 파트너에게 견적받기</div>
+          <div class="hf-checks" id="rqSvc"></div>
+          <span class="hf-hint" id="rqSvcHint">공간·서비스 중 <b>하나 이상</b> 선택하면 해당 파트너(호스트·맞춤업체)에게 요청이 전송됩니다.</span>
+        </div>
+
+        <!-- 카테고리별 요청사항 (선택한 항목만 slide-down) -->
+        <div class="hf-field"><div id="rqNotes"></div></div>
+
+        <div class="hf-field"><label class="hf-label">전체 공통 요청사항 <span style="color:var(--faint);font-weight:500">(모든 파트너에게 공통 전달)</span></label><textarea id="rqDetail" rows="2" placeholder="예: 행사 성격, 전체 일정, 주의사항 등."></textarea></div>
+
+        <!-- 참고 자료 업로드 (드래그&드롭) -->
+        <div class="hf-field">
+          <label class="hf-label">참고 자료 업로드 <span style="color:var(--faint);font-weight:500">(선택 · 최대 5개)</span></label>
+          <label class="rq-drop" id="rqDrop">
+            <input type="file" id="rqFiles" accept=".pdf,image/*" multiple hidden />
+            <span class="rq-drop__ic"><svg class="ic" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4M8 8l4-4 4 4"/><path d="M5 15v3.5a1.5 1.5 0 0 0 1.5 1.5h11a1.5 1.5 0 0 0 1.5-1.5V15"/></svg></span>
+            <b class="rq-drop__t">파일을 끌어다 놓거나 클릭해 업로드</b>
+            <span class="rq-drop__d">기획안 PDF · 배치 도면 · 레퍼런스 이미지 (PDF, PNG, JPG)</span>
+          </label>
+          <div class="rqn__files" id="rqRefFiles"></div>
+        </div>
+        <div class="wz-nav"><button type="button" class="btn btn--soft btn--lg" data-prev>← 이전</button><button type="button" class="btn btn--accent btn--lg" data-next>다음 단계 →</button></div>
       </div>
-      <div class="hf-field">
-        <label class="hf-label">필요한 서비스 <i>*</i></label>
-        <div class="hf-checks" id="rqSvc"></div>
-        <span class="hf-hint">선택한 서비스의 업체들에게 견적 요청이 일괄 전송됩니다.</span>
+
+      <!-- STEP 3: 연락처·제출 -->
+      <div class="wz-step" data-step="3" hidden>
+        <div class="hf-field"><label class="hf-label">휴대폰 번호 <i>*</i></label><input type="tel" id="rqPhone" placeholder="010-0000-0000" maxlength="13" inputmode="numeric" /><span class="hf-hint">파트너(호스트·맞춤업체)가 연락할 연락처예요. 숫자만 입력하면 자동으로 하이픈이 붙어요.</span></div>
+        <div class="rq-couponbox" id="rqCouponBox" hidden></div>
+        <div class="rq-review" id="rqReview"></div>
+        <label class="co-consent" id="rqConsentWrap"><input type="checkbox" id="rqConsent" /><span><b>[필수]</b> 개인정보 제3자 제공 동의 — 예약자 <b>이름·연락처</b>가 해당 <b>파트너(호스트·맞춤업체)</b>에게 제공되는 것에 동의합니다. <a href="#" data-consent-detail>자세히</a></span></label>
+        <p class="hf-err" id="rqErr" hidden></p>
+        <div class="wz-nav"><button type="button" class="btn btn--soft btn--lg" data-prev>← 이전</button><button type="submit" class="btn btn--accent btn--lg" id="rqSubmit">견적 요청 보내기</button></div>
+        <p class="hf-note">데모 — 요청은 이 브라우저에 저장되고, 해당 서비스 파트너 계정에 알림이 갑니다.</p>
       </div>
-      <div class="hf-field"><label class="hf-label">예산 (선택)</label><input type="text" id="rqBudget" placeholder="예: 30만원 내외" /></div>
-      <div class="hf-field"><label class="hf-label">상세 요청 사항</label><textarea id="rqDetail" rows="3" placeholder="행사 성격, 필요 수량, 시간 등 자유롭게 적어주세요."></textarea></div>
-      <p class="hf-err" id="rqErr" hidden></p>
-      <button type="submit" class="btn btn--accent btn--lg btn--block" id="rqSubmit">견적 요청 보내기</button>
-      <p class="hf-note">데모 — 요청은 이 브라우저에 저장되고, 해당 서비스 업체 계정에 알림이 갑니다.</p>
     </form>
   </main>
 
-  <footer class="footer"><div class="footer__copy" style="border:none">© 2026 공간잇다 · wylie</div></footer>
+  <footer class="footer"><div class="footer__copy" style="border:none"><a href="help.html?tab=guide" style="color:var(--muted);font-weight:600">이용 방법</a> · <a href="help.html?tab=booking" style="color:var(--muted);font-weight:600">예약 안내</a> · <a href="help.html?tab=faq" style="color:var(--muted);font-weight:600">자주 묻는 질문</a> &nbsp;|&nbsp; © 2026 공간잇다 · wylie</div></footer>
   <div class="toast" id="toast" hidden></div>
 
-  <script src="js/icons.js"></script>
-  <script src="data/categories.js"></script>
-  <script src="data/spaces.js"></script>
-  <script src="js/auth.js"></script>
-  <script src="js/request.js"></script>
+  <script src="js/icons.js?v=20260723"></script>
+  <script src="data/categories.js?v=20260723"></script>
+  <script src="data/spaces.js?v=20260723"></script>
+  <script src="js/auth.js?v=20260723"></script>
+  <script src="js/guide.js?v=20260723"></script>
+  <script src="js/request.js?v=20260723"></script>
 </body>
 </html>

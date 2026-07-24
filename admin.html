@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>관리자 콘솔 · 공간잇다</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://images.unsplash.com" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&display=swap" />
+  <link rel="stylesheet" href="css/style.css?v=20260723" />
+</head>
+<body data-require="admin">
+  <header class="header is-scrolled" id="header">
+    <div class="header__inner">
+      <a href="index.html" class="logo"><span class="logo__dot"></span>공간잇다 <span class="logo__admin">ADMIN</span></a>
+      <nav class="header__nav" id="nav">
+        <a href="index.html" class="header__link">사이트 보기</a>
+        <span class="header__sep"></span>
+        <span class="auth-area" data-authbox></span>
+      </nav>
+      <button class="hmenu" id="hmenu" aria-label="메뉴"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <button class="adx-burger" id="adMenuToggle" aria-label="관리 메뉴 열기/닫기" aria-expanded="false"><span class="adx-burger__bars"><span></span><span></span><span></span></span><span class="adx-burger__lbl">관리 메뉴</span></button>
+  <aside class="adx-drawer" id="adTabs">
+    <div class="adx-drawer__brand"><span class="logo__dot"></span> 관리 메뉴</div>
+    <nav class="adx-nav">
+      <button class="mp-tab is-active" data-tab="dash" data-perm="ops">대시보드</button>
+      <button class="mp-tab" data-tab="stats" data-perm="ops">통계·분석</button>
+      <button class="mp-tab" data-tab="approve" data-perm="ops">사업자 승인<span class="mp-tab__badge" id="apBadge" hidden></span></button>
+      <button class="mp-tab" data-tab="products" data-perm="ops">상품 관리</button>
+      <button class="mp-tab" data-tab="bookings" data-perm="ops">예약·결제</button>
+      <button class="mp-tab" data-tab="rfp" data-perm="ops">견적 요청</button>
+      <div class="adx-nav__div">정산·마케팅</div>
+      <button class="mp-tab" data-tab="orders" data-perm="finance">환불·주문</button>
+      <button class="mp-tab" data-tab="settle" data-perm="finance">정산·매출</button>
+      <button class="mp-tab" data-tab="coupons" data-perm="finance">쿠폰·포인트</button>
+      <button class="mp-tab" data-tab="fees" data-perm="finance">수수료율</button>
+      <div class="adx-nav__div">운영·관리</div>
+      <button class="mp-tab" data-tab="cs" data-perm="cs">CS·운영</button>
+      <button class="mp-tab" data-tab="users" data-perm="ops">회원 관리</button>
+      <button class="mp-tab" data-tab="bulk" data-perm="ops">일괄 등록</button>
+      <button class="mp-tab" data-tab="legal" data-perm="system">이용 약관</button>
+      <button class="mp-tab" data-tab="settings" data-perm="system">시스템 설정</button>
+      <button class="mp-tab" data-tab="audit" data-perm="system">접근 로그</button>
+    </nav>
+  </aside>
+  <div class="adx-backdrop" id="adBackdrop" hidden></div>
+
+  <main class="mp">
+    <div class="ad-seedbtns" id="adSeedBar">
+      <button class="btn btn--outline btn--sm" id="adReset">🗑 금액 초기화</button>
+      <button class="btn btn--accent btn--sm" id="adSeed">🧪 모의 데이터 생성/재설정</button>
+    </div>
+
+    <section class="mp-panel" data-panel="dash"><div id="adDash"></div></section>
+    <section class="mp-panel" data-panel="stats" hidden><div id="adStats"></div></section>
+    <section class="mp-panel" data-panel="approve" hidden><div id="adApprove"></div></section>
+    <section class="mp-panel" data-panel="products" hidden><div id="adProducts"></div></section>
+    <section class="mp-panel" data-panel="pkgadmin" hidden><div id="adPkg"></div></section>
+    <section class="mp-panel" data-panel="bookings" hidden><div id="adBookings"></div></section>
+    <section class="mp-panel" data-panel="rfp" hidden><div id="adRfp"></div></section>
+    <section class="mp-panel" data-panel="orders" hidden><div id="adOrders"></div></section>
+    <section class="mp-panel" data-panel="settle" hidden><div id="adSettle"></div></section>
+    <section class="mp-panel" data-panel="coupons" hidden><div id="adCoupons"></div></section>
+    <section class="mp-panel" data-panel="fees" hidden><div id="adFees"></div></section>
+    <section class="mp-panel" data-panel="cs" hidden><div id="adCS"></div></section>
+    <section class="mp-panel" data-panel="audit" hidden><div id="adAudit"></div></section>
+    <section class="mp-panel" data-panel="legal" hidden><div id="adLegal"></div></section>
+    <section class="mp-panel" data-panel="settings" hidden><div id="adSettings"></div></section>
+    <section class="mp-panel" data-panel="users" hidden>
+      <div class="ad-toolbar">
+        <div class="ad-filters" id="adRoleFilter"></div>
+        <input type="search" id="adSearch" class="ad-search" placeholder="아이디·이름·이메일 검색" />
+      </div>
+      <div id="adUsers"></div>
+    </section>
+    <section class="mp-panel" data-panel="bulk" hidden><div id="adBulk"></div></section>
+  </main>
+
+  <footer class="footer"><div class="footer__copy" style="border:none">© 2026 공간잇다 · wylie · Admin</div></footer>
+
+  <div class="modal" id="modal" hidden>
+    <div class="modal__backdrop" data-mclose></div>
+    <div class="modal__card" id="modalCard"></div>
+  </div>
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="js/icons.js?v=20260723"></script>
+  <script src="data/categories.js?v=20260723"></script>
+  <script src="data/spaces.js?v=20260723"></script>
+  <script src="data/packages.js?v=20260723"></script>
+  <script src="js/ops.js?v=20260723"></script>
+  <script src="js/auth.js?v=20260723"></script>
+  <script src="js/live.js?v=20260723"></script>
+  <script src="js/admin.js?v=20260723"></script>
+</body>
+</html>
